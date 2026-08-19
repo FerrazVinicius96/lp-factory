@@ -1,7 +1,10 @@
-{
+﻿{
   "name": "lp-cliente",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "tokens": "node scripts/tokens-to-theme.mjs",
     "dev": "npm run tokens && astro dev",
