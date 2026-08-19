@@ -1,0 +1,14 @@
+[
+  {
+    "name": "qa-log",
+    "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/tail-logs.mjs\" qa",
+    "description": "Vereditos do gate conforme sao gravados",
+    "when": "always"
+  },
+  {
+    "name": "deploy-log",
+    "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/tail-logs.mjs\" deploy",
+    "description": "Deploys e falhas de publicacao",
+    "when": "always"
+  }
+]

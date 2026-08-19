@@ -1,0 +1,91 @@
+---
+/**
+ * Layout base da landing page.
+ * SEO escalonado por nivel: `nivel` vem de clients/<slug>/tier.
+ *
+ * Esta pagina e um piloto tecnico de marca ficticia publicado em URL publica:
+ * `demonstracao` liga `noindex, nofollow` para que nunca seja confundida com
+ * o site de um escritorio real.
+ */
+interface Props {
+  titulo: string;
+  descricao: string;
+  nivel?: 'basico' | 'intermediario' | 'avancado';
+  canonical?: string;
+  imagemOg?: string;
+  schema?: object | object[];
+  demonstracao?: boolean;
+}
+
+const {
+  titulo,
+  descricao,
+  nivel = 'basico',
+  canonical = Astro.url.href,
+  imagemOg,
+  schema,
+  demonstracao = false,
+} = Astro.props;
+
+import '../styles/theme.css';
+import '../styles/semantica.css';
+import '../styles/sistema.css';
+import '../styles/motion.css';
+
+const esquemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+
+/* UMA requisicao de fonte, com os quatro cortes que o CSS realmente usa:
+     Bodoni Moda 400 normal  — h1, h2, h3, numerais (o peso do hero)
+     Bodoni Moda 400 italico — o fecho de "os dois caminhos"
+     Newsreader 400          — texto corrido
+     Newsreader 500          — rotulos em versalete
+   Bodoni Moda 500 e Newsreader 300 saiam da URL: eram baixados e nunca usados.
+   `display=swap` e o `preload` da mesma folha, que o hero depende dela; como o
+   href e identico ao do stylesheet, continua sendo uma unica ida a rede. */
+const FONTES =
+  'https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap';
+---
+
+<!doctype html>
+<html lang="pt-BR" data-nivel={nivel}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <meta name="color-scheme" content="light dark" />
+
+    {demonstracao && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href={FONTES} />
+    <link rel="stylesheet" href={FONTES} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Q&F Queiroz e Ferraz" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    {/* Sem imagem OG enquanto o cliente nao entregar logotipo: apontar para um
+        arquivo que nao existe e pior do que nao apontar. Vira card de resumo. */}
+    {imagemOg && (
+      <>
+        <meta property="og:image" content={new URL(imagemOg, Astro.site ?? Astro.url).href} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </>
+    )}
+    {!imagemOg && <meta name="twitter:card" content="summary" />}
+
+    {nivel !== 'basico' && <link rel="canonical" href={canonical} />}
+    {nivel !== 'basico' &&
+      esquemas.map((e) => <script type="application/ld+json" set:html={JSON.stringify(e)} />)}
+
+    <script type="module" src="/rum.js" data-endpoint="/_vitals"></script>
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>

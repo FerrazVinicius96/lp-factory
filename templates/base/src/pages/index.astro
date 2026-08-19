@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+
+/**
+ * Esqueleto minimo. O lp-builder substitui as secoes pelo conteudo real do copy.md,
+ * usando blocos de templates/blocks/ quando houver equivalente.
+ *
+ * Regras que valem aqui:
+ * - nenhuma cor literal: tudo vem do @theme gerado por tokens.json
+ * - nenhuma prova social sem origem no brief
+ * - classe lp-revelar so a partir do nivel intermediario
+ */
+const nivel = 'basico';
+---
+
+<Base
+  titulo="Substituir pela headline aprovada"
+  descricao="Substituir pela meta descricao aprovada"
+  nivel={nivel}
+>
+  <main>
+    <section class="mx-auto max-w-3xl px-6 py-24">
+      <h1 class="font-marca text-balance text-5xl leading-tight">
+        <!-- headline do copy.md -->
+      </h1>
+      <p class="mt-6 text-lg text-pretty">
+        <!-- subheadline do copy.md -->
+      </p>
+      <a href="#form" class="lp-interativo mt-10 inline-block rounded-md bg-acento px-6 py-3 font-medium text-base">
+        <!-- CTA do copy.md -->
+      </a>
+    </section>
+  </main>
+</Base>

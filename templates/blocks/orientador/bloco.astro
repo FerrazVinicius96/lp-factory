@@ -1,0 +1,429 @@
+---
+/**
+ * ORIENTADOR — perguntas de múltipla escolha que revelam um resultado já escrito.
+ *
+ * Não é um formulário nem uma calculadora: nada é enviado, nada é estimado,
+ * nada é armazenado. Todo o texto de todos os resultados já está no HTML; o
+ * script apenas decide qual mostrar. Consequências:
+ *   - sem JS, a pessoa lê todos os resultados possíveis — a página não quebra;
+ *   - o gate de copy enxerga o texto (ele zera blocos <script>);
+ *   - o custo de JS fica na casa de centenas de bytes.
+ *
+ * As regras vêm por prop: cada resultado declara em `quando` quais respostas o
+ * selecionam. O bloco não sabe nada do domínio.
+ *
+ * Acessibilidade (comportamento conquistado em auditoria — não remova):
+ *   - `fieldset`/`legend` por pergunta e radios nativos (navegação por setas de graça);
+ *   - alvo de toque de 44px em cada opção;
+ *   - o radio fica recortado a 1px, nunca `display:none`, e o anel de foco vem do
+ *     rótulo com `:focus`, não `:focus-visible` — depois de um clique de ponteiro o
+ *     `:focus-visible` não casa e o anel sumiria justamente ao devolver o foco por JS;
+ *   - a região viva nunca esvazia: sempre há mensagem pendente, resultado ou aviso
+ *     de combinação sem saída;
+ *   - `role="status"` é aplicado por JS DEPOIS da primeira pintura, para que o
+ *     ajuste de estado inicial não vire anúncio na carga da página;
+ *   - toda transição está sob `prefers-reduced-motion: no-preference`.
+ *
+ * Estado: um objeto em memória. Nada de localStorage, cookie ou requisição.
+ */
+type Regra = Record<string, string | string[]>;
+
+interface Opcao {
+  valor: string;
+  texto: string;
+}
+
+interface Pergunta {
+  /** Chave usada nas regras `quando`. Única dentro do bloco. */
+  nome: string;
+  texto: string;
+  /** Marcador visual da pergunta (ex.: '01'). Decorativo, `aria-hidden`. */
+  marcador?: string;
+  opcoes: Opcao[];
+}
+
+interface Resultado {
+  chave: string;
+  termo: string;
+  texto: string;
+  /** Respostas que selecionam este resultado. Omitido = pega tudo (deixe por último). */
+  quando?: Regra;
+}
+
+interface Complemento {
+  texto: string;
+  /** Omitido = aparece sempre que houver resultado. */
+  quando?: Regra;
+}
+
+interface Props {
+  perguntas: Pergunta[];
+  resultados: Resultado[];
+  /** Lista secundária filtrada pelas mesmas respostas (documentos, itens a preparar). */
+  complementos?: Complemento[];
+  tituloComplementos?: string;
+  rotuloTodos?: string;
+  rotuloEscolhido?: string;
+  textoPendente?: string;
+  textoSemCombinacao?: string;
+  textoLimpar?: string;
+  /** Limite de escopo, exibido ao final. Diga o que o bloco NÃO responde. */
+  aviso?: string;
+  /** Prefixo dos `name` dos radios. Troque se houver dois orientadores na mesma página. */
+  id?: string;
+}
+
+const {
+  perguntas,
+  resultados,
+  complementos = [],
+  tituloComplementos = 'O que preparar',
+  rotuloTodos = 'Resultados possíveis',
+  rotuloEscolhido = 'Seu resultado',
+  textoPendente = 'Responda a todas as perguntas para ver o resultado.',
+  textoSemCombinacao = 'Essa combinação de respostas não tem um resultado previsto aqui.',
+  textoLimpar = 'Limpar respostas',
+  aviso = '',
+  id = 'orientador',
+} = Astro.props;
+
+/** Normaliza `quando` para arrays no build: o script do cliente só compara arrays. */
+const regra = (r: Regra = {}) =>
+  JSON.stringify(
+    Object.fromEntries(Object.entries(r).map(([k, v]) => [k, Array.isArray(v) ? v : [v]]))
+  );
+---
+
+<div class="orientador" data-orientador>
+  {
+    perguntas.map((p) => (
+      <fieldset class="pergunta">
+        <legend class="pergunta__legenda">
+          {p.marcador && (
+            <span class="pergunta__marcador" aria-hidden="true">
+              {p.marcador}
+            </span>
+          )}
+          <span class="pergunta__texto">{p.texto}</span>
+        </legend>
+        <div class="opcoes">
+          {p.opcoes.map((o) => (
+            <label class="opcao">
+              <input type="radio" name={`${id}-${p.nome}`} value={o.valor} data-pergunta={p.nome} />
+              <span>{o.texto}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))
+  }
+
+  <p class="orientador__controles" data-controles hidden>
+    <button class="orientador__limpar" type="button" data-limpar>{textoLimpar}</button>
+  </p>
+
+  <div class="resultados" data-resultado>
+    <p class="orientador__nota" data-pendente hidden>{textoPendente}</p>
+    <p class="orientador__nota" data-sem-combinacao hidden>{textoSemCombinacao}</p>
+    <p class="orientador__rotulo" data-rotulo="todos">{rotuloTodos}</p>
+    <p class="orientador__rotulo" data-rotulo="escolhido" hidden>{rotuloEscolhido}</p>
+    <dl>
+      {
+        resultados.map((r) => (
+          <div data-resultado-chave={r.chave} data-quando={regra(r.quando)}>
+            <dt>{r.termo}</dt>
+            <dd>{r.texto}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    {
+      complementos.length > 0 && (
+        <div class="complementos" data-complementos hidden>
+          <p class="orientador__rotulo">{tituloComplementos}</p>
+          <ul>
+            {complementos.map((c) => (
+              <li data-complemento data-quando={regra(c.quando)}>
+                {c.texto}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+
+  {aviso && <p class="orientador__aviso">{aviso}</p>}
+</div>
+
+<script>
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-orientador]')) {
+    const ler = (el: HTMLElement): Record<string, string[]> => {
+      try {
+        return JSON.parse(el.dataset.quando || '{}');
+      } catch {
+        return {};
+      }
+    };
+    const par = (sel: string) =>
+      Array.from(raiz.querySelectorAll<HTMLElement>(sel)).map((el) => ({ el, quando: ler(el) }));
+
+    const resultados = par('[data-resultado-chave]');
+    const complementos = par('[data-complemento]');
+    const blocoComplementos = raiz.querySelector<HTMLElement>('[data-complementos]');
+    const rotuloTodos = raiz.querySelector<HTMLElement>('[data-rotulo="todos"]')!;
+    const rotuloEscolhido = raiz.querySelector<HTMLElement>('[data-rotulo="escolhido"]')!;
+    const pendente = raiz.querySelector<HTMLElement>('[data-pendente]')!;
+    const semCombinacao = raiz.querySelector<HTMLElement>('[data-sem-combinacao]')!;
+    const controles = raiz.querySelector<HTMLElement>('[data-controles]')!;
+    const radios = Array.from(raiz.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
+    const chaves = [...new Set(radios.map((r) => r.dataset.pergunta!))];
+
+    // Estado: só na memória, só enquanto a aba estiver aberta.
+    const resposta: Record<string, string> = {};
+
+    const casa = (quando: Record<string, string[]>) =>
+      Object.keys(quando).every((k) => quando[k].includes(resposta[k]));
+
+    const mostrar = (el: HTMLElement | null, visivel: boolean) => {
+      if (el) el.hidden = !visivel;
+    };
+
+    const pintar = () => {
+      const completo = chaves.every((k) => k in resposta);
+      const alvo = completo ? resultados.find((r) => casa(r.quando)) : undefined;
+
+      mostrar(rotuloTodos, false);
+      mostrar(pendente, !completo);
+      mostrar(semCombinacao, completo && !alvo);
+      mostrar(rotuloEscolhido, !!alvo);
+      for (const r of resultados) mostrar(r.el, r === alvo);
+      mostrar(blocoComplementos, !!alvo);
+      if (alvo) for (const c of complementos) mostrar(c.el, casa(c.quando));
+      mostrar(
+        controles,
+        radios.some((r) => r.checked)
+      );
+    };
+
+    for (const r of radios) {
+      r.addEventListener('change', () => {
+        resposta[r.dataset.pergunta!] = r.value;
+        pintar();
+      });
+    }
+
+    raiz.querySelector<HTMLButtonElement>('[data-limpar]')!.addEventListener('click', () => {
+      for (const r of radios) r.checked = false;
+      for (const k of Object.keys(resposta)) delete resposta[k];
+      pintar();
+      radios[0]?.focus();
+    });
+
+    pintar();
+
+    // A partir daqui toda mudança é resposta a uma ação da pessoa: pode anunciar.
+    const regiao = raiz.querySelector<HTMLElement>('[data-resultado]')!;
+    regiao.setAttribute('role', 'status');
+    regiao.setAttribute('aria-live', 'polite');
+  }
+</script>
+
+<style>
+  .pergunta {
+    border: 0;
+    border-top: var(--spacing-fio, 1px) solid var(--color-fio);
+    margin: 0;
+    padding: var(--spacing-interno, 2rem) 0;
+    display: grid;
+    gap: var(--spacing-entre-linhas-bloco, 1.25rem);
+  }
+
+  .pergunta__legenda {
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+    max-width: 26em;
+  }
+
+  @media (min-width: 56rem) {
+    .pergunta__legenda {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: var(--spacing-interno, 2rem);
+      align-items: baseline;
+      max-width: none;
+    }
+
+    .opcoes {
+      padding-left: calc(3.5rem + var(--spacing-interno, 2rem));
+    }
+  }
+
+  .pergunta__marcador {
+    font-family: var(--font-titulo, inherit);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    color: var(--color-anotacao, var(--color-conteudo-suave));
+  }
+
+  .pergunta__texto {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    max-width: 26em;
+  }
+
+  .opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  /* Alvo de toque de 44px (WCAG 2.5.8). Não reduza. */
+  .opcao {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--alvo-toque, 44px);
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-conteudo-suave);
+    border: var(--spacing-fio, 1px) solid var(--color-conteudo-suave);
+    border-radius: var(--radius-controle, 0);
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .opcao {
+      transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+    }
+  }
+
+  /* O radio continua no fluxo de foco: recortado, nunca display:none. */
+  .opcao input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+
+  .opcao:hover {
+    border-color: var(--color-acento);
+    color: var(--color-acento);
+  }
+
+  /* Estado escolhido não depende só de cor: o fundo enche e a borda vira acento. */
+  .opcao:has(input:checked) {
+    background: var(--color-acento);
+    border-color: var(--color-acento);
+    color: var(--color-acento-conteudo);
+  }
+
+  /* `:focus`, não `:focus-visible`: ao limpar as respostas o foco volta por JS
+     para o primeiro radio, e depois de um clique de ponteiro o :focus-visible
+     não casa — o anel sumiria justamente na hora em que ele é necessário.
+     O radio está recortado a 1px, então o anel tem de vir do rótulo. */
+  .opcao:has(input:focus) {
+    outline: 2px solid var(--color-foco, var(--color-acento));
+    outline-offset: 3px;
+  }
+
+  .orientador__limpar {
+    font: inherit;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-conteudo);
+    background: transparent;
+    border: var(--spacing-fio, 1px) solid var(--color-conteudo-suave);
+    border-radius: var(--radius-controle, 0);
+    padding: 0.45rem 0.85rem;
+    min-height: var(--alvo-toque, 44px);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .orientador__limpar:hover {
+    border-color: var(--color-acento);
+    color: var(--color-acento);
+  }
+
+  .orientador__controles {
+    margin: 0 0 var(--spacing-interno, 2rem);
+  }
+
+  .orientador__rotulo {
+    margin: 0 0 var(--spacing-entre-linhas-bloco, 1.25rem);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-anotacao, var(--color-conteudo-suave));
+  }
+
+  .orientador__nota {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--color-conteudo-suave);
+  }
+
+  .resultados {
+    border-top: var(--spacing-fio, 1px) solid var(--color-fio);
+    padding-top: var(--spacing-interno, 2rem);
+  }
+
+  .resultados dl {
+    margin: 0;
+    display: grid;
+    gap: var(--spacing-interno, 2rem);
+  }
+
+  .resultados dt {
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-acento);
+    margin-bottom: 0.35rem;
+  }
+
+  .resultados dd {
+    margin: 0;
+    max-width: var(--medida, 34em);
+    color: var(--color-conteudo-suave);
+  }
+
+  .complementos {
+    margin-top: var(--spacing-interno, 2rem);
+    padding-top: var(--spacing-interno, 2rem);
+    border-top: var(--spacing-fio, 1px) dashed var(--color-fio);
+  }
+
+  .complementos ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--spacing-entre-linhas-bloco, 1.25rem);
+    max-width: var(--medida, 34em);
+  }
+
+  .complementos li {
+    border-left: var(--spacing-fio, 1px) solid var(--color-fio);
+    padding-left: var(--spacing-interno, 2rem);
+    color: var(--color-conteudo-suave);
+  }
+
+  .orientador__aviso {
+    margin: var(--spacing-entre-blocos, 3.5rem) 0 0;
+    padding-top: var(--spacing-entre-linhas-bloco, 1.25rem);
+    border-top: var(--spacing-fio, 1px) solid var(--color-fio);
+    font-size: 1rem;
+    color: var(--color-conteudo-suave);
+    max-width: var(--medida, 34em);
+  }
+</style>

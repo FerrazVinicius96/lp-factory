@@ -1,0 +1,11 @@
+{
+  "name": "lp-factory-marketplace",
+  "owner": { "name": "VF" },
+  "plugins": [
+    {
+      "name": "lp-factory",
+      "source": "./plugin",
+      "description": "Fabrica agentica de landing pages: skills de ciclo, gates anti-slop e manutencao diaria"
+    }
+  ]
+}

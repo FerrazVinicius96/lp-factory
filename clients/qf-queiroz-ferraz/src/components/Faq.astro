@@ -1,0 +1,46 @@
+---
+/**
+ * FAQ. Sem accordion: sao seis respostas curtas que a pessoa quer ler de uma
+ * vez, e esconder texto atras de um clique custaria JS para piorar a leitura.
+ * O fio de chamada por pergunta ja da a hierarquia — sem caixa, sem cartao.
+ *
+ * A mesma lista alimenta o FAQPage schema em index.astro: pergunta e resposta
+ * existem em um unico lugar, entao o dado estruturado nao pode divergir da tela.
+ */
+interface Item {
+  pergunta: string;
+  resposta: string;
+}
+
+interface Props {
+  itens: Item[];
+}
+
+const { itens } = Astro.props;
+---
+
+<div class="faq">
+  {
+    itens.map((i) => (
+      <article class="faq__item">
+        <h3 class="chamada">{i.pergunta}</h3>
+        <p>{i.resposta}</p>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .faq { display: grid; }
+
+  .faq__item {
+    border-top: var(--spacing-fio) solid var(--color-fio);
+    padding-block: var(--spacing-interno);
+  }
+
+  .faq__item:last-child { border-bottom: var(--spacing-fio) solid var(--color-fio); }
+
+  .faq__item h3 { max-width: 24ch; }
+
+  .faq__item p { color: var(--color-conteudo-suave); }
+</style>

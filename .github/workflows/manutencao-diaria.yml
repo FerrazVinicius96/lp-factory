@@ -1,0 +1,53 @@
+# Manutencao diaria das landing pages — 23h America/Sao_Paulo (02:00 UTC).
+# Alternativa acionavel a Routine na nuvem: roda sobre o repositorio, sem depender de maquina ligada.
+name: manutencao-diaria
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  manutencao:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Coletar Web Vitals de campo
+        env:
+          DATABASE_URL: ${{ secrets.VITALS_DATABASE_URL }}
+        run: |
+          if [ -n "$DATABASE_URL" ]; then
+            cd telemetria/collector && npm ci --omit=dev
+            for c in ../../clients/*/; do
+              slug=$(basename "$c")
+              mkdir -p "../../clients/$slug/logs"
+              node consultar.mjs --horas 24 >> "../../clients/$slug/logs/runtime.jsonl" || true
+            done
+          else
+            echo "VITALS_DATABASE_URL ausente: manutencao seguira sem RUM de campo."
+          fi
+
+      - name: Rodar a manutencao
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Execute a rotina de manutencao diaria da fabrica de landing pages.
+            Siga a skill lp-maintenance: leia apenas o delta dos logs desde .last_run,
+            o BACKLOG.md de cada cliente e a telemetria ja coletada em runtime.jsonl.
+            Triagem pela matriz 0-5. Correcao 0-1 e hotfix; 2 vira PR; 3 vira backlog;
+            4-5 propoe um upgrade incremental com base na telemetria.
+            Toda correcao passa pelo gate antes de publicar.
+            Ao final grave logs/maintenance/<data>.md com no maximo 15 linhas, atualize
+            BACKLOG.md e .last_run, e rode plugin/scripts/rotate-logs.mjs.
+            Abra um PR com o que mudou. Nao facas merge automatico fora de P0 com gate verde.

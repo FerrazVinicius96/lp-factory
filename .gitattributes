@@ -1,0 +1,10 @@
+# Normaliza para LF no repositorio. Sem isto, o Windows commitaria CRLF e os
+# scripts .mjs/.sh chegariam quebrados em qualquer maquina Unix (e no CI).
+* text=auto eol=lf
+
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.zip binary
+*.woff2 binary

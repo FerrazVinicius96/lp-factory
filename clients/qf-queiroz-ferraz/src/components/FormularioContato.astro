@@ -1,0 +1,111 @@
+---
+/**
+ * Formulario de contato.
+ *
+ * Esta pagina e uma demonstracao com marca ficticia: o formulario nao envia
+ * dado nenhum a lugar nenhum. A garantia e estrutural, nao um aviso pedindo
+ * boa vontade — e por isso nao custa uma linha de JS:
+ *   - o <form> nao tem `action`;
+ *   - o unico botao de envio esta `disabled`, entao ele nao e o botao padrao
+ *     do formulario e a submissao implicita pelo Enter tambem nao dispara.
+ * Nao ha caminho, com teclado ou com mouse, que produza uma requisicao.
+ *
+ * Os campos continuam reais (rotulo associado, `autocomplete`, tipo correto)
+ * para que a demonstracao mostre o formulario que iria ao ar.
+ */
+interface Props {
+  avisoPrivacidade: string;
+}
+
+const { avisoPrivacidade } = Astro.props;
+---
+
+<form class="formulario" aria-describedby="aviso-envio">
+  <p class="campo">
+    <label for="f-nome">Nome</label>
+    <input id="f-nome" name="nome" type="text" autocomplete="name" />
+  </p>
+  <p class="campo">
+    <label for="f-email">E-mail</label>
+    <input id="f-email" name="email" type="email" autocomplete="email" />
+  </p>
+  <p class="campo">
+    <label for="f-telefone">Telefone</label>
+    <input id="f-telefone" name="telefone" type="tel" autocomplete="tel" />
+  </p>
+  <p class="campo campo--largo">
+    <label for="f-mensagem">Em que podemos ajudar</label>
+    <textarea id="f-mensagem" name="mensagem" rows="4"></textarea>
+  </p>
+
+  <p class="formulario__rodape">
+    <button class="botao" type="submit" disabled>Agendar uma conversa</button>
+  </p>
+
+  <p class="formulario__nota" id="aviso-envio">
+    Envio desativado: esta página é uma demonstração e o formulário não transmite os dados
+    preenchidos para nenhum destino.
+  </p>
+  <p class="formulario__nota">{avisoPrivacidade}</p>
+</form>
+
+<style>
+  .formulario {
+    display: grid;
+    gap: var(--spacing-interno);
+    max-width: 44em;
+    border-top: var(--spacing-fio) solid var(--color-fio);
+    padding-top: var(--spacing-entre-blocos);
+  }
+
+  @media (min-width: 48rem) {
+    .formulario { grid-template-columns: 1fr 1fr; }
+    .campo--largo,
+    .formulario__rodape,
+    .formulario__nota {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    max-width: none;
+  }
+
+  .campo label {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-anotacao);
+  }
+
+  .campo input,
+  .campo textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--color-conteudo);
+    background: transparent;
+    border: 0;
+    border-bottom: var(--spacing-fio) solid var(--color-conteudo-suave);
+    border-radius: var(--radius-nenhum);
+    padding: 0.55rem 0;
+    width: 100%;
+    resize: vertical;
+  }
+
+  .campo input:focus-visible,
+  .campo textarea:focus-visible {
+    border-bottom-color: var(--color-acento);
+  }
+
+  .formulario__rodape { margin: 0; max-width: none; }
+
+  .formulario__nota {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--color-conteudo-suave);
+    max-width: 40em;
+  }
+</style>

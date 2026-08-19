@@ -1,0 +1,95 @@
+---
+/**
+ * Lista de termo + explicacao, com o fio a esquerda de cada item.
+ * Serve a linha do tempo (ordenada, com o numeral da etapa na margem interna)
+ * e as areas conexas (nao ordenada). Um bloco, dois usos: a etapa e a area
+ * tem a mesma forma editorial — verbete de indice remissivo.
+ */
+interface Item {
+  termo: string;
+  texto: string;
+}
+
+interface Props {
+  itens: Item[];
+  ordenada?: boolean;
+}
+
+const { itens, ordenada = false } = Astro.props;
+const Lista = ordenada ? 'ol' : 'ul';
+---
+
+<Lista class:list={['verbetes', ordenada && 'verbetes--ordenada']}>
+  {
+    itens.map((item) => (
+      <li class="verbete">
+        <h3>{item.termo}</h3>
+        <p>{item.texto}</p>
+      </li>
+    ))
+  }
+</Lista>
+
+<style>
+  .verbetes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .verbete {
+    border-left: var(--spacing-fio) solid var(--color-fio);
+    padding: var(--spacing-interno) 0 var(--spacing-interno) var(--spacing-interno);
+    position: relative;
+  }
+
+  .verbete:first-child { padding-top: 0; }
+  .verbete:last-child { padding-bottom: 0; }
+
+  .verbete h3 {
+    font-size: 1.25rem;
+    max-width: 26ch;
+  }
+
+  .verbete p {
+    color: var(--color-conteudo-suave);
+    margin-bottom: 0;
+  }
+
+  /* numeral da etapa: mesmo versalete ocre do numeral de secao, na margem interna */
+  .verbetes--ordenada {
+    counter-reset: etapa;
+  }
+
+  .verbetes--ordenada .verbete {
+    counter-increment: etapa;
+  }
+
+  .verbetes--ordenada .verbete::before {
+    content: counter(etapa, decimal-leading-zero);
+    position: absolute;
+    left: calc(var(--spacing-interno) * -1 - 2.5rem);
+    top: var(--spacing-interno);
+    width: 2.5rem;
+    text-align: right;
+    font-family: var(--font-titulo);
+    font-size: 0.875rem;
+    letter-spacing: 0.08em;
+    color: var(--color-anotacao);
+  }
+
+  .verbetes--ordenada .verbete:first-child::before { top: 0; }
+
+  /* Sem espaco para o numeral fora do fio: ele entra acima do termo. */
+  @media (max-width: 52rem) {
+    .verbetes--ordenada .verbete::before {
+      position: static;
+      display: block;
+      width: auto;
+      text-align: left;
+      margin-bottom: 0.35rem;
+    }
+  }
+</style>

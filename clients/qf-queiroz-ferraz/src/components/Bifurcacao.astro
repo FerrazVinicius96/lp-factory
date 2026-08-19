@@ -1,0 +1,76 @@
+---
+/**
+ * "Os dois caminhos": o ponto em que o fio de margem se bifurca em dois
+ * filetes paralelos, um por caminho. Cada filete abre com um traco no acento.
+ * O conteudo de cada caminho entra pelos slots nomeados.
+ */
+interface Props {
+  rotuloA: string;
+  rotuloB: string;
+}
+
+const { rotuloA, rotuloB } = Astro.props;
+---
+
+<div class="bifurcacao">
+  <article class="caminho">
+    <h3 class="rotulo">{rotuloA}</h3>
+    <slot name="a" />
+  </article>
+  <article class="caminho">
+    <h3 class="rotulo">{rotuloB}</h3>
+    <slot name="b" />
+  </article>
+</div>
+
+<style>
+  .bifurcacao {
+    display: grid;
+    gap: var(--spacing-entre-blocos);
+    margin-bottom: var(--spacing-entre-blocos);
+  }
+
+  @media (min-width: 56rem) {
+    .bifurcacao {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-gutter);
+    }
+  }
+
+  .caminho {
+    border-left: var(--spacing-fio) solid var(--color-fio);
+    padding-left: var(--spacing-interno);
+    position: relative;
+  }
+
+  .caminho::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.25rem;
+    height: var(--spacing-fio);
+    background: var(--color-acento);
+    transform-origin: left center;
+  }
+
+  .caminho h3 {
+    margin-top: var(--spacing-chamada);
+    font-size: 0.75rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .caminho::before {
+        animation: bifurcar linear both;
+        animation-timeline: view();
+        animation-range: entry 15% entry 70%;
+      }
+    }
+  }
+
+  @keyframes bifurcar {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+</style>

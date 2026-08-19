@@ -1,0 +1,331 @@
+/* ============================================================
+   SISTEMA VISUAL — DIREÇÃO A, "EDITORIAL SÓBRIA"
+   Tradução do protótipo aprovado (proto/direcao-a.html) para a base.
+
+   Motivo gráfico: FIO DE MARGEM.
+   Um filete de 1px corre na posição da margem de anotação de uma
+   edição impressa comentada. Dele saem fios de chamada horizontais
+   que abrem cada bloco, e nele vivem os numerais romanos de seção.
+   O fio significa: bifurca em "os dois caminhos", vira tracejado nos
+   blocos de pendência, deita no rodapé.
+
+   Regra deste arquivo: nenhuma cor literal. Espaço, raio e sombra vêm
+   de theme.css (@theme); papéis de cor vêm de semantica.css.
+   ============================================================ */
+
+:root {
+  /* Medida de linha. Vive em tokens.json > tipografia.escala.medida, que o
+     gerador de tema não emite (ele só emite cor, espaçamento, raio e sombra). */
+  --medida: 34em;
+
+  /* Alvo mínimo de toque (WCAG 2.5.8 Target Size, nível AA). */
+  --alvo-toque: 44px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--color-superficie);
+  color: var(--color-conteudo);
+  font-family: var(--font-texto);
+  font-size: clamp(1.0625rem, 0.35vw + 1rem, 1.1875rem);
+  line-height: 1.65;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.numeral {
+  font-family: var(--font-titulo);
+  font-weight: 400;
+  font-optical-sizing: auto;
+}
+
+p {
+  margin: 0 0 var(--spacing-entre-linhas-bloco);
+  max-width: var(--medida);
+}
+
+p:last-child { margin-bottom: 0; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+.pular {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-acento);
+  color: var(--color-acento-conteudo);
+  padding: 0.65rem 1rem;
+  z-index: 9;
+}
+
+.pular:focus { left: 0; }
+
+/* ---------- rótulo em versalete ---------- */
+.rotulo {
+  font-family: var(--font-texto);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-anotacao);
+  margin: 0 0 var(--spacing-chamada);
+  font-weight: 500;
+}
+
+/* ---------- folha e grade do motivo ---------- */
+.folha {
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+.secao {
+  display: grid;
+  grid-template-columns: var(--spacing-margem-anotacao) minmax(0, 1fr);
+  padding-block: var(--spacing-entre-secoes);
+}
+
+.secao > .margem {
+  border-right: var(--spacing-fio) solid var(--color-fio);
+  padding-right: var(--spacing-chamada);
+  text-align: right;
+}
+
+.secao > .coluna { padding-left: var(--spacing-gutter); }
+
+.numeral {
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--color-anotacao);
+  position: sticky;
+  top: 2rem;
+  display: block;
+}
+
+/* fio de chamada: o traço curto que sai do filete e abre o bloco */
+.chamada { position: relative; }
+
+.chamada::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--spacing-gutter) * -1);
+  top: 0.72em;
+  width: var(--spacing-gutter);
+  height: var(--spacing-fio);
+  background: var(--color-fio);
+  transform-origin: left center;
+}
+
+h2.chamada::before { top: 0.58em; }
+
+h2 {
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--spacing-interno);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+h3 {
+  font-size: 1.375rem;
+  line-height: 1.2;
+  margin: 0 0 var(--spacing-chamada);
+}
+
+/* ---------- hero ----------
+   A classe chega a <section> por prop de Secao.astro, fora do escopo de
+   estilo da pagina; por isso o respiro do hero mora aqui. */
+.hero { padding-block: var(--spacing-respiro-hero) var(--spacing-entre-secoes); }
+
+/* ---------- controles ---------- */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--alvo-toque);
+  background: var(--color-acento);
+  color: var(--color-acento-conteudo);
+  text-decoration: none;
+  font-family: var(--font-texto);
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 1.05rem 2rem;
+  border: var(--spacing-fio) solid var(--color-acento);
+  border-radius: var(--radius-nenhum);
+  cursor: pointer;
+}
+
+.botao:hover {
+  background: var(--color-conteudo);
+  border-color: var(--color-conteudo);
+  color: var(--color-superficie);
+}
+
+.botao[disabled] {
+  background: transparent;
+  color: var(--color-conteudo-suave);
+  border-color: var(--color-conteudo-suave);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.elo {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo-toque);
+  font-size: 0.9375rem;
+  color: var(--color-conteudo);
+  /* Sublinhado por text-decoration, e nao por border-bottom: com a caixa
+     esticada ate 44px a borda descolaria do texto. */
+  text-decoration: underline;
+  text-decoration-color: var(--color-acento);
+  text-decoration-thickness: var(--spacing-fio);
+  text-underline-offset: 0.3em;
+}
+
+.elo:hover { text-decoration-thickness: 2px; }
+
+/* botão discreto: mesma família do controle de tema */
+.botao-fio {
+  font-family: var(--font-texto);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-conteudo);
+  background: transparent;
+  border: var(--spacing-fio) solid var(--color-conteudo-suave);
+  border-radius: var(--radius-controle);
+  padding: 0.45rem 0.85rem;
+  min-height: var(--alvo-toque);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-impressao);
+}
+
+.botao-fio:hover {
+  border-color: var(--color-acento);
+  color: var(--color-acento);
+}
+
+/* ---------- blocos de texto recorrentes ---------- */
+.destaque {
+  font-size: 1.375rem;
+  line-height: 1.5;
+  max-width: 30em;
+}
+
+.fecho {
+  font-style: italic;
+  font-family: var(--font-titulo);
+  font-size: 1.375rem;
+  line-height: 1.45;
+  max-width: 32em;
+  border-top: var(--spacing-fio) solid var(--color-fio);
+  padding-top: var(--spacing-interno);
+  margin-bottom: 0;
+}
+
+.nota-bloco {
+  color: var(--color-conteudo-suave);
+  font-size: 1rem;
+  max-width: 34em;
+  margin-bottom: var(--spacing-entre-blocos);
+}
+
+.rodape-bloco {
+  margin: var(--spacing-entre-blocos) 0 0;
+  font-size: 1rem;
+  color: var(--color-conteudo-suave);
+  border-top: var(--spacing-fio) solid var(--color-fio);
+  padding-top: var(--spacing-entre-linhas-bloco);
+  max-width: 34em;
+}
+
+/* ---------- lista de itens com fio à esquerda ---------- */
+.lista-fio {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--spacing-entre-linhas-bloco);
+  max-width: var(--medida);
+}
+
+.lista-fio > li {
+  border-left: var(--spacing-fio) solid var(--color-fio);
+  padding-left: var(--spacing-interno);
+}
+
+/* ---------- motivo em estado de pendência: o fio vira tracejado ---------- */
+.secao--pendencia > .margem { border-right-style: dashed; }
+
+/* ---------- telas estreitas ---------- */
+@media (max-width: 40rem) {
+  .secao > .coluna { padding-left: var(--spacing-interno); }
+
+  .chamada::before {
+    left: calc(var(--spacing-interno) * -1);
+    width: var(--spacing-interno);
+  }
+
+  .numeral {
+    font-size: 0.8125rem;
+    position: static;
+  }
+}
+
+/* ---------- motion do motivo: o fio se traça na rolagem ----------
+   Só CSS, sempre dentro de @supports, sempre desligável.
+   O estado final é o estático legível: sem suporte, nada se perde. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .chamada::before {
+      animation: tracar linear both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 70%;
+    }
+
+    .numeral,
+    .pergunta__num {
+      animation: surgir linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+
+@keyframes tracar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes surgir {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

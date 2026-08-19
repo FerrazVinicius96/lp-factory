@@ -1,0 +1,63 @@
+---
+/**
+ * Layout base da landing page.
+ * SEO escalonado por nivel: `nivel` vem de clients/<slug>/tier.
+ */
+interface Props {
+  titulo: string;
+  descricao: string;
+  nivel?: 'basico' | 'intermediario' | 'avancado';
+  canonical?: string;
+  imagemOg?: string;
+  schema?: object;
+}
+
+const {
+  titulo,
+  descricao,
+  nivel = 'basico',
+  canonical = Astro.url.href,
+  imagemOg = '/og.jpg',
+  schema,
+} = Astro.props;
+
+import '../styles/theme.css';
+import '../styles/motion.css';
+
+const temaEscuro = nivel === 'avancado';
+---
+
+<!doctype html>
+<html lang="pt-BR" data-nivel={nivel}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:image" content={new URL(imagemOg, Astro.site ?? Astro.url).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {nivel !== 'basico' && <link rel="canonical" href={canonical} />}
+    {nivel !== 'basico' && schema && (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
+
+    {temaEscuro && (
+      <script is:inline>
+        // Tema por preferencia do sistema, sem flash. Semantico: as cores vivem no @theme.
+        document.documentElement.dataset.tema =
+          matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+      </script>
+    )}
+
+    <script type="module" src="/rum.js" data-endpoint="/_vitals"></script>
+  </head>
+
+  <body class="bg-base text-conteudo antialiased">
+    <slot />
+  </body>
+</html>

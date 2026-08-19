@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divórcio e dissolução de união estável, explicados — Q&amp;F Queiroz e Ferraz</title>
+<meta name="description" content="Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<script>
+  /* Aplica o tema salvo antes da pintura, para não piscar. */
+  try { var t = localStorage.getItem('qf-tema'); if (t) document.documentElement.dataset.tema = t; } catch (e) {}
+</script>
+<style>
+/* ============================================================
+   DIREÇÃO B — HUMANA E ACOLHEDORA
+   Tokens semânticos. Nenhum hex solto fora deste bloco :root.
+   Tema por light-dark(): segue prefers-color-scheme e o botão.
+   A primeira declaração de cada par é o fallback claro para
+   navegadores sem light-dark().
+   ============================================================ */
+:root {
+  color-scheme: light dark;
+
+  --cor-superficie: #FCF7F0;            --cor-superficie: light-dark(#FCF7F0, #17130F);
+  --cor-superficie-elevada: #FFFBF5;    --cor-superficie-elevada: light-dark(#FFFBF5, #201A15);
+  --cor-superficie-alterna: #F4EADD;    --cor-superficie-alterna: light-dark(#F4EADD, #1C1713);
+  --cor-conteudo: #231C15;              --cor-conteudo: light-dark(#231C15, #F0E7DA);
+  --cor-conteudo-suave: #57493C;        --cor-conteudo-suave: light-dark(#57493C, #BFB0A0);
+  --cor-acento: #3B5540;                --cor-acento: light-dark(#3B5540, #A9C39B);
+  --cor-acento-conteudo: #FCF7F0;       --cor-acento-conteudo: light-dark(#FCF7F0, #17130F);
+  --cor-consensual: #3B5540;            --cor-consensual: light-dark(#3B5540, #A9C39B);
+  --cor-litigioso: #9C4B2C;             --cor-litigioso: light-dark(#9C4B2C, #E3A183);
+  --cor-borda: #E2D3C0;                 --cor-borda: light-dark(#E2D3C0, #3B3128);
+  --cor-borda-forte: #8C7A5E;           --cor-borda-forte: light-dark(#8C7A5E, #857260);
+  --cor-dobra: #EFE0CB;                 --cor-dobra: light-dark(#EFE0CB, #2E261F);
+  --cor-foco: #8A4A28;                  --cor-foco: light-dark(#8A4A28, #E3A183);
+  --cor-foco-halo: rgba(138,74,40,.28); --cor-foco-halo: light-dark(rgba(138,74,40,.28), rgba(227,161,131,.3));
+  --cor-sombra: rgba(35,28,21,.18);     --cor-sombra: light-dark(rgba(35,28,21,.18), rgba(0,0,0,.55));
+
+  --fonte-texto: "Literata", Georgia, "Times New Roman", serif;
+  --fonte-rotulo: "Karla", "Segoe UI", system-ui, sans-serif;
+
+  --olho: .78rem;
+  --corpo: clamp(1.02rem, .98rem + .22vw, 1.14rem);
+  --corpo-guia: clamp(1.16rem, 1.06rem + .5vw, 1.34rem);
+  --titulo-secao: clamp(1.62rem, 1.3rem + 1.5vw, 2.42rem);
+  --titulo-hero: clamp(2.18rem, 1.5rem + 3.1vw, 3.72rem);
+
+  --esp-xs: 8px;
+  --esp-sm: 12px;
+  --esp-md: 20px;
+  --esp-lg: 32px;
+  --esp-xl: 52px;
+  --esp-secao-densa: clamp(44px, 6vw, 72px);
+  --esp-secao: clamp(64px, 9vw, 116px);
+  --margem-pagina: clamp(20px, 5vw, 64px);
+  --medida: 62ch;
+
+  --raio-acao: 6px;
+  --raio-opcao: 999px;
+  --raio-campo: 3px;
+  --raio-selo: 2px;
+
+  --dobra-tam: 30px;
+  /* Sombra só onde há papel sobre papel; a cor é token, nunca cinza-neutro. */
+  --sombra-carta: drop-shadow(0 10px 16px var(--cor-sombra));
+}
+:root[data-tema="claro"] { color-scheme: light; }
+:root[data-tema="escuro"] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--cor-superficie);
+  color: var(--cor-conteudo);
+  font-family: var(--fonte-texto);
+  font-size: var(--corpo);
+  line-height: 1.66;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { font-weight: 500; line-height: 1.14; letter-spacing: -.012em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--cor-foco);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--cor-foco-halo);
+}
+
+.pular {
+  position: absolute; left: var(--margem-pagina); top: -100px; z-index: 20;
+  background: var(--cor-superficie-elevada); color: var(--cor-conteudo);
+  border: 1px solid var(--cor-borda-forte); border-radius: var(--raio-acao);
+  padding: var(--esp-sm) var(--esp-md); font-family: var(--fonte-rotulo); font-size: var(--olho);
+  transition: top .12s;
+}
+.pular:focus { top: var(--esp-sm); }
+
+.faixa { padding-inline: var(--margem-pagina); }
+.limite { max-width: 1160px; margin-inline: auto; }
+.prosa { max-width: var(--medida); }
+
+/* --- Rótulo / olho ------------------------------------------------ */
+.olho {
+  font-family: var(--fonte-rotulo);
+  font-size: var(--olho);
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--cor-conteudo-suave);
+  margin: 0 0 var(--esp-sm);
+}
+.olho--acento { color: var(--cor-acento); }
+
+/* ============================================================
+   MOTIVO GRÁFICO — DOBRA E VINCO
+   .dobra  : corta o canto superior direito e desenha o avesso
+             do papel dobrado. Aparece no hero, nos dois caminhos,
+             no orientador, na pendência e no rodapé.
+   .vinco  : filete com entalhe no ponto de dobra, usado como
+             separador entre blocos e itens.
+   ============================================================ */
+.dobra {
+  position: relative;
+  background: var(--cor-superficie-elevada);
+  border: 1px solid var(--cor-borda);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - var(--dobra-tam)) 0, 100% var(--dobra-tam), 100% 100%, 0 100%);
+}
+.dobra::after {
+  content: "";
+  position: absolute; top: 0; right: 0;
+  width: var(--dobra-tam); height: var(--dobra-tam);
+  background: var(--cor-dobra);
+  background: linear-gradient(225deg, color-mix(in srgb, var(--cor-dobra) 80%, var(--cor-conteudo)) 0%, var(--cor-dobra) 64%);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+.dobra--grande { --dobra-tam: 46px; }
+.dobra--pequena { --dobra-tam: 20px; }
+
+.vinco {
+  position: relative;
+  height: 1px;
+  background: var(--cor-borda);
+  border: 0;
+  margin: var(--esp-lg) 0;
+}
+.vinco::after {
+  content: "";
+  position: absolute; right: 0; top: -5px;
+  width: 11px; height: 11px;
+  border-top: 1px solid var(--cor-borda);
+  border-right: 1px solid var(--cor-borda);
+  transform: rotate(45deg);
+  transform-origin: top right;
+}
+.vinco--acento { background: var(--cor-acento); }
+.vinco--acento::after { border-color: var(--cor-acento); }
+
+/* --- Cabeçalho ---------------------------------------------------- */
+.cabecalho {
+  position: sticky; top: 0; z-index: 10;
+  padding-block: var(--esp-sm);
+  background: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+}
+.cabecalho .limite { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-md); }
+:is(section, footer)[id] { scroll-margin-top: 88px; }
+.marca {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--fonte-rotulo); text-decoration: none;
+}
+.marca b { font-size: 1.06rem; letter-spacing: .06em; font-weight: 700; }
+.marca span { font-size: var(--olho); color: var(--cor-conteudo-suave); letter-spacing: .04em; }
+
+.alternar {
+  display: inline-flex; align-items: center; gap: var(--esp-xs);
+  background: transparent; color: var(--cor-conteudo);
+  border: 1px solid var(--cor-borda-forte); border-radius: var(--raio-opcao);
+  padding: 7px 14px 7px 11px; cursor: pointer;
+  font-family: var(--fonte-rotulo); font-size: var(--olho); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+}
+.alternar:hover { background: var(--cor-superficie-alterna); }
+.alternar svg { display: block; }
+
+/* --- Ações -------------------------------------------------------- */
+.acao {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--fonte-rotulo); font-size: .94rem; font-weight: 600;
+  text-decoration: none; padding: 13px 22px; border-radius: var(--raio-acao);
+  border: 1px solid transparent;
+}
+.acao--principal { background: var(--cor-acento); color: var(--cor-acento-conteudo); }
+.acao--principal:hover { background: color-mix(in srgb, var(--cor-acento) 86%, var(--cor-conteudo)); }
+.acao--discreta { border-color: var(--cor-borda-forte); color: var(--cor-conteudo); }
+.acao--discreta:hover { background: var(--cor-superficie-alterna); }
+.acao .seta { transition: transform .18s ease; }
+@media (prefers-reduced-motion: reduce) { .acao .seta { transition: none; } }
+.acao:hover .seta { transform: translateX(3px); }
+
+/* --- Hero --------------------------------------------------------- */
+.hero {
+  padding-block: var(--esp-secao) var(--esp-secao-densa);
+  /* Luz de janela: composta só de tokens do tema, sem cor nova. */
+  background:
+    radial-gradient(120% 82% at 12% -10%, var(--cor-superficie-elevada) 0%, transparent 62%),
+    radial-gradient(90% 70% at 96% 4%, var(--cor-superficie-alterna) 0%, transparent 58%),
+    var(--cor-superficie);
+}
+.hero__grade {
+  display: grid; gap: var(--esp-xl);
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  align-items: start;
+}
+@media (max-width: 900px) { .hero__grade { grid-template-columns: 1fr; gap: var(--esp-lg); } }
+
+.hero h1 { font-size: var(--titulo-hero); font-weight: 400; max-width: 15ch; }
+.hero__sub {
+  font-size: var(--corpo-guia); line-height: 1.58; color: var(--cor-conteudo-suave);
+  max-width: 46ch; margin-top: var(--esp-md);
+}
+.hero__acoes { display: flex; flex-wrap: wrap; gap: var(--esp-sm); margin-top: var(--esp-lg); }
+
+.indice { padding: var(--esp-lg) var(--esp-lg) var(--esp-md); filter: var(--sombra-carta); }
+.indice ol { list-style: none; margin: 0; padding: 0; counter-reset: i; }
+.indice li { counter-increment: i; border-top: 1px solid var(--cor-borda); }
+.indice li:first-child { border-top: 0; }
+.indice a {
+  display: grid; grid-template-columns: 2.2rem 1fr; align-items: baseline; gap: var(--esp-xs);
+  padding: 13px 0; text-decoration: none;
+}
+.indice a::before {
+  content: counter(i, decimal-leading-zero);
+  font-family: var(--fonte-rotulo); font-size: var(--olho); font-weight: 600;
+  color: var(--cor-acento); letter-spacing: .08em;
+}
+.indice a span { border-bottom: 1px solid transparent; }
+.indice a:hover span { border-bottom-color: var(--cor-borda-forte); }
+
+/* --- Reconhecimento ----------------------------------------------- */
+.reconhecimento { padding-block: var(--esp-secao); background: var(--cor-superficie-alterna); }
+.reconhecimento h2 { font-size: var(--titulo-secao); max-width: 22ch; }
+.reconhecimento__grade {
+  display: grid; gap: var(--esp-xl); grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start;
+}
+@media (max-width: 900px) { .reconhecimento__grade { grid-template-columns: 1fr; gap: var(--esp-lg); } }
+
+.duvidas { list-style: none; margin: 0 0 var(--esp-lg); padding: 0; }
+.duvidas li {
+  position: relative;
+  font-size: var(--corpo-guia); line-height: 1.5;
+  padding: var(--esp-sm) 0 var(--esp-md);
+  border-bottom: 1px solid var(--cor-borda);
+}
+.duvidas li::after {
+  content: ""; position: absolute; right: 0; bottom: -6px;
+  width: 11px; height: 11px;
+  border-bottom: 1px solid var(--cor-borda); border-right: 1px solid var(--cor-borda);
+  transform: rotate(-45deg); transform-origin: bottom right;
+}
+.reconhecimento p { color: var(--cor-conteudo-suave); }
+.reconhecimento p strong { color: var(--cor-conteudo); font-weight: 500; }
+
+/* --- Os dois caminhos --------------------------------------------- */
+.caminhos { padding-block: var(--esp-secao); }
+.caminhos h2 { font-size: var(--titulo-secao); max-width: 24ch; }
+.caminhos__par {
+  display: grid; gap: var(--esp-md); grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--esp-xl);
+}
+@media (max-width: 860px) { .caminhos__par { grid-template-columns: 1fr; } }
+
+.caminho { padding: var(--esp-lg); }
+.caminho--consensual { border-left: 4px solid var(--cor-consensual); }
+.caminho--litigioso {
+  background: var(--cor-superficie-alterna);
+  border-left: 4px solid var(--cor-litigioso);
+  /* a dobra acompanha a superfície do próprio painel */
+  --cor-dobra: color-mix(in srgb, var(--cor-superficie-alterna) 88%, var(--cor-litigioso));
+}
+.caminho h3 { font-family: var(--fonte-rotulo); font-size: 1.18rem; font-weight: 700; letter-spacing: .01em; }
+.caminho--consensual h3 { color: var(--cor-consensual); }
+.caminho--litigioso h3 { color: var(--cor-litigioso); }
+.caminho p { margin-top: var(--esp-md); }
+
+.fechamento {
+  margin-top: var(--esp-lg); padding: var(--esp-lg) 0 0;
+  border-top: 1px solid var(--cor-borda);
+  font-size: var(--corpo-guia); line-height: 1.56; max-width: 68ch;
+}
+
+/* --- Orientador ---------------------------------------------------- */
+.orientador { padding-block: var(--esp-secao); background: var(--cor-superficie-alterna); }
+.orientador h2 { font-size: var(--titulo-secao); max-width: 20ch; }
+.orientador__sub { margin-top: var(--esp-md); color: var(--cor-conteudo-suave); max-width: 60ch; }
+
+.maquete-nota {
+  display: inline-flex; align-items: center; gap: var(--esp-xs);
+  margin-top: var(--esp-md); padding: 6px 12px;
+  border: 1px dashed var(--cor-borda-forte); border-radius: var(--raio-selo);
+  font-family: var(--fonte-rotulo); font-size: var(--olho); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--cor-conteudo-suave);
+}
+
+.perguntas { display: grid; gap: var(--esp-md); margin-top: var(--esp-xl); }
+.pergunta {
+  display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; gap: var(--esp-md);
+  align-items: center; padding: var(--esp-md) var(--esp-lg);
+  background: var(--cor-superficie-elevada); border: 1px solid var(--cor-borda);
+}
+@media (max-width: 760px) { .pergunta { grid-template-columns: 2.4rem minmax(0, 1fr); } .pergunta__opcoes { grid-column: 2; } }
+.pergunta__n {
+  font-family: var(--fonte-rotulo); font-size: var(--olho); font-weight: 700; letter-spacing: .08em;
+  color: var(--cor-acento);
+}
+.pergunta__texto { font-size: 1.06rem; }
+.pergunta__opcoes { display: flex; flex-wrap: wrap; gap: var(--esp-xs); }
+.opcao {
+  font-family: var(--fonte-rotulo); font-size: .82rem; font-weight: 500;
+  color: var(--cor-conteudo-suave);
+  border: 1px solid var(--cor-borda-forte); border-radius: var(--raio-opcao);
+  padding: 5px 14px;
+}
+
+.saidas { margin-top: var(--esp-lg); padding: var(--esp-lg); }
+.saidas > .olho { margin-bottom: var(--esp-md); }
+.saidas dl { margin: 0; display: grid; gap: 0; }
+.saidas dt {
+  font-family: var(--fonte-rotulo); font-weight: 700; font-size: .92rem;
+  color: var(--cor-acento); padding-top: var(--esp-md);
+}
+.saidas dd { margin: 6px 0 var(--esp-md); padding-bottom: var(--esp-md); border-bottom: 1px solid var(--cor-borda); }
+.saidas dd:last-of-type { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+.saidas .documentos { display: block; margin-top: 6px; color: var(--cor-conteudo-suave); font-size: .96rem; }
+.orientador__rodape { margin-top: var(--esp-md); color: var(--cor-conteudo-suave); font-size: .96rem; max-width: 64ch; }
+
+/* --- FAQ ----------------------------------------------------------- */
+.faq { padding-block: var(--esp-secao); }
+.faq h2 { font-size: var(--titulo-secao); }
+.faq .vinco { max-width: 78ch; }
+.faq__lista { max-width: 78ch; }
+.faq details { border-top: 1px solid var(--cor-borda); }
+.faq details:last-child { border-bottom: 1px solid var(--cor-borda); }
+.faq summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--esp-md);
+  padding: var(--esp-md) 0; cursor: pointer; list-style: none;
+  font-size: 1.12rem;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: ""; flex: 0 0 auto; width: 12px; height: 12px; margin-top: 6px;
+  border-right: 1.5px solid var(--cor-acento); border-bottom: 1.5px solid var(--cor-acento);
+  transform: rotate(45deg);
+}
+.faq details[open] summary::after { transform: rotate(-135deg); }
+.faq details p { padding: 0 0 var(--esp-md); color: var(--cor-conteudo-suave); max-width: var(--medida); }
+
+/* --- Quem atende (pendência) --------------------------------------- */
+.quem { padding-block: var(--esp-secao); background: var(--cor-superficie-alterna); }
+.quem h2 { font-size: var(--titulo-secao); }
+.pendencia { margin-top: var(--esp-lg); padding: var(--esp-xl) var(--esp-lg) var(--esp-lg); }
+.pendencia__topo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-md); padding-right: 56px; }
+.carimbo {
+  font-family: var(--fonte-rotulo); font-size: .8rem; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--cor-litigioso);
+  border: 2px solid var(--cor-litigioso); border-radius: var(--raio-selo);
+  padding: 7px 14px; transform: rotate(-2.5deg);
+}
+.pendencia__estado { margin: 0; }
+.pendencia__texto { margin-top: var(--esp-md); max-width: var(--medida); color: var(--cor-conteudo-suave); }
+.pendencia__lista { list-style: none; margin: var(--esp-lg) 0 0; padding: 0; display: grid; gap: 0; }
+.pendencia__lista li {
+  display: grid; grid-template-columns: 1fr; gap: 4px;
+  padding: var(--esp-sm) 0; border-bottom: 1px dashed var(--cor-borda-forte);
+  font-family: var(--fonte-rotulo); font-size: .95rem;
+}
+.pendencia__lista li span { font-size: var(--olho); letter-spacing: .1em; text-transform: uppercase; color: var(--cor-conteudo-suave); }
+
+/* --- Rodapé -------------------------------------------------------- */
+.rodape { padding-block: var(--esp-secao-densa) var(--esp-lg); border-top: 1px solid var(--cor-borda); }
+.rodape__grade {
+  display: grid; gap: var(--esp-lg); grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start;
+}
+@media (max-width: 780px) { .rodape__grade { grid-template-columns: 1fr; } }
+.rodape__marca { font-size: 1.18rem; }
+.rodape__marca span { display: block; font-family: var(--fonte-rotulo); font-size: var(--olho); letter-spacing: .1em; text-transform: uppercase; color: var(--cor-conteudo-suave); margin-top: 6px; }
+.rodape__pendencia { padding: var(--esp-md) var(--esp-lg) var(--esp-md) var(--esp-md); border-color: var(--cor-borda-forte); }
+.rodape__pendencia p { font-family: var(--fonte-rotulo); font-size: .92rem; margin-top: var(--esp-xs); color: var(--cor-conteudo-suave); }
+.rodape__links {
+  display: flex; flex-wrap: wrap; gap: var(--esp-md); margin-top: var(--esp-lg);
+  font-family: var(--fonte-rotulo); font-size: .88rem;
+}
+.rodape__links a { color: var(--cor-conteudo-suave); text-underline-offset: 4px; }
+.rodape__nota { margin-top: var(--esp-md); font-family: var(--fonte-rotulo); font-size: var(--olho); color: var(--cor-conteudo-suave); max-width: 70ch; line-height: 1.7; }
+
+/* --- Motion: só scroll-linked, e desligado em reduced-motion -------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .revela {
+      animation: abrir-dobra linear both;
+      animation-timeline: view();
+      animation-range: entry 6% cover 24%;
+    }
+    .risca {
+      animation: riscar linear both;
+      animation-timeline: view();
+      animation-range: entry 12% entry 72%;
+      transform-origin: left center;
+    }
+  }
+}
+@keyframes abrir-dobra {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes riscar {
+  from { transform: scaleX(.06); opacity: .3; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Preciso ir ao fórum?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado." }
+    },
+    {
+      "@type": "Question",
+      "name": "Dá para fazer o divórcio se a outra parte não quiser?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão." }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto tempo demora?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+<header class="cabecalho faixa" id="topo">
+  <div class="limite">
+    <a class="marca" href="#conteudo">
+      <b>Q&amp;F</b>
+      <span>Queiroz e Ferraz · Advocacia de Família</span>
+    </a>
+    <button class="alternar" type="button" id="alternar-tema" aria-label="Mudar para o tema escuro">
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+        <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/>
+      </svg>
+      <span class="rotulo-tema">Escuro</span>
+    </button>
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <!-- 1. HERO — motivo aplicado no cartão de índice -->
+  <section class="hero faixa">
+    <div class="limite hero__grade">
+      <div class="revela">
+        <p class="olho olho--acento">Divórcio e dissolução de união estável</p>
+        <h1>Antes de decidir qualquer coisa, entenda o que vem pela frente.</h1>
+        <p class="hero__sub">Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.</p>
+        <div class="hero__acoes">
+          <a class="acao acao--principal" href="#contato">
+            Agendar uma conversa
+            <svg class="seta" width="15" height="10" viewBox="0 0 15 10" aria-hidden="true"><path d="M0 5h13M9.5 1 13.5 5l-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+          </a>
+          <a class="acao acao--discreta" href="#caminhos">Ver como funciona o processo</a>
+        </div>
+      </div>
+
+      <aside class="dobra dobra--grande indice revela" aria-labelledby="indice-titulo">
+        <p class="olho" id="indice-titulo">Nesta página</p>
+        <ol>
+          <li><a href="#reconhecimento"><span>O que costuma pesar antes do processo</span></a></li>
+          <li><a href="#caminhos"><span>Consensual ou litigioso</span></a></li>
+          <li><a href="#orientador"><span>Sua situação, em três perguntas</span></a></li>
+          <li><a href="#faq"><span>Perguntas frequentes</span></a></li>
+          <li><a href="#quem-atende"><span>Quem vai conversar com você</span></a></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 2. RECONHECIMENTO — motivo aplicado no vinco entre as dúvidas -->
+  <section class="reconhecimento faixa" id="reconhecimento" aria-labelledby="reconhecimento-titulo">
+    <div class="limite reconhecimento__grade">
+      <div class="revela">
+        <p class="olho">Reconhecimento</p>
+        <h2 id="reconhecimento-titulo">A maior parte das dúvidas não é jurídica. É sobre o que acontece com a sua vida.</h2>
+        <hr class="vinco vinco--acento risca">
+      </div>
+      <div class="revela">
+        <ul class="duvidas">
+          <li>Quanto tempo isso dura.</li>
+          <li>Se é preciso ir ao fórum.</li>
+          <li>O que muda na rotina das crianças.</li>
+          <li>O que acontece com a casa.</li>
+          <li>Se procurar um advogado significa transformar uma conversa difícil em uma disputa.</li>
+        </ul>
+        <p class="prosa"><strong>São perguntas legítimas, e elas têm resposta antes de qualquer processo começar.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. OS DOIS CAMINHOS — motivo aplicado nos dois painéis -->
+  <section class="caminhos faixa" id="caminhos" aria-labelledby="caminhos-titulo">
+    <div class="limite">
+      <p class="olho">Os dois caminhos</p>
+      <h2 id="caminhos-titulo">Consensual ou litigioso: a diferença que muda tudo</h2>
+
+      <div class="caminhos__par">
+        <article class="dobra caminho caminho--consensual revela">
+          <h3>Consensual</h3>
+          <p>Quando as duas partes concordam com os termos — partilha, convivência com os filhos, pensão. O acordo é formalizado e levado à homologação. Havendo consenso e não havendo filhos menores ou incapazes, pode ser feito em cartório.</p>
+        </article>
+        <article class="dobra caminho caminho--litigioso revela">
+          <h3>Litigioso</h3>
+          <p>Quando não há acordo sobre um ou mais pontos. O processo corre na Justiça e o juiz decide o que as partes não conseguiram decidir. Pode começar litigioso e virar consensual a qualquer momento — inclusive por mediação.</p>
+        </article>
+      </div>
+
+      <p class="fechamento revela">Boa parte do trabalho de um advogado de família é ajudar a transformar o segundo caso no primeiro, quando isso é possível e do interesse das duas partes.</p>
+    </div>
+  </section>
+
+  <!-- 4. ORIENTADOR — maquete estática. Motivo aplicado no painel de saídas -->
+  <section class="orientador faixa" id="orientador" aria-labelledby="orientador-titulo">
+    <div class="limite">
+      <p class="olho">Orientador de próximos passos</p>
+      <h2 id="orientador-titulo">Sua situação, em três perguntas</h2>
+      <p class="orientador__sub">Não é uma consulta e não avalia o seu caso. Serve para você entender o caminho típico e chegar à conversa sabendo o que perguntar.</p>
+      <p class="maquete-nota">Maquete de direção — a interação entra no protótipo funcional</p>
+
+      <div class="perguntas">
+        <div class="pergunta revela">
+          <span class="pergunta__n">01</span>
+          <p class="pergunta__texto">Vocês concordam com os termos da separação?</p>
+          <div class="pergunta__opcoes"><span class="opcao">Sim</span><span class="opcao">Parcialmente</span><span class="opcao">Não</span></div>
+        </div>
+        <div class="pergunta revela">
+          <span class="pergunta__n">02</span>
+          <p class="pergunta__texto">Há filhos menores ou incapazes?</p>
+          <div class="pergunta__opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span></div>
+        </div>
+        <div class="pergunta revela">
+          <span class="pergunta__n">03</span>
+          <p class="pergunta__texto">Há bens a partilhar?</p>
+          <div class="pergunta__opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span><span class="opcao">Ainda não sabemos</span></div>
+        </div>
+      </div>
+
+      <div class="dobra saidas revela">
+        <p class="olho">Saídas possíveis</p>
+        <dl>
+          <dt>Consenso, sem filhos menores, com ou sem bens</dt>
+          <dd>Caminho extrajudicial em cartório costuma ser possível.
+            <span class="documentos">Documentos a separar: certidão de casamento, documentos pessoais, documentação dos bens.</span>
+          </dd>
+          <dt>Consenso, com filhos menores</dt>
+          <dd>Exige via judicial mesmo havendo acordo, com participação do Ministério Público.
+            <span class="documentos">Documentos: os anteriores mais certidões de nascimento.</span>
+          </dd>
+          <dt>Consenso parcial</dt>
+          <dd>É comum resolver os pontos acordados e discutir apenas os controversos, inclusive por mediação.</dd>
+          <dt>Sem consenso</dt>
+          <dd>Via judicial. O primeiro passo costuma ser organizar documentação e definir prioridades antes de qualquer petição.</dd>
+        </dl>
+      </div>
+
+      <p class="orientador__rodape">Cada caso tem particularidades que uma página não alcança. Este orientador não substitui a análise de um advogado.</p>
+    </div>
+  </section>
+
+  <!-- 5. FAQ -->
+  <section class="faq faixa" id="faq" aria-labelledby="faq-titulo">
+    <div class="limite">
+      <p class="olho">Perguntas frequentes</p>
+      <h2 id="faq-titulo">O que costumam perguntar antes da primeira conversa</h2>
+      <hr class="vinco vinco--acento risca">
+      <div class="faq__lista revela">
+        <details open>
+          <summary>Preciso ir ao fórum?</summary>
+          <p>Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado.</p>
+        </details>
+        <details>
+          <summary>Dá para fazer o divórcio se a outra parte não quiser?</summary>
+          <p>Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão.</p>
+        </details>
+        <details>
+          <summary>Quanto tempo demora?</summary>
+          <p>Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. QUEM ATENDE — pendência do cliente, desenhada como parte do sistema -->
+  <section class="quem faixa" id="quem-atende" aria-labelledby="quem-titulo">
+    <div class="limite">
+      <p class="olho">Quem atende</p>
+      <h2 id="quem-titulo">Quem vai conversar com você</h2>
+
+      <div class="dobra dobra--grande pendencia revela">
+        <div class="pendencia__topo">
+          <span class="carimbo">Pendência do cliente</span>
+          <p class="olho pendencia__estado">Seção não publicável enquanto o material não chegar</p>
+        </div>
+        <p class="pendencia__texto">Esta seção não será preenchida com pessoas, títulos ou fotografias fictícias. Nomes, inscrição na OAB, formação e imagens reais vêm do escritório; até lá, o espaço fica reservado e marcado.</p>
+        <ul class="pendencia__lista">
+          <li><span>Nome completo dos sócios</span></li>
+          <li><span>Número de inscrição na OAB</span></li>
+          <li><span>Formação e áreas de atuação</span></li>
+          <li><span>Fotografias reais dos advogados e do escritório</span></li>
+          <li><span>Cidade e endereço de atendimento</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 7. RODAPÉ — motivo aplicado no bloco de pendência -->
+<footer class="rodape faixa" id="contato">
+  <div class="limite">
+    <div class="rodape__grade">
+      <div>
+        <p class="rodape__marca">Q&amp;F Queiroz e Ferraz
+          <span>Advocacia de Família</span>
+        </p>
+        <p class="rodape__nota">Marca fictícia declarada. Protótipo de direção visual: nenhum advogado, número de inscrição, contato, endereço ou cliente real foi usado, e nenhum foi inventado para ocupar espaço.</p>
+        <div class="rodape__links">
+          <a href="#topo">Política de Privacidade</a>
+          <a href="#topo">Aviso de telemetria de performance</a>
+        </div>
+      </div>
+
+      <div class="dobra dobra--pequena rodape__pendencia">
+        <span class="carimbo">Pendência do cliente</span>
+        <p>Identificação completa do escritório e número de inscrição na OAB, obrigatórios antes de publicar.</p>
+        <p>Canal de contato oficial para o agendamento — telefone, e-mail ou WhatsApp institucional.</p>
+        <p>Cidade e endereço de atendimento.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var raiz = document.documentElement;
+  var botao = document.getElementById('alternar-tema');
+  var rotulo = botao.querySelector('.rotulo-tema');
+
+  function estaEscuro() {
+    if (raiz.dataset.tema) return raiz.dataset.tema === 'escuro';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function sincronizar() {
+    var escuro = estaEscuro();
+    rotulo.textContent = escuro ? 'Claro' : 'Escuro';
+    botao.setAttribute('aria-label', escuro ? 'Mudar para o tema claro' : 'Mudar para o tema escuro');
+  }
+  botao.addEventListener('click', function () {
+    raiz.dataset.tema = estaEscuro() ? 'claro' : 'escuro';
+    try { localStorage.setItem('qf-tema', raiz.dataset.tema); } catch (e) {}
+    sincronizar();
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    if (!raiz.dataset.tema) sincronizar();
+  });
+  sincronizar();
+})();
+</script>
+</body>
+</html>

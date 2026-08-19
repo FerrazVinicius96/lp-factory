@@ -1,0 +1,96 @@
+{
+  "direcao": "B — Humana e acolhedora",
+  "tipografia": {
+    "familia": "Literata (títulos e texto corrido) + Karla (rótulos, olho, controles)",
+    "razao": "Literata foi desenhada para leitura longa em tela de livro, e o único diferencial legítimo desta página é explicar o processo: serifa robusta de baixo contraste que soa como alguém sentado explicando, não como timbre de ofício, com acentuação portuguesa desenhada e não adaptada — Karla entra só nos rótulos para manter a hierarquia sem endurecer o texto.",
+    "escala": {
+      "principio": "razão 1.25 fluida por clamp, com medida de leitura travada em 62ch para o público não perder a linha",
+      "olho": "0.78rem",
+      "corpo": "clamp(1.02rem, 0.98rem + 0.22vw, 1.14rem)",
+      "corpo-guia": "clamp(1.16rem, 1.06rem + 0.5vw, 1.34rem)",
+      "titulo-secao": "clamp(1.62rem, 1.3rem + 1.5vw, 2.42rem)",
+      "titulo-hero": "clamp(2.18rem, 1.5rem + 3.1vw, 3.72rem)"
+    },
+    "entrelinha": {
+      "titulo": "1.14",
+      "corpo": "1.66",
+      "guia": "1.58"
+    }
+  },
+  "cor": {
+    "origem": "Derivada do material físico de um processo de família no Brasil — papel de certidão e livro de registro civil sob luz de fim de tarde — e deliberadamente não do azul-marinho institucional do setor: neutros quentes de papel, tinta marrom-escura no lugar de preto puro, e dois acentos de mesma temperatura para os dois caminhos (oliva de tinta de carimbo para o consensual, argila para o litigioso), porque marcar o litigioso de vermelho seria julgar a situação de quem chega.",
+    "escala": {
+      "claro-superficie": "#FCF7F0",
+      "claro-superficie-elevada": "#FFFBF5",
+      "claro-superficie-alterna": "#F4EADD",
+      "claro-conteudo": "#231C15",
+      "claro-conteudo-suave": "#57493C",
+      "claro-acento": "#3B5540",
+      "claro-acento-conteudo": "#FCF7F0",
+      "claro-caminho-consensual": "#3B5540",
+      "claro-caminho-litigioso": "#9C4B2C",
+      "claro-borda": "#E2D3C0",
+      "claro-borda-forte": "#8C7A5E",
+      "claro-dobra": "#EFE0CB",
+      "claro-foco": "#8A4A28",
+      "escuro-superficie": "#17130F",
+      "escuro-superficie-elevada": "#201A15",
+      "escuro-superficie-alterna": "#1C1713",
+      "escuro-conteudo": "#F0E7DA",
+      "escuro-conteudo-suave": "#BFB0A0",
+      "escuro-acento": "#A9C39B",
+      "escuro-acento-conteudo": "#17130F",
+      "escuro-caminho-consensual": "#A9C39B",
+      "escuro-caminho-litigioso": "#E3A183",
+      "escuro-borda": "#3B3128",
+      "escuro-borda-forte": "#857260",
+      "escuro-dobra": "#2E261F",
+      "escuro-foco": "#E3A183",
+      "claro-sombra": "rgba(35, 28, 21, 0.18)",
+      "escuro-sombra": "rgba(0, 0, 0, 0.55)"
+    },
+    "luz-de-janela": "Único degradê declarado do tema, exclusivo do hero: dois radiais suaves compostos apenas de superficie-elevada e superficie-alterna sobre a superfície base, simulando luz entrando pela esquerda em ambiente doméstico. Nenhuma cor nova entra por ele.",
+    "contraste": "Verificado nos dois temas: conteúdo/superfície 15.78 e 15.09; conteúdo suave 8.13 e 8.74; acento sobre papel 7.70 e 9.65; argila sobre papel 5.70 e 8.53; bordas de controle interativo em 3.89 e 4.02. Nenhum par abaixo de AA."
+  },
+  "motivo": {
+    "nome": "Dobra e vinco",
+    "descricao": "Todo contêiner de conteúdo tem o canto superior direito dobrado — corte em diagonal no papel mais o triângulo do avesso, em tom um passo mais escuro que a superfície — e as seções e itens são separados por vincos: filete de 1px com um entalhe curto no ponto onde o papel dobraria. Vem do documento que se dobra, se guarda e se reabre, que é o objeto concreto desse público; substitui o arredondamento uniforme e entrega borda macia sem arredondar tudo.",
+    "aplicacao": [
+      "hero",
+      "os dois caminhos",
+      "orientador de próximos passos",
+      "quem atende (pendência)",
+      "rodapé"
+    ]
+  },
+  "espacamento": {
+    "principio": "progressão tipo Fibonacci a partir de 4px — os incrementos crescem como respiração e evitam a régua de 8px uniforme, que é o que deixa página de escritório com cara de formulário",
+    "base": "4px",
+    "respiro-xs": "8px",
+    "respiro-sm": "12px",
+    "respiro-md": "20px",
+    "respiro-lg": "32px",
+    "respiro-xl": "52px",
+    "secao-densa": "clamp(44px, 6vw, 72px)",
+    "secao": "clamp(64px, 9vw, 116px)",
+    "margem-pagina": "clamp(20px, 5vw, 64px)",
+    "medida-leitura": "62ch"
+  },
+  "raio": {
+    "principio": "não uniforme por decisão: a dobra faz o papel do arredondamento nos contêineres, então cartão e seção ficam em 0 e o raio só existe onde a mão toca",
+    "cartao": "0",
+    "acao-primaria": "6px",
+    "acao-secundaria": "6px",
+    "opcao": "999px",
+    "campo": "3px",
+    "selo": "2px"
+  },
+  "sombra": {
+    "principio": "sombra não é acabamento padrão: só existe onde há papel de fato sobreposto a papel — um único elemento por tema a recebe — e a cor é marrom da tinta, nunca cinza-neutro",
+    "cor-claro": "rgba(35, 28, 21, 0.18)",
+    "cor-escuro": "rgba(0, 0, 0, 0.55)",
+    "carta-erguida": "drop-shadow(0 10px 16px var(--cor-sombra))",
+    "dobra": "não é sombra: o avesso do papel é um degradê de 225° do próprio tom de dobra, para a sombra não ser cortada pelo clip-path",
+    "foco": "0 0 0 3px rgba(138, 74, 40, 0.28)"
+  }
+}

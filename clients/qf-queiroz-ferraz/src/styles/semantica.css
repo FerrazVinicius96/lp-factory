@@ -1,0 +1,46 @@
+/* ============================================================
+   CAMADA SEMÂNTICA — papéis, não cores.
+
+   Este arquivo e o `theme.css` gerado são os DOIS únicos lugares da
+   base onde uma cor pode ser nomeada. No ponto de uso só existe
+   `var(--color-*)`; hex literal em componente reprova no gate visual.
+
+   Os tokens brutos (--color-papel, --color-tinta, ...) vêm de
+   `theme.css`, gerado por `npm run tokens` a partir de `tokens.json`.
+   Aqui eles viram papéis: superfície, conteúdo, acento, fio, foco.
+
+   Tema: `color-scheme: light dark` + `light-dark()`. O padrão segue a
+   preferência do sistema sem uma linha de JS e sem flash. O atributo
+   `data-tema` no <html> sobrepõe a preferência quando a pessoa escolhe
+   pelo botão do cabeçalho — trocando apenas o `color-scheme`, de modo
+   que nenhuma cor precisa ser redeclarada.
+
+   Contraste (medido sobre os pares abaixo, claro / escuro):
+     conteúdo        15,95 / 16,47
+     conteúdo-suave   8,34 /  8,21
+     anotação         5,74 /  9,19
+     acento           9,53 / 10,14
+     acento-conteúdo  9,53 / 10,14
+   Mínimo 5,20 (anotação sobre superfície-alt no claro). AA nos dois temas.
+
+   `--color-fio` é filete decorativo de 1px (1,6:1) e nunca é a única
+   borda de um controle: contorno de controle usa `--color-conteudo-suave`.
+   ============================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  --color-superficie:      light-dark(var(--color-papel),               var(--color-tinta-fundo));
+  --color-superficie-alt:  light-dark(var(--color-papel-fundo),         var(--color-tinta-alt));
+  --color-conteudo:        light-dark(var(--color-tinta),               var(--color-papel));
+  --color-conteudo-suave:  light-dark(var(--color-tinta-suave),         var(--color-cinza-tinta));
+  --color-acento:          light-dark(var(--color-verde-encadernacao),  var(--color-verde-lombada));
+  --color-acento-conteudo: light-dark(var(--color-papel),               var(--color-tinta-fundo));
+  --color-anotacao:        light-dark(var(--color-ocre-anotacao),       var(--color-ocre-anotacao-claro));
+  --color-fio:             light-dark(var(--color-papel-fio),           var(--color-tinta-fio));
+  --color-foco:            light-dark(var(--color-verde-encadernacao),  var(--color-verde-lombada));
+}
+
+/* Escolha explícita da pessoa. Só o color-scheme muda; light-dark() faz o resto. */
+:root[data-tema='claro']  { color-scheme: light; }
+:root[data-tema='escuro'] { color-scheme: dark; }

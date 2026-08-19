@@ -1,0 +1,65 @@
+---
+/**
+ * Rodape: o fio de margem deita e vira o fio horizontal de fechamento.
+ *
+ * A identificacao do escritorio (nome completo, inscricao na OAB, endereco) e
+ * obrigatoria antes de publicar e nao chegou no brief — fica como pendencia
+ * visivel, nunca preenchida com ficcao. A "Politica de Privacidade" entra na
+ * mesma lista pelo mesmo motivo: o documento nao existe ainda.
+ *
+ * O aviso de telemetria, esse sim, descreve o que a pagina realmente faz.
+ */
+import Pendencia from './Pendencia.astro';
+
+interface Props {
+  pendencias: string[];
+  avisoTelemetria: string;
+}
+
+const { pendencias, avisoTelemetria } = Astro.props;
+---
+
+<footer class="rodape">
+  <div>
+    <p class="rodape__marca">Q&amp;F Queiroz e Ferraz — Advocacia de Família</p>
+    <Pendencia selo="Pendência" itens={pendencias}>
+      <p>
+        Identificação completa do escritório e número de inscrição na OAB, obrigatórios antes de
+        publicar.
+      </p>
+    </Pendencia>
+  </div>
+  <div class="rodape__lado">
+    <p class="rotulo">Aviso de telemetria de performance</p>
+    <p class="rodape__nota" id="telemetria">{avisoTelemetria}</p>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    border-top: var(--spacing-fio) solid var(--color-conteudo-suave);
+    padding-block: var(--spacing-entre-blocos) var(--spacing-interno);
+    display: grid;
+    gap: var(--spacing-entre-blocos);
+  }
+
+  @media (min-width: 56rem) {
+    .rodape {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+      gap: var(--spacing-gutter);
+      align-items: start;
+    }
+  }
+
+  .rodape__marca {
+    font-family: var(--font-titulo);
+    font-size: 1.375rem;
+    margin-bottom: var(--spacing-entre-linhas-bloco);
+  }
+
+  .rodape__nota {
+    font-size: 0.875rem;
+    color: var(--color-conteudo-suave);
+    max-width: 40em;
+  }
+</style>

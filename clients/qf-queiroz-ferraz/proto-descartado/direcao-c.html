@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divórcio e dissolução de união estável — Q&amp;F Queiroz e Ferraz</title>
+<meta name="description" content="Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.">
+<meta name="robots" content="noindex">
+<script>try{var t=localStorage.getItem('qf-tema');if(t){document.documentElement.dataset.tema=t;}}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap">
+<style>
+/* ============================================================
+   DIREÇÃO C — Contemporânea e técnica
+   Motivo gráfico: "Pauta" — malha de filetes aparente, índices
+   de dois dígitos na margem, hachura a 45° para campo pendente.
+   ============================================================ */
+
+/* --- 1. Tokens: escala bruta --------------------------------- */
+:root{
+  --papel-100:#F5F3EE; --papel-200:#EBE8E0; --papel-300:#E2DED3; --papel-400:#CFCBBE;
+  --grafite-300:#A3A096; --grafite-400:#8A8478; --grafite-500:#6A6C61; --grafite-600:#54524A;
+  --tinta-700:#2E302C; --tinta-800:#202220; --tinta-850:#191A18; --tinta-900:#141412; --tinta-950:#101110;
+  --claro-200:#EDEAE1;
+  --assinatura-600:#1B3A9E; --assinatura-300:#9CB2E4;
+
+  --e1:4px; --e2:8px; --e3:12px; --e4:16px; --e5:24px; --e6:32px;
+  --e7:48px; --e8:64px; --e9:96px; --e10:128px; --e11:176px;
+  --medianiz:clamp(24px,3.2vw,48px);
+  --margem-secao:clamp(72px,9vw,160px);
+  --margem-lateral:clamp(16px,4vw,56px);
+  --largura-max:1280px;
+  --medida-texto:64ch;
+
+  --raio-nenhum:0px; --raio-campo:2px; --raio-marcador:999px;
+  --sombra-nenhuma:none;
+}
+
+/* --- 2. Tokens semânticos: tema claro (padrão) --------------- */
+:root{
+  color-scheme: light;
+  --cor-superficie:var(--papel-100);
+  --cor-superficie-recuo:var(--papel-200);
+  --cor-superficie-campo:var(--papel-300);
+  --cor-conteudo:var(--tinta-900);
+  --cor-conteudo-suave:var(--grafite-600);
+  --cor-filete:var(--papel-400);
+  --cor-filete-forte:var(--grafite-400);
+  --cor-acento:var(--assinatura-600);
+  --cor-acento-contraste:var(--papel-100);
+}
+
+/* --- 3. Tema escuro: por preferência do sistema -------------- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-tema="claro"]){
+    color-scheme: dark;
+    --cor-superficie:var(--tinta-950);
+    --cor-superficie-recuo:var(--tinta-850);
+    --cor-superficie-campo:var(--tinta-800);
+    --cor-conteudo:var(--claro-200);
+    --cor-conteudo-suave:var(--grafite-300);
+    --cor-filete:var(--tinta-700);
+    --cor-filete-forte:var(--grafite-500);
+    --cor-acento:var(--assinatura-300);
+    --cor-acento-contraste:var(--tinta-950);
+  }
+}
+/* --- 4. Tema escuro: por escolha explícita ------------------- */
+:root[data-tema="escuro"]{
+  color-scheme: dark;
+  --cor-superficie:var(--tinta-950);
+  --cor-superficie-recuo:var(--tinta-850);
+  --cor-superficie-campo:var(--tinta-800);
+  --cor-conteudo:var(--claro-200);
+  --cor-conteudo-suave:var(--grafite-300);
+  --cor-filete:var(--tinta-700);
+  --cor-filete-forte:var(--grafite-500);
+  --cor-acento:var(--assinatura-300);
+  --cor-acento-contraste:var(--tinta-950);
+}
+
+/* --- 5. Base ------------------------------------------------- */
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--cor-superficie);
+  color:var(--cor-conteudo);
+  font-family:'Archivo','Helvetica Neue',Arial,system-ui,sans-serif;
+  font-variation-settings:'wdth' 100,'wght' 400;
+  font-size:clamp(1.0625rem,0.98rem + 0.4vw,1.1875rem);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+p{margin:0 0 var(--e5);max-width:var(--medida-texto);}
+p:last-child{margin-bottom:0;}
+ul,ol{margin:0;padding:0;list-style:none;}
+a{color:inherit;}
+::selection{background:var(--cor-acento);color:var(--cor-acento-contraste);}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--cor-superficie),0 0 0 4px var(--cor-acento);}
+
+.env{max-width:var(--largura-max);margin-inline:auto;padding-inline:var(--margem-lateral);}
+
+/* --- 6. Sistema tipográfico: três degraus -------------------- */
+.rotulo{
+  font-variation-settings:'wdth' 116,'wght' 600;
+  font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--cor-conteudo-suave);margin:0;line-height:1.3;
+}
+.rotulo--acento{color:var(--cor-acento);}
+.indice{
+  font-variation-settings:'wdth' 116,'wght' 600;
+  font-variant-numeric:tabular-nums;font-size:0.72rem;letter-spacing:0.14em;
+  color:var(--cor-acento);
+}
+.indice--grande{font-size:clamp(2rem,4.5vw,3.25rem);letter-spacing:-0.01em;line-height:1;display:block;}
+h1,h2,h3{
+  font-variation-settings:'wdth' 94,'wght' 600;
+  letter-spacing:-0.02em;line-height:1.05;margin:0;text-wrap:balance;
+}
+h1{font-size:clamp(2.5rem,1.6rem + 4.2vw,5rem);max-width:19ch;}
+h2{font-size:clamp(1.85rem,1.3rem + 2.4vw,3.25rem);max-width:24ch;line-height:1.1;}
+h3{font-size:clamp(1.25rem,1.05rem + 0.9vw,1.6rem);line-height:1.2;}
+.lede{
+  font-size:clamp(1.15rem,1.02rem + 0.6vw,1.5rem);
+  line-height:1.5;color:var(--cor-conteudo-suave);max-width:52ch;
+}
+
+/* --- 7. MOTIVO "PAUTA": malha vertical ----------------------- */
+.malha{
+  position:absolute;inset:0;pointer-events:none;
+  max-width:var(--largura-max);margin-inline:auto;padding-inline:var(--margem-lateral);
+  display:grid;grid-template-columns:repeat(2,1fr);
+}
+.malha i{border-left:1px solid var(--cor-filete);}
+.malha i:last-child{border-right:1px solid var(--cor-filete);}
+.malha i:nth-child(n+3){display:none;}
+@media (min-width:900px){
+  .malha{grid-template-columns:repeat(4,1fr);}
+  .malha i:nth-child(n+3){display:block;}
+}
+
+/* --- 8. MOTIVO "PAUTA": filete de abertura + índice ---------- */
+.secao{padding-block:var(--margem-secao);position:relative;}
+.abertura{
+  border-top:1px solid var(--cor-filete-forte);
+  padding-top:var(--e3);margin-bottom:var(--e8);
+  display:flex;gap:var(--e4);align-items:baseline;flex-wrap:nowrap;
+}
+.abertura .indice{flex:none;}
+@media (min-width:760px){.abertura{gap:var(--e5);}}
+
+/* --- 9. MOTIVO "PAUTA": hachura de campo não preenchido ------ */
+.hachura{
+  background-image:repeating-linear-gradient(-45deg,var(--cor-filete) 0 1px,transparent 1px 10px);
+  background-color:var(--cor-superficie-recuo);
+}
+
+/* --- 10. Masthead + tema ------------------------------------- */
+.masthead{border-bottom:1px solid var(--cor-filete-forte);}
+.masthead .env{display:flex;align-items:center;gap:var(--e5);justify-content:space-between;padding-block:var(--e4);}
+.marca{font-variation-settings:'wdth' 116,'wght' 700;letter-spacing:0.06em;font-size:0.95rem;text-transform:uppercase;}
+.marca .marca-e{color:var(--cor-acento);}
+.masthead .rotulo{display:none;}
+@media (min-width:760px){.masthead .rotulo{display:block;}}
+.btn-tema{
+  display:inline-flex;align-items:center;gap:var(--e2);
+  font:inherit;font-variation-settings:'wdth' 116,'wght' 600;
+  font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;
+  background:transparent;color:var(--cor-conteudo);
+  border:1px solid var(--cor-filete-forte);border-radius:var(--raio-nenhum);
+  padding:10px 14px;cursor:pointer;box-shadow:var(--sombra-nenhuma);
+}
+.btn-tema:hover{border-color:var(--cor-acento);color:var(--cor-acento);}
+.btn-tema .ponto{
+  width:10px;height:10px;border-radius:var(--raio-marcador);
+  background:var(--cor-acento);flex:none;
+}
+
+/* --- 11. Hero ------------------------------------------------ */
+.hero{position:relative;padding-block:var(--e8) var(--margem-secao);}
+.hero .env{position:relative;}
+.hero .abertura{border-top:0;padding-top:0;margin-bottom:var(--e9);}
+.hero-corpo{display:grid;gap:var(--e7);}
+@media (min-width:1000px){
+  .hero-corpo{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--medianiz);align-items:end;}
+}
+.acoes{display:flex;flex-wrap:wrap;gap:var(--e4);margin-top:var(--e7);}
+.btn{
+  display:inline-flex;align-items:center;gap:var(--e3);
+  font-variation-settings:'wdth' 108,'wght' 600;
+  font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;padding:20px 30px;border-radius:var(--raio-nenhum);
+  box-shadow:var(--sombra-nenhuma);justify-content:center;text-align:center;
+}
+.btn--primario{background:var(--cor-acento);color:var(--cor-acento-contraste);border:1px solid var(--cor-acento);}
+.btn--primario:hover{background:transparent;color:var(--cor-acento);}
+.btn--secundario{background:transparent;color:var(--cor-conteudo);border:1px solid var(--cor-filete-forte);}
+.btn--secundario:hover{border-color:var(--cor-acento);color:var(--cor-acento);}
+
+/* --- 12. Reconhecimento: dúvidas como linhas de pauta -------- */
+.pauta-lista{margin-top:var(--e8);border-bottom:1px solid var(--cor-filete);}
+.pauta-lista li{
+  display:grid;grid-template-columns:3.25rem minmax(0,1fr);gap:var(--e4);
+  border-top:1px solid var(--cor-filete);padding-block:var(--e5);
+  font-size:clamp(1.15rem,1rem + 1.1vw,1.75rem);line-height:1.3;
+  font-variation-settings:'wdth' 98,'wght' 400;
+}
+.pauta-lista .indice{padding-top:0.55em;}
+.fechamento{
+  margin-top:var(--e8);font-size:clamp(1.15rem,1.02rem + 0.6vw,1.5rem);
+  line-height:1.45;max-width:46ch;border-left:2px solid var(--cor-acento);
+  padding-left:var(--e5);
+}
+
+/* --- 13. Os dois caminhos ------------------------------------ */
+.caminhos{display:grid;grid-template-columns:1fr;}
+.caminho{border-top:1px solid var(--cor-filete-forte);padding-block:var(--e6) var(--e8);}
+.caminho + .caminho{border-top:1px solid var(--cor-filete);}
+.caminho h3.rotulo{font-size:0.85rem;letter-spacing:0.16em;margin-block:var(--e4) var(--e5);}
+.caminho p{color:var(--cor-conteudo-suave);max-width:44ch;}
+@media (min-width:860px){
+  .caminhos{grid-template-columns:1fr 1fr;}
+  .caminho{padding-inline:var(--medianiz);}
+  .caminho:first-child{padding-left:0;}
+  .caminho + .caminho{border-top:1px solid var(--cor-filete-forte);border-left:1px solid var(--cor-filete-forte);padding-right:0;}
+}
+.caminhos-nota{
+  border-top:1px solid var(--cor-filete-forte);padding-top:var(--e5);
+  font-size:clamp(1.05rem,0.98rem + 0.5vw,1.3rem);max-width:60ch;
+}
+
+/* --- 14. Orientador ------------------------------------------ */
+.orientador-topo{display:flex;justify-content:space-between;gap:var(--e5);flex-wrap:wrap;align-items:flex-start;}
+.selo-maquete{
+  border:1px dashed var(--cor-filete-forte);padding:8px 12px;border-radius:var(--raio-nenhum);
+  color:var(--cor-conteudo-suave);flex:none;
+}
+.perguntas{margin-top:var(--e8);border-bottom:1px solid var(--cor-filete);}
+.pergunta-item{
+  border-top:1px solid var(--cor-filete);padding-block:var(--e6);
+  display:grid;grid-template-columns:3.25rem minmax(0,1fr);gap:var(--e4);
+}
+.pergunta{
+  font-variation-settings:'wdth' 96,'wght' 500;
+  font-size:clamp(1.15rem,1rem + 0.9vw,1.6rem);line-height:1.25;margin:0 0 var(--e5);max-width:34ch;
+}
+.opcoes{display:flex;flex-wrap:wrap;gap:var(--e3);}
+.opcao{
+  border:1px solid var(--cor-filete-forte);border-radius:var(--raio-campo);
+  padding:11px 20px;font-variation-settings:'wdth' 104,'wght' 500;
+  font-size:0.95rem;color:var(--cor-conteudo-suave);background:var(--cor-superficie);
+}
+.saidas{margin-top:var(--e9);}
+.saidas > .rotulo{margin-bottom:var(--e5);}
+.saida{
+  border-top:1px solid var(--cor-filete);padding-block:var(--e5);
+  display:grid;grid-template-columns:1fr;gap:var(--e3);
+}
+.saida:last-child{border-bottom:1px solid var(--cor-filete);}
+.saida-condicao{
+  font-variation-settings:'wdth' 104,'wght' 600;font-size:1rem;line-height:1.35;
+  color:var(--cor-conteudo);
+}
+.saida p{color:var(--cor-conteudo-suave);font-size:1rem;margin:0;max-width:70ch;}
+@media (min-width:900px){
+  .saida{grid-template-columns:minmax(0,15rem) 2rem minmax(0,1fr);gap:var(--e5);align-items:start;}
+  .saida-seta{color:var(--cor-acento);font-variation-settings:'wdth' 116,'wght' 600;}
+}
+.saida-seta{color:var(--cor-acento);}
+@media (max-width:899px){.saida-seta{display:none;}}
+.orientador-nota{margin-top:var(--e7);color:var(--cor-conteudo-suave);font-size:1rem;max-width:58ch;}
+
+/* --- 15. FAQ ------------------------------------------------- */
+.faq{border-bottom:1px solid var(--cor-filete);}
+.faq-item{
+  border-top:1px solid var(--cor-filete);padding-block:var(--e6);
+  display:grid;grid-template-columns:3.25rem minmax(0,1fr);gap:var(--e4);
+}
+.faq-item h3{margin-bottom:var(--e4);max-width:28ch;}
+.faq-item p{color:var(--cor-conteudo-suave);max-width:62ch;}
+@media (min-width:1000px){
+  .faq-item{grid-template-columns:3.25rem minmax(0,22rem) minmax(0,1fr);gap:var(--medianiz);}
+  .faq-item h3{margin-bottom:0;}
+}
+
+/* --- 16. Pendência: célula hachurada da pauta ---------------- */
+.pendencia{
+  border:1px solid var(--cor-filete-forte);
+  padding:var(--e5);margin-top:var(--e7);
+}
+.pendencia-corpo{background:var(--cor-superficie);padding:clamp(20px,3vw,40px);}
+.pendencia-tag{
+  display:inline-flex;align-items:center;gap:var(--e2);
+  border:1px solid var(--cor-acento);color:var(--cor-acento);
+  padding:7px 12px;margin-bottom:var(--e5);
+}
+.pendencia-tag .ponto{width:8px;height:8px;border-radius:var(--raio-marcador);background:var(--cor-acento);flex:none;}
+.pendencia-corpo p{color:var(--cor-conteudo-suave);max-width:58ch;}
+.pendencia-corpo p:first-of-type{color:var(--cor-conteudo);font-size:1.15rem;}
+.campos{margin-top:var(--e7);display:grid;gap:var(--e5);}
+@media (min-width:700px){.campos{grid-template-columns:1fr 1fr;column-gap:var(--medianiz);}}
+.campo .rotulo{margin-bottom:var(--e2);}
+.campo .linha-vazia{
+  height:2.25rem;border-bottom:1px solid var(--cor-filete-forte);
+  background:var(--cor-superficie-campo);border-radius:var(--raio-campo) var(--raio-campo) 0 0;
+}
+
+/* --- 17. Rodapé ---------------------------------------------- */
+.rodape{padding-bottom:var(--e8);}
+.rodape-grade{display:grid;gap:var(--e7);}
+@media (min-width:900px){.rodape-grade{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--medianiz);}}
+.rodape-marca{
+  font-variation-settings:'wdth' 94,'wght' 600;
+  font-size:clamp(1.5rem,1.2rem + 1.4vw,2.25rem);line-height:1.15;letter-spacing:-0.02em;
+  max-width:none;text-wrap:balance;
+}
+.rodape .pendencia{margin-top:0;}
+.rodape .pendencia + .pendencia{margin-top:var(--e5);}
+.rodape-fim{
+  margin-top:var(--e9);border-top:1px solid var(--cor-filete-forte);padding-top:var(--e4);
+  display:flex;flex-wrap:wrap;gap:var(--e5);justify-content:space-between;
+}
+.rodape-fim p{margin:0;max-width:none;}
+.rodape-fim a{color:var(--cor-conteudo-suave);text-decoration:none;border-bottom:1px solid var(--cor-filete-forte);}
+.rodape-fim a:hover{color:var(--cor-acento);border-color:var(--cor-acento);}
+
+/* --- 18. Acessibilidade -------------------------------------- */
+.pular{
+  position:absolute;left:-9999px;top:0;background:var(--cor-acento);color:var(--cor-acento-contraste);
+  padding:12px 18px;z-index:9;
+}
+.pular:focus{left:var(--margem-lateral);}
+
+/* --- 19. Motion: só scroll-linked, só se suportado ----------- */
+/* Nenhuma animação toca opacidade ou cor de texto: se o fim do documento
+   impedir o intervalo de se completar, nada fica ilegível. O movimento é
+   estrutural — o filete se traça, o bloco assenta na pauta. */
+@keyframes tracar{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0 0 0);}}
+@keyframes subir{from{transform:translateY(18px);}to{transform:none;}}
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    .abertura,.caminhos-nota{
+      animation:tracar linear both;
+      animation-timeline:view();
+      animation-range:entry 5% entry 45%;
+    }
+    .pauta-lista li,.caminho,.pergunta-item,.faq-item,.saida,.pendencia{
+      animation:subir linear both;
+      animation-timeline:view();
+      animation-range:entry 0% entry 35%;
+    }
+  }
+}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="masthead">
+  <div class="env">
+    <span class="marca">Q<span class="marca-e">&amp;</span>F&nbsp; Queiroz e Ferraz</span>
+    <span class="rotulo">Advocacia de família</span>
+    <button class="btn-tema" id="btn-tema" type="button">
+      <span class="ponto" aria-hidden="true"></span><span id="btn-tema-texto">Tema</span>
+    </button>
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <!-- ========== 00 · HERO ========== -->
+  <section class="hero">
+    <div class="malha" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">00</span>
+        <span class="rotulo">Divórcio e dissolução de união estável</span>
+      </div>
+      <div class="hero-corpo">
+        <div>
+          <h1>Antes de decidir qualquer coisa, entenda o que vem pela frente.</h1>
+          <div class="acoes">
+            <a class="btn btn--primario" href="#agendar"><span>Agendar uma conversa</span></a>
+            <a class="btn btn--secundario" href="#caminhos"><span>Ver como funciona o processo</span><span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <p class="lede">Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 01 · RECONHECIMENTO ========== -->
+  <section class="secao" id="reconhecimento">
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">01</span>
+        <span class="rotulo">Reconhecimento</span>
+      </div>
+      <h2>A maior parte das dúvidas não é jurídica. É sobre o que acontece com a sua vida.</h2>
+      <ul class="pauta-lista">
+        <li><span class="indice">01</span><span>Quanto tempo isso dura.</span></li>
+        <li><span class="indice">02</span><span>Se é preciso ir ao fórum.</span></li>
+        <li><span class="indice">03</span><span>O que muda na rotina das crianças.</span></li>
+        <li><span class="indice">04</span><span>O que acontece com a casa.</span></li>
+        <li><span class="indice">05</span><span>Se procurar um advogado significa transformar uma conversa difícil em uma disputa.</span></li>
+      </ul>
+      <p class="fechamento">São perguntas legítimas, e elas têm resposta antes de qualquer processo começar.</p>
+    </div>
+  </section>
+
+  <!-- ========== 02 · OS DOIS CAMINHOS ========== -->
+  <section class="secao" id="caminhos">
+    <div class="malha" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">02</span>
+        <span class="rotulo">Os dois caminhos</span>
+      </div>
+      <h2>Consensual ou litigioso: a diferença que muda tudo</h2>
+      <div class="caminhos" style="margin-top:var(--e8)">
+        <article class="caminho">
+          <span class="indice indice--grande">01</span>
+          <h3 class="rotulo rotulo--acento">Consensual</h3>
+          <p>Quando as duas partes concordam com os termos — partilha, convivência com os filhos, pensão. O acordo é formalizado e levado à homologação. Havendo consenso e não havendo filhos menores ou incapazes, pode ser feito em cartório.</p>
+        </article>
+        <article class="caminho">
+          <span class="indice indice--grande">02</span>
+          <h3 class="rotulo rotulo--acento">Litigioso</h3>
+          <p>Quando não há acordo sobre um ou mais pontos. O processo corre na Justiça e o juiz decide o que as partes não conseguiram decidir. Pode começar litigioso e virar consensual a qualquer momento — inclusive por mediação.</p>
+        </article>
+      </div>
+      <p class="caminhos-nota">Boa parte do trabalho de um advogado de família é ajudar a transformar o segundo caso no primeiro, quando isso é possível e do interesse das duas partes.</p>
+    </div>
+  </section>
+
+  <!-- ========== 03 · ORIENTADOR ========== -->
+  <section class="secao" id="orientador">
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">03</span>
+        <span class="rotulo">Orientador de próximos passos</span>
+      </div>
+      <div class="orientador-topo">
+        <h2>Sua situação, em três perguntas</h2>
+        <p class="rotulo selo-maquete">Maquete estática · interação a implementar</p>
+      </div>
+      <p class="lede" style="margin-top:var(--e5)">Não é uma consulta e não avalia o seu caso. Serve para você entender o caminho típico e chegar à conversa sabendo o que perguntar.</p>
+
+      <ol class="perguntas">
+        <li class="pergunta-item">
+          <span class="indice">01</span>
+          <div>
+            <p class="pergunta">Vocês concordam com os termos da separação?</p>
+            <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Parcialmente</span><span class="opcao">Não</span></div>
+          </div>
+        </li>
+        <li class="pergunta-item">
+          <span class="indice">02</span>
+          <div>
+            <p class="pergunta">Há filhos menores ou incapazes?</p>
+            <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span></div>
+          </div>
+        </li>
+        <li class="pergunta-item">
+          <span class="indice">03</span>
+          <div>
+            <p class="pergunta">Há bens a partilhar?</p>
+            <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span><span class="opcao">Ainda não sabemos</span></div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="saidas">
+        <p class="rotulo">Saídas possíveis</p>
+        <div class="saida">
+          <span class="saida-condicao">Consenso, sem filhos menores, com ou sem bens</span>
+          <span class="saida-seta" aria-hidden="true">→</span>
+          <p>caminho extrajudicial em cartório costuma ser possível. Documentos a separar: certidão de casamento, documentos pessoais, documentação dos bens.</p>
+        </div>
+        <div class="saida">
+          <span class="saida-condicao">Consenso, com filhos menores</span>
+          <span class="saida-seta" aria-hidden="true">→</span>
+          <p>exige via judicial mesmo havendo acordo, com participação do Ministério Público. Documentos: os anteriores mais certidões de nascimento.</p>
+        </div>
+        <div class="saida">
+          <span class="saida-condicao">Consenso parcial</span>
+          <span class="saida-seta" aria-hidden="true">→</span>
+          <p>é comum resolver os pontos acordados e discutir apenas os controversos, inclusive por mediação.</p>
+        </div>
+        <div class="saida">
+          <span class="saida-condicao">Sem consenso</span>
+          <span class="saida-seta" aria-hidden="true">→</span>
+          <p>via judicial. O primeiro passo costuma ser organizar documentação e definir prioridades antes de qualquer petição.</p>
+        </div>
+      </div>
+
+      <p class="orientador-nota">Cada caso tem particularidades que uma página não alcança. Este orientador não substitui a análise de um advogado.</p>
+    </div>
+  </section>
+
+  <!-- ========== 04 · PERGUNTAS FREQUENTES ========== -->
+  <section class="secao" id="faq">
+    <div class="malha" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">04</span>
+        <span class="rotulo">Perguntas frequentes</span>
+      </div>
+      <div class="faq">
+        <article class="faq-item">
+          <span class="indice">01</span>
+          <h3>Preciso ir ao fórum?</h3>
+          <p>Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado.</p>
+        </article>
+        <article class="faq-item">
+          <span class="indice">02</span>
+          <h3>Dá para fazer o divórcio se a outra parte não quiser?</h3>
+          <p>Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão.</p>
+        </article>
+        <article class="faq-item">
+          <span class="indice">03</span>
+          <h3>Quanto tempo demora?</h3>
+          <p>Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 05 · QUEM ATENDE (PENDÊNCIA) ========== -->
+  <section class="secao" id="quem-atende">
+    <div class="env">
+      <div class="abertura">
+        <span class="indice">05</span>
+        <span class="rotulo">Quem atende</span>
+      </div>
+      <h2>Quem vai conversar com você</h2>
+      <div class="pendencia hachura">
+        <div class="pendencia-corpo">
+          <p class="rotulo pendencia-tag"><span class="ponto" aria-hidden="true"></span>Pendência do cliente</p>
+          <p>Nomes completos, número de inscrição na OAB, formação e fotografias reais.</p>
+          <p>Esta seção não será preenchida com pessoas, títulos ou fotos fictícias. Enquanto o material não chegar, ela permanece marcada como pendência no protótipo e não vai ao ar.</p>
+          <div class="campos">
+            <div class="campo"><p class="rotulo">Nome completo</p><div class="linha-vazia"></div></div>
+            <div class="campo"><p class="rotulo">Inscrição na OAB</p><div class="linha-vazia"></div></div>
+            <div class="campo"><p class="rotulo">Formação</p><div class="linha-vazia"></div></div>
+            <div class="campo"><p class="rotulo">Fotografia real</p><div class="linha-vazia"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== 06 · RODAPÉ ========== -->
+<footer class="secao rodape" id="rodape">
+  <div class="env">
+    <div class="abertura">
+      <span class="indice">06</span>
+      <span class="rotulo">Identificação</span>
+    </div>
+    <div class="rodape-grade">
+      <p class="rodape-marca">Q&amp;F Queiroz e Ferraz — Advocacia de Família</p>
+      <div>
+        <div class="pendencia hachura" id="agendar">
+          <div class="pendencia-corpo">
+            <p class="rotulo pendencia-tag"><span class="ponto" aria-hidden="true"></span>Pendência do cliente</p>
+            <p>Canal de contato oficial para agendamento.</p>
+            <div class="campos">
+              <div class="campo"><p class="rotulo">Telefone</p><div class="linha-vazia"></div></div>
+              <div class="campo"><p class="rotulo">E-mail</p><div class="linha-vazia"></div></div>
+              <div class="campo"><p class="rotulo">Cidade e endereço</p><div class="linha-vazia"></div></div>
+              <div class="campo"><p class="rotulo">WhatsApp institucional</p><div class="linha-vazia"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="pendencia hachura">
+          <div class="pendencia-corpo">
+            <p class="rotulo pendencia-tag"><span class="ponto" aria-hidden="true"></span>Pendência</p>
+            <p>Identificação completa do escritório e número de inscrição na OAB, obrigatórios antes de publicar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rodape-fim">
+      <p class="rotulo"><a href="#rodape">Política de Privacidade</a> &nbsp;·&nbsp; <a href="#rodape">Aviso de telemetria de performance</a></p>
+      <p class="rotulo">Marca fictícia declarada · protótipo, direção C</p>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","inLanguage":"pt-BR","mainEntity":[
+{"@type":"Question","name":"Preciso ir ao fórum?","acceptedAnswer":{"@type":"Answer","text":"Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado."}},
+{"@type":"Question","name":"Dá para fazer o divórcio se a outra parte não quiser?","acceptedAnswer":{"@type":"Answer","text":"Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão."}},
+{"@type":"Question","name":"Quanto tempo demora?","acceptedAnswer":{"@type":"Answer","text":"Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute."}}]}
+</script>
+
+<script>
+(function(){
+  var raiz=document.documentElement,botao=document.getElementById('btn-tema'),texto=document.getElementById('btn-tema-texto'),chave='qf-tema';
+  function escuroAtivo(){
+    return raiz.dataset.tema ? raiz.dataset.tema==='escuro' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function pintar(){
+    var e=escuroAtivo();
+    texto.textContent=e?'Tema escuro':'Tema claro';
+    /* o nome acessível contém o texto visível (WCAG 2.5.3 Label in Name) */
+    botao.setAttribute('aria-label','Alternar tema. Atual: '+texto.textContent);
+  }
+  botao.addEventListener('click',function(){
+    raiz.dataset.tema=escuroAtivo()?'claro':'escuro';
+    try{localStorage.setItem(chave,raiz.dataset.tema);}catch(e){}
+    pintar();
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>

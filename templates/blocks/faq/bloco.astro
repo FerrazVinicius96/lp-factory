@@ -1,0 +1,97 @@
+---
+/**
+ * FAQ — perguntas e respostas curtas, todas abertas.
+ *
+ * Sem accordion, por decisão: são poucas respostas curtas que a pessoa quer ler
+ * de uma vez, e esconder texto atrás de um clique custaria JS para piorar a
+ * leitura, a busca da página (Ctrl+F) e a indexação. O filete entre itens já dá
+ * a hierarquia — sem caixa, sem cartão, sem ícone que gira.
+ *
+ * A mesma lista pode alimentar o dado estruturado `FAQPage` (`schema`): pergunta
+ * e resposta existem em um único lugar, então o schema não pode divergir da tela.
+ * JSON-LD não é JS de aplicação — não entra no orçamento de JS do nível.
+ *
+ * Árvore de títulos: o nível da pergunta entra por prop. Confira o heading
+ * anterior na página antes de escolher.
+ */
+interface Item {
+  pergunta: string;
+  resposta: string;
+}
+
+interface Props {
+  itens: Item[];
+  /** Emite o JSON-LD FAQPage a partir da mesma lista. Uma vez por página. */
+  schema?: boolean;
+  /** Nível do heading de cada pergunta. Escolha pelo contexto da página. */
+  nivelTitulo?: 2 | 3 | 4 | 5;
+  classe?: string;
+}
+
+const { itens, schema = false, nivelTitulo = 3, classe = '' } = Astro.props;
+
+const Titulo = `h${nivelTitulo}` as 'h2' | 'h3' | 'h4' | 'h5';
+
+const dados = schema
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: itens.map((i) => ({
+        '@type': 'Question',
+        name: i.pergunta,
+        acceptedAnswer: { '@type': 'Answer', text: i.resposta },
+      })),
+    }
+  : null;
+---
+
+<div class:list={['faq', classe]}>
+  {
+    itens.map((i) => (
+      <article class="faq__item">
+        <Titulo class="faq__pergunta">{i.pergunta}</Titulo>
+        <p class="faq__resposta">{i.resposta}</p>
+      </article>
+    ))
+  }
+</div>
+
+{
+  dados && (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(dados).replace(/</g, '\\u003c')}
+    />
+  )
+}
+
+<style>
+  .faq {
+    display: grid;
+  }
+
+  .faq__item {
+    border-top: var(--spacing-fio, 1px) solid var(--color-fio);
+    padding-block: var(--spacing-interno, 2rem);
+  }
+
+  .faq__item:last-child {
+    border-bottom: var(--spacing-fio, 1px) solid var(--color-fio);
+  }
+
+  .faq__pergunta {
+    font-family: var(--font-titulo, inherit);
+    font-weight: 400;
+    font-size: 1.375rem;
+    line-height: 1.2;
+    margin: 0 0 var(--spacing-chamada, 0.5rem);
+    max-width: 24ch;
+  }
+
+  .faq__resposta {
+    margin: 0;
+    max-width: var(--medida, 34em);
+    color: var(--color-conteudo-suave);
+  }
+</style>

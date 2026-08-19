@@ -1,0 +1,13 @@
+{
+  "name": "lp-factory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "slop:copy": "node plugin/scripts/anti-slop-copy.mjs",
+    "slop:visual": "node plugin/scripts/anti-slop-visual.mjs",
+    "budget": "node plugin/scripts/budget-check.mjs",
+    "gate": "node plugin/scripts/qa-gate.mjs",
+    "test:gates": "node plugin/scripts/selftest.mjs"
+  }
+}

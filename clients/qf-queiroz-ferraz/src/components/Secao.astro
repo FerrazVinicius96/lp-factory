@@ -1,0 +1,23 @@
+---
+/**
+ * A unidade do motivo grafico "fio de margem": duas colunas, o filete na
+ * borda da margem de anotacao e o numeral romano da secao dentro dela.
+ * Toda secao da pagina passa por aqui — e o que faz o fio ser continuo.
+ */
+interface Props {
+  numeral: string;
+  id?: string;
+  rotuladaPor: string;
+  pendencia?: boolean;
+  classe?: string;
+}
+
+const { numeral, id, rotuladaPor, pendencia = false, classe = '' } = Astro.props;
+
+const classes = ['secao', pendencia ? 'secao--pendencia' : '', classe].filter(Boolean).join(' ');
+---
+
+<section class={classes} id={id} aria-labelledby={rotuladaPor}>
+  <div class="margem"><span class="numeral" aria-hidden="true">{numeral}</span></div>
+  <div class="coluna"><slot /></div>
+</section>

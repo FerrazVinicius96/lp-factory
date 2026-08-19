@@ -1,0 +1,7 @@
+{
+  "name": "lp-vitals-collector",
+  "type": "module",
+  "private": true,
+  "scripts": { "start": "node server.mjs", "consultar": "node consultar.mjs" },
+  "dependencies": { "pg": "^8.13.0" }
+}

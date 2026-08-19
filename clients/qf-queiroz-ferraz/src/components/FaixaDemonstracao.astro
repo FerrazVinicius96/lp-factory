@@ -1,0 +1,51 @@
+---
+/**
+ * Faixa de demonstracao. Primeiro elemento do <body>, no fluxo normal.
+ *
+ * Ela ja foi `position: fixed` e isso era um defeito, nao uma decisao: em
+ * 320-768px o texto quebra em 2-3 linhas, a faixa passa de 68 a 106px de
+ * altura e cobre o cabecalho e o link de pular conteudo (WCAG 2.4.11).
+ * No fluxo o aviso continua sendo a primeira coisa lida e nao ha altura
+ * nenhuma para reservar — o defeito some na origem.
+ *
+ * Estilo do sistema, nao de alerta: papel-fundo, filete ocre embaixo e o
+ * mesmo versalete do resto da pagina.
+ */
+---
+
+<p class="faixa">
+  <span class="faixa__selo">Demonstração</span>
+  <span
+    >Q&amp;F Queiroz e Ferraz é uma marca fictícia. Esta página é um piloto técnico e não presta
+    serviço jurídico.</span
+  >
+</p>
+
+<style>
+  .faixa {
+    margin: 0;
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.85rem;
+    padding: 0.7rem var(--spacing-interno);
+    background: var(--color-superficie-alt);
+    border-bottom: var(--spacing-fio) solid var(--color-anotacao);
+    color: var(--color-conteudo);
+    font-size: 0.875rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .faixa__selo {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-anotacao);
+    border-bottom: var(--spacing-fio) solid var(--color-anotacao);
+    padding-bottom: 0.15rem;
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,59 @@
+{
+  "descricao": "Camada de conformidade para publicidade advocaticia no Brasil (Provimento 205/2021 da OAB e Codigo de Etica). Ativada por clients/<slug>/compliance contendo 'oab'. NAO substitui parecer juridico: e uma rede de seguranca contra o erro obvio, e a validacao final e da seccional.",
+  "fonte": "Provimento 205/2021 OAB. Confirmar interpretacao com a seccional do estado antes de publicar.",
+  "regras": [
+    {
+      "id": "oab-promessa-resultado",
+      "re": "\\b(garantimos|garantia de|asseguramos|ganhamos|voce vai ganhar|resultado garantido|alta chance de (vitoria|exito)|sucesso garantido)\\b",
+      "msg": "Promessa de resultado. Vedada na publicidade advocaticia."
+    },
+    {
+      "id": "oab-honorarios",
+      "re": "\\b(honorarios? a partir de|consulta gratuita|primeira consulta gratis|sem custo inicial|parcelamos|parcelamento em|desconto de|so paga se|exito de \\d+%)\\b",
+      "msg": "Referencia a valores, gratuidade ou forma de pagamento. Vedada."
+    },
+    {
+      "id": "oab-preco",
+      "re": "r\\$\\s?\\d",
+      "msg": "Valor monetario na pagina. Vedado em publicidade advocaticia."
+    },
+    {
+      "id": "oab-superlativo",
+      "re": "\\b(o melhor|a melhor|melhores advogad|maior escritorio|numero 1|n[o°]\\s?1|lider em|referencia nacional|mais premiado)\\b",
+      "msg": "Autopromocao comparativa ou superlativa. Vedada."
+    },
+    {
+      "id": "oab-especialista",
+      "re": "\\bespecialista em\\b",
+      "msg": "Uso de 'especialista' so e admitido com titulacao formal comprovada. Sem o titulo, use 'atuacao em'."
+    },
+    {
+      "id": "oab-caso-concreto",
+      "re": "\\b(caso de sucesso|casos de sucesso|conseguimos para (o|a) cliente|processo que ganhamos|vitoria (recente|no)\\b)",
+      "msg": "Caso concreto como argumento de venda. Vedado."
+    },
+    {
+      "id": "oab-captacao",
+      "re": "\\b(chame no whats agora|fale agora e garanta|vagas limitadas|ultimas vagas|so hoje|aproveite antes que)\\b",
+      "msg": "Mercantilizacao e captacao com apelo de urgencia. Vedadas."
+    },
+    {
+      "id": "oab-depoimento",
+      "re": "\\b(depoimento(s)? de clientes?|o que nossos clientes dizem|avaliacao de clientes)\\b",
+      "msg": "Depoimento de cliente e ponto controverso sob o Provimento 205. Nao publique sem confirmacao da seccional."
+    },
+    {
+      "id": "oab-ostentacao",
+      "re": "\\b(escritorio de luxo|estrutura de ponta|nossa sede premium)\\b",
+      "msg": "Ostentacao de estrutura. Vedada."
+    }
+  ],
+  "estrutural": [
+    "Sem secao de depoimentos ou avaliacoes ate confirmacao da seccional.",
+    "Sem contador de casos ganhos, valores recuperados ou taxa de exito.",
+    "Sem tabela de precos ou mencao a honorarios.",
+    "CTA informativo e passivo ('agendar uma conversa', 'entrar em contato'), nunca com urgencia artificial.",
+    "Identificar o escritorio com nome e numero de inscricao na OAB, conforme exigido.",
+    "Conteudo orientado a informacao juridica, nao a argumento de venda."
+  ]
+}

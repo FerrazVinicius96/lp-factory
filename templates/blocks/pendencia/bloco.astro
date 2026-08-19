@@ -1,0 +1,89 @@
+---
+/**
+ * PENDÊNCIA — a informação que o cliente ainda não entregou, exibida como falta.
+ *
+ * Existe para dar forma à regra de integridade da fábrica: prova social, número,
+ * selo, foto e dado de contato só entram se vierem do brief. Sem material, a
+ * seção não é preenchida com ficção — ela vira este bloco, que declara o que
+ * falta e de quem é a falta.
+ *
+ * O bloco não tem cor própria nem motivo gráfico. O tracejado é o único sinal
+ * visual e é semântico: borda incompleta para conteúdo incompleto. Se o tema
+ * quiser outro tratamento, redeclare `--traco-pendencia`.
+ *
+ * Estrutura: nenhum heading. O selo é um <span>, então o bloco pode ser inserido
+ * em qualquer profundidade da página sem abrir buraco na árvore de títulos.
+ */
+interface Props {
+  /** Texto do selo. Diga de quem é a pendência, não só que ela existe. */
+  selo?: string;
+  /** Itens que faltam, um por linha. O texto corrido entra pelo slot. */
+  itens?: string[];
+  /** Classe extra aplicada à raiz, para o tema posicionar o bloco. */
+  classe?: string;
+}
+
+const { selo = 'Pendência do cliente', itens = [], classe = '' } = Astro.props;
+---
+
+<div class:list={['pendencia', classe]}>
+  <span class="pendencia__selo">{selo}</span>
+  <slot />
+  {
+    itens.length > 0 && (
+      <ul class="pendencia__itens">
+        {itens.map((i) => (
+          <li>{i}</li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<style>
+  .pendencia {
+    border: var(--spacing-fio, 1px) var(--traco-pendencia, dashed)
+      var(--color-anotacao, var(--color-conteudo-suave));
+    border-radius: var(--radius-pendencia, 0);
+    padding: var(--spacing-interno, 2rem);
+    background: var(--color-superficie-alt, transparent);
+    max-width: 44em;
+  }
+
+  .pendencia__selo {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-anotacao, var(--color-conteudo-suave));
+    border-bottom: var(--spacing-fio, 1px) solid
+      var(--color-anotacao, var(--color-conteudo-suave));
+    padding-bottom: 0.3rem;
+    margin-bottom: var(--spacing-entre-linhas-bloco, 1.25rem);
+  }
+
+  /* O texto do slot não é escopado por este componente. */
+  .pendencia :global(p) {
+    color: var(--color-conteudo);
+    max-width: var(--medida, 34em);
+  }
+
+  .pendencia :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .pendencia__itens {
+    margin: var(--spacing-entre-linhas-bloco, 1.25rem) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: var(--color-conteudo-suave);
+  }
+
+  .pendencia__itens li {
+    border-left: var(--spacing-fio, 1px) var(--traco-pendencia, dashed) var(--color-fio);
+    padding-left: 0.9rem;
+  }
+</style>

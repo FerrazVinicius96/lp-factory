@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "descricao": "Assinatura visual de cada entrega. O lp-designer consulta antes de propor direcao: repetir familia tipografica, estrutura de hero e motivo no mesmo nicho e colisao. Janela de comparacao: ultimas 5 entregas do nicho.",
+  "entregas": [
+    {
+      "slug": "qf-queiroz-ferraz",
+      "data": "2026-08-19",
+      "nicho": "advocacia-familia",
+      "nivel": "avancado",
+      "direcao": "A — Editorial sóbria",
+      "assinatura": {
+        "tipografia": [
+          "Bodoni Moda",
+          "Newsreader"
+        ],
+        "paletaBase": "#F6F3EC",
+        "acento": "#A9B0A6",
+        "motivo": "Fio de margem",
+        "estruturaHero": "titulo-esquerda-numeral-margem"
+      }
+    }
+  ]
+}

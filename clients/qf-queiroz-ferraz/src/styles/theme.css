@@ -1,0 +1,38 @@
+/* Gerado por scripts/tokens-to-theme.mjs. Nao edite a mao.
+   Tipografia: Bodoni Moda (títulos e numerais de margem) + Newsreader (texto corrido, rótulos em versalete) — A Didone é a letra da publicação impressa séria — coleção de jurisprudência, caderno de análise — e sinaliza instituição sem recorrer a brasão ou dourado; Newsreader entra abaixo de 20px porque quem chega a esta página vai ler parágrafos inteiros sobre a própria separação, e o alto contraste da Bodoni quebra nesse tamanho.
+   Cor: Materiais físicos do próprio procedimento, não paleta de setor: papel avergoado de certidão, tinta ferrogálica de registro civil (preto-azulado, nunca preto puro) e o verde de encadernação de compêndios jurídicos. O verde é o acento porque é a cor institucional do direito que não é adversarial — não o azul corporativo nem o dourado de ostentação, vedado pela leitura do Provimento 205/2021.
+   Motivo grafico: Fio de margem — Um filete vertical de 1px corre à esquerda de toda a página, na posição da margem de anotação de uma edição impressa comentada. Dele saem traços horizontais curtos (fios de chamada) que marcam o início de cada bloco, e nele vivem os numerais romanos de seção em versalete ocre. O fio carrega significado, não ornamento: em 'os dois caminhos' ele se bifurca em dois filetes paralelos; no bloco de pendência ele passa a tracejado, porque a informação ainda não existe; no rodapé ele deita e vira um fio horizontal de fechamento de página. */
+@import "tailwindcss";
+
+@theme {
+  --color-papel: #F6F3EC;
+  --color-papel-fundo: #EDE8DD;
+  --color-papel-fio: #C9BFAB;
+  --color-tinta: #131A17;
+  --color-tinta-suave: #3F4A43;
+  --color-tinta-fundo: #121614;
+  --color-tinta-alt: #191E1B;
+  --color-tinta-fio: #333B36;
+  --color-verde-encadernacao: #1F4636;
+  --color-verde-lombada: #A8C9B2;
+  --color-ocre-anotacao: #6E5D40;
+  --color-ocre-anotacao-claro: #C6B78F;
+  --color-cinza-tinta: #A9B0A6;
+  --spacing-base: 8px;
+  --spacing-fio: 1px;
+  --spacing-chamada: 0.5rem;
+  --spacing-entre-linhas-bloco: 1.25rem;
+  --spacing-interno: 2rem;
+  --spacing-entre-blocos: 3.5rem;
+  --spacing-entre-secoes: clamp(5rem, 11vh, 9rem);
+  --spacing-respiro-hero: clamp(7rem, 20vh, 14rem);
+  --spacing-margem-anotacao: clamp(2.25rem, 9vw, 9.5rem);
+  --spacing-gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --radius-nenhum: 0;
+  --radius-controle: 2px;
+  --radius-recorte-pendencia: 0 0 0 14px;
+  --shadow-nenhuma: none;
+  --shadow-impressao: 1px 1px 0 var(--color-fio);
+  --font-titulo: 'Bodoni Moda', ui-serif, Georgia, serif;
+  --font-texto: 'Newsreader', ui-serif, Georgia, serif;
+}

@@ -1,0 +1,409 @@
+---
+/**
+ * Q&F Queiroz e Ferraz — divorcio e dissolucao de uniao estavel.
+ * Nivel `avancado`. Direcao A, "editorial sobria": motivo grafico "fio de margem".
+ *
+ * Todo o texto desta pagina vem verbatim de copy.md, aprovado em tres passes com
+ * a camada de conformidade `oab` ativa. O construtor nao reescreve copy.
+ *
+ * O conteudo mora aqui, no frontmatter, e nao em um modulo de dados, de proposito:
+ * o gate de copy varre .astro e precisa enxergar cada frase que vai ao ar.
+ */
+import Base from '../layouts/Base.astro';
+import FaixaDemonstracao from '../components/FaixaDemonstracao.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Secao from '../components/Secao.astro';
+import Bifurcacao from '../components/Bifurcacao.astro';
+import Orientador from '../components/Orientador.astro';
+import ListaDefinicoes from '../components/ListaDefinicoes.astro';
+import Pendencia from '../components/Pendencia.astro';
+import Faq from '../components/Faq.astro';
+import FormularioContato from '../components/FormularioContato.astro';
+import Rodape from '../components/Rodape.astro';
+
+const nivel = 'avancado';
+
+const titulo = 'Divórcio e dissolução de união estável — Q&F Queiroz e Ferraz';
+const descricao =
+  'Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.';
+
+/* Piloto tecnico publicado em URL publica de demonstracao. Nao ha dominio de
+   cliente: o endereco e o do proprio servico, sobrescritivel no deploy. */
+const site = Astro.site ?? new URL('https://qf-queiroz-ferraz.up.railway.app/');
+const canonical = new URL(Astro.url.pathname, site).href;
+
+/* --- 4. Orientador de proximos passos --- */
+const perguntas = [
+  {
+    nome: 'consenso',
+    numero: '01',
+    texto: 'Vocês concordam com os termos da separação?',
+    opcoes: [
+      { valor: 'sim', texto: 'Sim' },
+      { valor: 'parcial', texto: 'Parcialmente' },
+      { valor: 'nao', texto: 'Não' },
+    ],
+  },
+  {
+    nome: 'filhos',
+    numero: '02',
+    texto: 'Há filhos menores ou incapazes?',
+    opcoes: [
+      { valor: 'sim', texto: 'Sim' },
+      { valor: 'nao', texto: 'Não' },
+    ],
+  },
+  {
+    nome: 'bens',
+    numero: '03',
+    texto: 'Há bens a partilhar?',
+    opcoes: [
+      { valor: 'sim', texto: 'Sim' },
+      { valor: 'nao', texto: 'Não' },
+      { valor: 'talvez', texto: 'Ainda não sabemos' },
+    ],
+  },
+];
+
+const saidas = [
+  {
+    chave: 'extrajudicial',
+    termo: 'Consenso, sem filhos menores, com ou sem bens',
+    texto:
+      'Caminho extrajudicial em cartório costuma ser possível. Documentos a separar: certidão de casamento, documentos pessoais, documentação dos bens.',
+  },
+  {
+    chave: 'judicial-consensual',
+    termo: 'Consenso, com filhos menores',
+    texto:
+      'Exige via judicial mesmo havendo acordo, com participação do Ministério Público. Documentos: os anteriores mais certidões de nascimento.',
+  },
+  {
+    chave: 'parcial',
+    termo: 'Consenso parcial',
+    texto:
+      'É comum resolver os pontos acordados e discutir apenas os controversos, inclusive por mediação.',
+  },
+  {
+    chave: 'litigioso',
+    termo: 'Sem consenso',
+    texto:
+      'Via judicial. O primeiro passo costuma ser organizar documentação e definir prioridades antes de qualquer petição.',
+  },
+];
+
+/* --- 6. O que separar antes da primeira conversa ---
+   A mesma lista serve a secao VI e ao resultado do orientador, filtrada pelas
+   respostas. Um unico lugar para o texto; o orientador so decide o que mostrar. */
+const documentos = [
+  { condicao: 'sempre', texto: 'Certidão de casamento atualizada, ou comprovação da união estável' },
+  { condicao: 'sempre', texto: 'Documentos pessoais das duas partes' },
+  { condicao: 'filhos', texto: 'Certidão de nascimento dos filhos, se houver' },
+  { condicao: 'bens', texto: 'Documentação dos bens em nome de qualquer um dos dois' },
+  { condicao: 'sempre', texto: 'Comprovantes de renda, quando houver discussão sobre pensão' },
+  { condicao: 'bens', texto: 'Pacto antenupcial, se existir' },
+];
+
+/* --- 5. Linha do tempo --- */
+const etapas = [
+  { termo: 'Conversa inicial', texto: 'Entender a situação, mapear pontos de acordo e de conflito.' },
+  { termo: 'Documentação', texto: 'Reunir certidões, documentos pessoais e patrimoniais.' },
+  { termo: 'Definição do caminho', texto: 'Extrajudicial ou judicial, consensual ou litigioso.' },
+  { termo: 'Formalização', texto: 'Minuta do acordo ou petição inicial.' },
+  {
+    termo: 'Tramitação',
+    texto: 'Homologação em cartório, ou o rito judicial com manifestação das partes.',
+  },
+  { termo: 'Encerramento', texto: 'Averbação da sentença ou escritura no registro civil.' },
+];
+
+/* --- 7. Areas conexas --- */
+const areas = [
+  {
+    termo: 'Guarda e convivência',
+    texto: 'Como se define o regime e o que o juiz considera.',
+  },
+  {
+    termo: 'Pensão alimentícia',
+    texto: 'Quem paga, para quem, e o que entra na conta.',
+  },
+  {
+    termo: 'Partilha de bens',
+    texto: 'O que o regime de casamento determina sobre cada bem.',
+  },
+  {
+    termo: 'União estável',
+    texto: 'Reconhecimento, dissolução e efeitos patrimoniais.',
+  },
+];
+
+/* --- 9. Perguntas frequentes. Alimenta a secao e o FAQPage schema. --- */
+const faq = [
+  {
+    pergunta: 'Preciso ir ao fórum?',
+    resposta:
+      'Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado.',
+  },
+  {
+    pergunta: 'Dá para fazer o divórcio se a outra parte não quiser?',
+    resposta:
+      'Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão.',
+  },
+  {
+    pergunta: 'Quanto tempo demora?',
+    resposta:
+      'Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute.',
+  },
+  {
+    pergunta: 'Preciso de advogado se estamos de acordo?',
+    resposta:
+      'Sim. Mesmo no caminho extrajudicial, a lei exige assistência de advogado. As duas partes podem ser assistidas por profissionais diferentes ou, em algumas situações, pelo mesmo.',
+  },
+  {
+    pergunta: 'E se descobrirmos bens depois?',
+    resposta: 'Bens não incluídos na partilha podem ser objeto de sobrepartilha posterior.',
+  },
+  {
+    pergunta: 'Precisamos estar separados há quanto tempo?',
+    resposta:
+      'Não há prazo mínimo. A exigência de separação prévia foi eliminada pela Emenda Constitucional 66/2010.',
+  },
+];
+
+/* --- 8 e 11. Pendencias do cliente. Nada aqui e preenchido com ficcao. --- */
+const pendenciasEquipe = [
+  'Nome completo dos sócios e número de inscrição na OAB',
+  'Fotografias reais dos advogados e do escritório',
+  'Cidade e endereço de atendimento',
+  'Canal de contato oficial (telefone, e-mail, mensageria institucional)',
+];
+
+const pendenciasRodape = [
+  'Nome empresarial completo e número de inscrição da sociedade na OAB',
+  'Endereço do escritório',
+  'Política de Privacidade',
+];
+
+/* --- Dados estruturados ---
+   LegalService só com campo que existe: nada de endereço, telefone, inscrição
+   ou nota, porque nada disso veio do brief. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LegalService',
+    name: 'Q&F Queiroz e Ferraz — Advocacia de Família',
+    description: descricao,
+    disambiguatingDescription:
+      'Marca fictícia. Esta página é um piloto técnico de demonstração e não presta serviço jurídico.',
+    url: canonical,
+    inLanguage: 'pt-BR',
+    availableLanguage: 'pt-BR',
+    knowsAbout: [
+      'Divórcio consensual',
+      'Divórcio litigioso',
+      'Dissolução de união estável',
+      'Guarda e convivência',
+      'Pensão alimentícia',
+      'Partilha de bens',
+    ],
+  },
+];
+---
+
+<Base
+  titulo={titulo}
+  descricao={descricao}
+  nivel={nivel}
+  canonical={canonical}
+  schema={schema}
+  demonstracao
+>
+  <FaixaDemonstracao />
+  <a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+  <div class="folha">
+    <Cabecalho />
+
+    <main id="conteudo">
+      {/* I — HERO: o fio de margem nasce aqui */}
+      <Secao numeral="I" rotuladaPor="t-hero" classe="hero">
+        <p class="rotulo chamada">Divórcio e dissolução de união estável</p>
+        <h1 class="hero__titulo" id="t-hero">
+          Antes de decidir qualquer coisa, entenda o que vem pela frente.
+        </h1>
+        <p class="hero__sub">
+          Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se
+          decide em cada uma e o que dá para resolver por acordo.
+        </p>
+        <p class="acoes">
+          <a class="botao lp-interativo" href="#conversa">Agendar uma conversa</a>
+          <a class="elo lp-interativo" href="#caminhos">Ver como funciona o processo</a>
+        </p>
+      </Secao>
+
+      {/* II — RECONHECIMENTO */}
+      <Secao numeral="II" rotuladaPor="t-reconhecimento">
+        <h2 class="chamada" id="t-reconhecimento">
+          A maior parte das dúvidas não é jurídica. É sobre o que acontece com a sua vida.
+        </h2>
+        <p class="destaque">
+          Quanto tempo isso dura. Se é preciso ir ao fórum. O que muda na rotina das crianças. O que
+          acontece com a casa. Se procurar um advogado significa transformar uma conversa difícil em
+          uma disputa.
+        </p>
+        <p>São perguntas legítimas, e elas têm resposta antes de qualquer processo começar.</p>
+      </Secao>
+
+      {/* III — OS DOIS CAMINHOS: o fio se bifurca */}
+      <Secao numeral="III" id="caminhos" rotuladaPor="t-caminhos">
+        <h2 class="chamada" id="t-caminhos">Consensual ou litigioso: a diferença que muda tudo</h2>
+        <Bifurcacao rotuloA="A — Consensual" rotuloB="B — Litigioso">
+          <p slot="a">
+            Quando as duas partes concordam com os termos — partilha, convivência com os filhos,
+            pensão. O acordo é formalizado e levado à homologação. Havendo consenso e não havendo
+            filhos menores ou incapazes, pode ser feito em cartório.
+          </p>
+          <p slot="b">
+            Quando não há acordo sobre um ou mais pontos. O processo corre na Justiça e o juiz decide
+            o que as partes não conseguiram decidir. Pode começar litigioso e virar consensual a
+            qualquer momento — inclusive por mediação.
+          </p>
+        </Bifurcacao>
+        <p class="fecho">
+          Boa parte do trabalho de um advogado de família é ajudar a transformar o segundo caso no
+          primeiro, quando isso é possível e do interesse das duas partes.
+        </p>
+      </Secao>
+
+      {/* IV — ORIENTADOR DE PRÓXIMOS PASSOS: a ilha interativa */}
+      <Secao numeral="IV" id="orientador" rotuladaPor="t-orientador">
+        <h2 class="chamada" id="t-orientador">Sua situação, em três perguntas</h2>
+        <p class="nota-bloco">
+          Não é uma consulta e não avalia o seu caso. Serve para você entender o caminho típico e
+          chegar à conversa sabendo o que perguntar.
+        </p>
+        <Orientador
+          perguntas={perguntas}
+          saidas={saidas}
+          documentos={documentos}
+          aviso="Cada caso tem particularidades que uma página não alcança. Este orientador não substitui a análise de um advogado."
+        />
+      </Secao>
+
+      {/* V — LINHA DO TEMPO */}
+      <Secao numeral="V" rotuladaPor="t-etapas">
+        <h2 class="chamada" id="t-etapas">As etapas, na ordem em que costumam acontecer</h2>
+        <ListaDefinicoes itens={etapas} ordenada />
+      </Secao>
+
+      {/* VI — DOCUMENTOS A SEPARAR */}
+      <Secao numeral="VI" rotuladaPor="t-documentos">
+        <h2 class="chamada" id="t-documentos">O que separar antes da primeira conversa</h2>
+        <ul class="lista-fio">
+          {documentos.map((d) => <li>{d.texto}</li>)}
+        </ul>
+        <p class="rodape-bloco">
+          Não é preciso ter tudo em mãos para conversar. A lista serve para você saber onde procurar.
+        </p>
+      </Secao>
+
+      {/* VII — ÁREAS CONEXAS */}
+      <Secao numeral="VII" rotuladaPor="t-conexas">
+        <h2 class="chamada" id="t-conexas">O que costuma vir junto</h2>
+        <ListaDefinicoes itens={areas} />
+        <div class="apos-lista">
+          <Pendencia selo="Pendência de conteúdo">
+            <p>
+              Cada tema previsto no conteúdo aprovado leva a uma página própria. Essas páginas ainda
+              não existem, então os quatro temas acima ficam sem link até que sejam escritas.
+            </p>
+          </Pendencia>
+        </div>
+      </Secao>
+
+      {/* VIII — QUEM ATENDE: o fio vira tracejado */}
+      <Secao numeral="VIII" id="atendimento" rotuladaPor="t-atendimento" pendencia>
+        <h2 class="chamada" id="t-atendimento">Quem vai conversar com você</h2>
+        <Pendencia itens={pendenciasEquipe}>
+          <p>Nomes completos, número de inscrição na OAB, formação e fotografias reais.</p>
+          <p>
+            Esta seção não será preenchida com pessoas, títulos ou fotos fictícias. Enquanto o
+            material não chegar, ela permanece marcada como pendência e não vai ao ar.
+          </p>
+        </Pendencia>
+      </Secao>
+
+      {/* IX — PERGUNTAS FREQUENTES */}
+      <Secao numeral="IX" rotuladaPor="t-faq">
+        <h2 class="chamada" id="t-faq">Perguntas frequentes</h2>
+        <Faq itens={faq} />
+      </Secao>
+
+      {/* X — ENCERRAMENTO */}
+      <Secao numeral="X" id="conversa" rotuladaPor="t-conversa">
+        <h2 class="chamada" id="t-conversa">Uma conversa antes de qualquer decisão</h2>
+        <p class="destaque">
+          O primeiro contato serve para entender a situação e explicar os caminhos possíveis. Nada é
+          iniciado sem que você entenda o que está sendo feito e por quê.
+        </p>
+        <FormularioContato avisoPrivacidade="Aviso de privacidade: os dados são usados apenas para retorno do contato." />
+      </Secao>
+    </main>
+
+    <Rodape
+      pendencias={pendenciasRodape}
+      avisoTelemetria="Esta página mede no próprio navegador os tempos de carregamento, de estabilidade visual e de resposta à primeira interação, e envia esses números de desempenho. Nenhum campo do formulário e nenhum dado de identificação entram nessa medição."
+    />
+  </div>
+</Base>
+
+<style>
+  /* `.hero` (na <section>, dentro de Secao.astro) vive em sistema.css:
+     o escopo de estilo do Astro para aqui, e a classe atravessa por prop. */
+  .hero__titulo {
+    font-size: clamp(2.6rem, 6.2vw, 5.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.022em;
+    margin: 0 0 var(--spacing-interno);
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  .hero__sub {
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-conteudo-suave);
+    max-width: 30em;
+    margin-bottom: var(--spacing-entre-blocos);
+  }
+
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-interno);
+    max-width: none;
+    margin-bottom: 0;
+  }
+
+  .apos-lista { margin-top: var(--spacing-entre-blocos); }
+
+  @media (max-width: 40rem) {
+    .hero__sub { font-size: 1.125rem; }
+
+    .acoes {
+      gap: var(--spacing-entre-linhas-bloco);
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

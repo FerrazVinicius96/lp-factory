@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divórcio e dissolução de união estável — Q&amp;F Queiroz e Ferraz</title>
+<meta name="description" content="Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DIREÇÃO A — EDITORIAL SÓBRIA
+   Motivo gráfico: "Fio de margem"
+   Todos os valores derivam de proto/tokens-a.json
+   ============================================================ */
+
+/* --- tokens brutos --- */
+:root {
+  --papel: #F6F3EC;
+  --papel-fundo: #EDE8DD;
+  --papel-fio: #C9BFAB;
+  --tinta: #131A17;
+  --tinta-suave: #3F4A43;
+  --tinta-fundo: #121614;
+  --tinta-alt: #191E1B;
+  --tinta-fio: #333B36;
+  --verde-encadernacao: #1F4636;
+  --verde-lombada: #A8C9B2;
+  --ocre-anotacao: #6E5D40;
+  --ocre-anotacao-claro: #C6B78F;
+  --cinza-tinta: #A9B0A6;
+
+  /* espaçamento */
+  --e-fio: 1px;
+  --e-chamada: .5rem;
+  --e-linha: 1.25rem;
+  --e-interno: 2rem;
+  --e-bloco: 3.5rem;
+  --e-secao: clamp(5rem, 11vh, 9rem);
+  --e-hero: clamp(7rem, 20vh, 14rem);
+  --margem: clamp(2.25rem, 9vw, 9.5rem);
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --medida: 34em;
+
+  /* raio */
+  --raio-nenhum: 0;
+  --raio-controle: 2px;
+  --raio-recorte: 0 0 0 14px;
+}
+
+/* --- tokens semânticos: tema claro (padrão) --- */
+:root {
+  --cor-superficie: var(--papel);
+  --cor-superficie-alt: var(--papel-fundo);
+  --cor-conteudo: var(--tinta);
+  --cor-conteudo-suave: var(--tinta-suave);
+  --cor-acento: var(--verde-encadernacao);
+  --cor-acento-conteudo: var(--papel);
+  --cor-anotacao: var(--ocre-anotacao);
+  --cor-fio: var(--papel-fio);
+  --sombra-impressao: 1px 1px 0 var(--cor-fio);
+}
+
+/* --- tema escuro por preferência do sistema --- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --cor-superficie: var(--tinta-fundo);
+    --cor-superficie-alt: var(--tinta-alt);
+    --cor-conteudo: #EDE8DD;
+    --cor-conteudo-suave: var(--cinza-tinta);
+    --cor-acento: var(--verde-lombada);
+    --cor-acento-conteudo: var(--tinta-fundo);
+    --cor-anotacao: var(--ocre-anotacao-claro);
+    --cor-fio: var(--tinta-fio);
+  }
+}
+
+/* --- tema escuro por escolha explícita --- */
+:root[data-tema="escuro"] {
+  --cor-superficie: var(--tinta-fundo);
+  --cor-superficie-alt: var(--tinta-alt);
+  --cor-conteudo: #EDE8DD;
+  --cor-conteudo-suave: var(--cinza-tinta);
+  --cor-acento: var(--verde-lombada);
+  --cor-acento-conteudo: var(--tinta-fundo);
+  --cor-anotacao: var(--ocre-anotacao-claro);
+  --cor-fio: var(--tinta-fio);
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--cor-superficie);
+  color: var(--cor-conteudo);
+  font-family: "Newsreader", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.0625rem, .35vw + 1rem, 1.1875rem);
+  line-height: 1.65;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, .numeral, .marca__sigla {
+  font-family: "Bodoni Moda", "Didot", Georgia, serif;
+  font-weight: 400;
+  font-optical-sizing: auto;
+}
+p { margin: 0 0 var(--e-linha); max-width: var(--medida); }
+p:last-child { margin-bottom: 0; }
+a { color: inherit; }
+:focus-visible {
+  outline: 2px solid var(--cor-acento);
+  outline-offset: 3px;
+}
+.pular {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--cor-acento); color: var(--cor-acento-conteudo);
+  padding: .65rem 1rem; z-index: 9;
+}
+.pular:focus { left: 0; }
+
+/* ---------- rótulo em versalete ---------- */
+.rotulo {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: .75rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cor-anotacao);
+  margin: 0 0 var(--e-chamada);
+  font-weight: 500;
+}
+
+/* ============================================================
+   MOTIVO GRÁFICO — FIO DE MARGEM
+   grid de duas colunas: margem de anotação + coluna de texto.
+   O filete vertical vive na borda direita da coluna de margem.
+   ============================================================ */
+.folha {
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.secao {
+  display: grid;
+  grid-template-columns: var(--margem) minmax(0, 1fr);
+  padding-block: var(--e-secao);
+}
+.secao > .margem {
+  border-right: var(--e-fio) solid var(--cor-fio);
+  padding-right: var(--e-chamada);
+  text-align: right;
+}
+.secao > .coluna { padding-left: var(--gutter); }
+
+/* numeral romano na margem */
+.numeral {
+  font-size: 1rem;
+  letter-spacing: .08em;
+  color: var(--cor-anotacao);
+  position: sticky;
+  top: 2rem;
+  display: block;
+}
+
+/* fio de chamada: traço horizontal curto que sai do filete */
+.chamada { position: relative; }
+.chamada::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--gutter) * -1);
+  top: .72em;
+  width: var(--gutter);
+  height: var(--e-fio);
+  background: var(--cor-fio);
+  transform-origin: left center;
+}
+
+h2.chamada::before { top: .58em; }
+h2 {
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -.01em;
+  margin: 0 0 var(--e-interno);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+h3 {
+  font-size: 1.375rem;
+  line-height: 1.2;
+  margin: 0 0 var(--e-chamada);
+}
+
+/* ---------- cabeçalho ---------- */
+.topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e-interno);
+  padding-block: 1.6rem 1.4rem;
+  border-bottom: var(--e-fio) solid var(--cor-fio);
+  flex-wrap: wrap;
+}
+.marca { display: flex; align-items: baseline; gap: .9rem; }
+.marca__sigla {
+  font-size: 1.6rem;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.marca__nome {
+  font-size: .75rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cor-conteudo-suave);
+}
+.tema {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: .75rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cor-conteudo);
+  background: transparent;
+  border: var(--e-fio) solid var(--cor-conteudo-suave);
+  border-radius: var(--raio-controle);
+  padding: .45rem .85rem;
+  cursor: pointer;
+  box-shadow: var(--sombra-impressao);
+}
+.tema:hover { border-color: var(--cor-acento); color: var(--cor-acento); }
+
+/* ---------- hero ---------- */
+.hero { padding-block: var(--e-hero) var(--e-secao); }
+.hero h1 {
+  font-size: clamp(2.6rem, 6.2vw, 5.2rem);
+  line-height: .98;
+  letter-spacing: -.022em;
+  margin: 0 0 var(--e-interno);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+.hero__sub {
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--cor-conteudo-suave);
+  max-width: 30em;
+  margin-bottom: var(--e-bloco);
+}
+.acoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-interno); }
+.botao {
+  display: inline-block;
+  background: var(--cor-acento);
+  color: var(--cor-acento-conteudo);
+  text-decoration: none;
+  font-size: .8125rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 1.05rem 2rem;
+  border-radius: var(--raio-nenhum);
+}
+.botao:hover { background: var(--cor-conteudo); color: var(--cor-superficie); }
+.elo {
+  font-size: .9375rem;
+  color: var(--cor-conteudo);
+  text-decoration: none;
+  border-bottom: var(--e-fio) solid var(--cor-acento);
+  padding-bottom: .2rem;
+}
+.elo:hover { border-bottom-width: 2px; }
+
+/* ---------- reconhecimento ---------- */
+.destaque {
+  font-size: 1.375rem;
+  line-height: 1.5;
+  max-width: 30em;
+}
+.enumeracao {
+  margin: 0 0 var(--e-linha);
+  max-width: var(--medida);
+  color: var(--cor-conteudo-suave);
+}
+
+/* ---------- os dois caminhos: o fio se bifurca ---------- */
+.bifurcacao {
+  display: grid;
+  gap: var(--e-bloco);
+  margin-bottom: var(--e-bloco);
+}
+@media (min-width: 56rem) {
+  .bifurcacao { grid-template-columns: 1fr 1fr; gap: var(--gutter); }
+}
+.caminho {
+  border-left: var(--e-fio) solid var(--cor-fio);
+  padding-left: var(--e-interno);
+  position: relative;
+}
+.caminho::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0;
+  width: 2.25rem; height: var(--e-fio);
+  background: var(--cor-acento);
+  transform-origin: left center;
+}
+.caminho .rotulo { margin-top: var(--e-chamada); }
+.fecho {
+  font-style: italic;
+  font-family: "Bodoni Moda", Georgia, serif;
+  font-size: 1.375rem;
+  line-height: 1.45;
+  max-width: 32em;
+  border-top: var(--e-fio) solid var(--cor-fio);
+  padding-top: var(--e-interno);
+}
+
+/* ---------- orientador ---------- */
+.nota-bloco {
+  color: var(--cor-conteudo-suave);
+  font-size: 1rem;
+  max-width: 34em;
+  margin-bottom: var(--e-bloco);
+}
+.perguntas { list-style: none; margin: 0 0 var(--e-bloco); padding: 0; }
+.pergunta {
+  border-top: var(--e-fio) solid var(--cor-fio);
+  padding-block: var(--e-interno);
+  display: grid;
+  gap: var(--e-linha);
+}
+@media (min-width: 56rem) {
+  .pergunta { grid-template-columns: 3.5rem minmax(0, 1fr); align-items: start; gap: var(--gutter); }
+}
+.pergunta__num {
+  font-family: "Bodoni Moda", Georgia, serif;
+  font-size: 1rem;
+  color: var(--cor-anotacao);
+  letter-spacing: .08em;
+}
+.pergunta__texto { font-size: 1.25rem; line-height: 1.4; margin: 0 0 var(--e-linha); max-width: 26em; }
+.opcoes { display: flex; flex-wrap: wrap; gap: .65rem; }
+.opcao {
+  font-size: .8125rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cor-conteudo-suave);
+  border: var(--e-fio) solid var(--cor-fio);
+  border-radius: var(--raio-controle);
+  padding: .55rem 1.1rem;
+}
+.saidas { border-top: var(--e-fio) solid var(--cor-fio); padding-top: var(--e-interno); }
+.saidas dl { margin: 0; display: grid; gap: var(--e-interno); }
+.saidas dt {
+  font-size: .8125rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cor-acento);
+  margin-bottom: .35rem;
+}
+.saidas dd { margin: 0; max-width: var(--medida); color: var(--cor-conteudo-suave); }
+.rodape-bloco {
+  margin-top: var(--e-bloco);
+  font-size: 1rem;
+  color: var(--cor-conteudo-suave);
+  border-top: var(--e-fio) solid var(--cor-fio);
+  padding-top: var(--e-linha);
+  max-width: 34em;
+}
+
+/* ---------- FAQ ---------- */
+.faq { display: grid; }
+.faq__item {
+  border-top: var(--e-fio) solid var(--cor-fio);
+  padding-block: var(--e-interno);
+}
+.faq__item:last-child { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.faq__item h3 { max-width: 24ch; }
+.faq__item p { color: var(--cor-conteudo-suave); }
+
+/* ---------- pendência: o fio vira tracejado ---------- */
+.secao--pendencia > .margem {
+  border-right-style: dashed;
+}
+.pendencia {
+  border: var(--e-fio) dashed var(--cor-anotacao);
+  border-radius: var(--raio-recorte);
+  padding: var(--e-interno);
+  background: var(--cor-superficie-alt);
+  max-width: 40em;
+}
+.pendencia__selo {
+  font-size: .75rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cor-anotacao);
+  display: inline-block;
+  border-bottom: var(--e-fio) solid var(--cor-anotacao);
+  padding-bottom: .3rem;
+  margin-bottom: var(--e-linha);
+}
+.pendencia p { color: var(--cor-conteudo); }
+.pendencia ul {
+  margin: var(--e-linha) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .5rem;
+  color: var(--cor-conteudo-suave);
+  font-size: 1rem;
+}
+.pendencia li { border-left: var(--e-fio) dashed var(--cor-fio); padding-left: .9rem; }
+
+/* ---------- rodapé: o fio deita ---------- */
+.rodape {
+  border-top: var(--e-fio) solid var(--cor-conteudo-suave);
+  padding-block: var(--e-bloco) var(--e-interno);
+  display: grid;
+  gap: var(--e-interno);
+}
+@media (min-width: 56rem) {
+  .rodape { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+}
+.rodape__marca { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.375rem; margin-bottom: var(--e-chamada); }
+.rodape__elos { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; font-size: .9375rem; color: var(--cor-conteudo-suave); }
+.rodape__elos a { text-decoration: none; border-bottom: var(--e-fio) solid var(--cor-fio); }
+.rodape__elos a:hover { border-bottom-color: var(--cor-acento); }
+.rodape__nota { font-size: .875rem; color: var(--cor-conteudo-suave); max-width: 40em; }
+
+/* ---------- motion: só CSS, só scroll-linked, desligável ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .chamada::before,
+    .caminho::before {
+      animation: tracar linear both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 70%;
+    }
+    .numeral, .pergunta__num {
+      animation: surgir linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+@keyframes tracar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes surgir {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- telas estreitas ---------- */
+@media (max-width: 40rem) {
+  .secao > .coluna { padding-left: var(--e-interno); }
+  .chamada::before { left: calc(var(--e-interno) * -1); width: var(--e-interno); }
+  .numeral { font-size: .8125rem; position: static; }
+  .hero__sub { font-size: 1.125rem; }
+  .acoes { gap: var(--e-linha); align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+<div class="folha">
+
+  <header class="topo">
+    <div class="marca">
+      <span class="marca__sigla">Q&amp;F</span>
+      <span class="marca__nome">Queiroz e Ferraz · Advocacia de Família</span>
+    </div>
+    <button class="tema" type="button" id="tema" aria-pressed="false">Tema escuro</button>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- 1. HERO — o fio de margem nasce aqui -->
+    <section class="secao hero" aria-labelledby="t-hero">
+      <div class="margem"><span class="numeral">I</span></div>
+      <div class="coluna">
+        <p class="rotulo chamada">Divórcio e dissolução de união estável</p>
+        <h1 id="t-hero">Antes de decidir qualquer coisa, entenda o que vem pela frente.</h1>
+        <p class="hero__sub">Divórcio e dissolução de união estável explicados sem juridiquês: as etapas, o que se decide em cada uma e o que dá para resolver por acordo.</p>
+        <div class="acoes">
+          <a class="botao" href="#atendimento">Agendar uma conversa</a>
+          <a class="elo" href="#caminhos">Ver como funciona o processo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. RECONHECIMENTO -->
+    <section class="secao" aria-labelledby="t-reconhecimento">
+      <div class="margem"><span class="numeral">II</span></div>
+      <div class="coluna">
+        <h2 class="chamada" id="t-reconhecimento">A maior parte das dúvidas não é jurídica. É sobre o que acontece com a sua vida.</h2>
+        <p class="destaque">Quanto tempo isso dura. Se é preciso ir ao fórum. O que muda na rotina das crianças. O que acontece com a casa. Se procurar um advogado significa transformar uma conversa difícil em uma disputa.</p>
+        <p>São perguntas legítimas, e elas têm resposta antes de qualquer processo começar.</p>
+      </div>
+    </section>
+
+    <!-- 3. OS DOIS CAMINHOS — o fio se bifurca -->
+    <section class="secao" id="caminhos" aria-labelledby="t-caminhos">
+      <div class="margem"><span class="numeral">III</span></div>
+      <div class="coluna">
+        <h2 class="chamada" id="t-caminhos">Consensual ou litigioso: a diferença que muda tudo</h2>
+        <div class="bifurcacao">
+          <article class="caminho">
+            <p class="rotulo">A — Consensual</p>
+            <p>Quando as duas partes concordam com os termos — partilha, convivência com os filhos, pensão. O acordo é formalizado e levado à homologação. Havendo consenso e não havendo filhos menores ou incapazes, pode ser feito em cartório.</p>
+          </article>
+          <article class="caminho">
+            <p class="rotulo">B — Litigioso</p>
+            <p>Quando não há acordo sobre um ou mais pontos. O processo corre na Justiça e o juiz decide o que as partes não conseguiram decidir. Pode começar litigioso e virar consensual a qualquer momento — inclusive por mediação.</p>
+          </article>
+        </div>
+        <p class="fecho">Boa parte do trabalho de um advogado de família é ajudar a transformar o segundo caso no primeiro, quando isso é possível e do interesse das duas partes.</p>
+      </div>
+    </section>
+
+    <!-- 4. ORIENTADOR — maquete estática -->
+    <section class="secao" id="orientador" aria-labelledby="t-orientador">
+      <div class="margem"><span class="numeral">IV</span></div>
+      <div class="coluna">
+        <h2 class="chamada" id="t-orientador">Sua situação, em três perguntas</h2>
+        <p class="nota-bloco">Não é uma consulta e não avalia o seu caso. Serve para você entender o caminho típico e chegar à conversa sabendo o que perguntar.</p>
+
+        <ol class="perguntas">
+          <li class="pergunta">
+            <span class="pergunta__num" aria-hidden="true">01</span>
+            <div>
+              <p class="pergunta__texto">Vocês concordam com os termos da separação?</p>
+              <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Parcialmente</span><span class="opcao">Não</span></div>
+            </div>
+          </li>
+          <li class="pergunta">
+            <span class="pergunta__num" aria-hidden="true">02</span>
+            <div>
+              <p class="pergunta__texto">Há filhos menores ou incapazes?</p>
+              <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span></div>
+            </div>
+          </li>
+          <li class="pergunta">
+            <span class="pergunta__num" aria-hidden="true">03</span>
+            <div>
+              <p class="pergunta__texto">Há bens a partilhar?</p>
+              <div class="opcoes"><span class="opcao">Sim</span><span class="opcao">Não</span><span class="opcao">Ainda não sabemos</span></div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="saidas">
+          <p class="rotulo">Saídas possíveis</p>
+          <dl>
+            <div>
+              <dt>Consenso, sem filhos menores, com ou sem bens</dt>
+              <dd>Caminho extrajudicial em cartório costuma ser possível. Documentos a separar: certidão de casamento, documentos pessoais, documentação dos bens.</dd>
+            </div>
+            <div>
+              <dt>Consenso, com filhos menores</dt>
+              <dd>Exige via judicial mesmo havendo acordo, com participação do Ministério Público. Documentos: os anteriores mais certidões de nascimento.</dd>
+            </div>
+            <div>
+              <dt>Consenso parcial</dt>
+              <dd>É comum resolver os pontos acordados e discutir apenas os controversos, inclusive por mediação.</dd>
+            </div>
+            <div>
+              <dt>Sem consenso</dt>
+              <dd>Via judicial. O primeiro passo costuma ser organizar documentação e definir prioridades antes de qualquer petição.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <p class="rodape-bloco">Cada caso tem particularidades que uma página não alcança. Este orientador não substitui a análise de um advogado.</p>
+        <p class="rodape-bloco">Maquete de layout desta direção: as opções acima estão desenhadas, sem lógica de resposta.</p>
+      </div>
+    </section>
+
+    <!-- 5. FAQ -->
+    <section class="secao" aria-labelledby="t-faq">
+      <div class="margem"><span class="numeral">V</span></div>
+      <div class="coluna">
+        <h2 class="chamada" id="t-faq">Perguntas frequentes</h2>
+        <div class="faq">
+          <article class="faq__item">
+            <h3 class="chamada">Preciso ir ao fórum?</h3>
+            <p>Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado.</p>
+          </article>
+          <article class="faq__item">
+            <h3 class="chamada">Dá para fazer o divórcio se a outra parte não quiser?</h3>
+            <p>Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão.</p>
+          </article>
+          <article class="faq__item">
+            <h3 class="chamada">Quanto tempo demora?</h3>
+            <p>Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. QUEM ATENDE — o fio vira tracejado -->
+    <section class="secao secao--pendencia" id="atendimento" aria-labelledby="t-atendimento">
+      <div class="margem"><span class="numeral">VI</span></div>
+      <div class="coluna">
+        <h2 class="chamada" id="t-atendimento">Quem vai conversar com você</h2>
+        <div class="pendencia">
+          <span class="pendencia__selo">Pendência do cliente</span>
+          <p>Nomes completos, número de inscrição na OAB, formação e fotografias reais.</p>
+          <p>Esta seção não será preenchida com pessoas, títulos ou fotos fictícias. Enquanto o material não chegar, ela permanece marcada como pendência no protótipo e não vai ao ar.</p>
+          <ul>
+            <li>Nome completo dos sócios e número de inscrição na OAB</li>
+            <li>Fotografias reais dos advogados e do escritório</li>
+            <li>Cidade e endereço de atendimento</li>
+            <li>Canal de contato oficial (telefone, e-mail, mensageria institucional)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 7. RODAPÉ — o fio deita -->
+  <footer class="rodape">
+    <div>
+      <p class="rodape__marca">Q&amp;F Queiroz e Ferraz — Advocacia de Família</p>
+      <p class="rodape__nota"><span class="pendencia__selo">Pendência</span><br>Identificação completa do escritório e número de inscrição na OAB, obrigatórios antes de publicar.</p>
+    </div>
+    <div class="rodape__elos">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Aviso de telemetria de performance</a>
+    </div>
+  </footer>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Preciso ir ao fórum?","acceptedAnswer":{"@type":"Answer","text":"Nem sempre. Havendo acordo e não havendo filhos menores ou incapazes, o divórcio pode ser feito em cartório, por escritura pública, com assistência de advogado."}},
+    {"@type":"Question","name":"Dá para fazer o divórcio se a outra parte não quiser?","acceptedAnswer":{"@type":"Answer","text":"Sim. O divórcio não depende da concordância da outra parte. O que se discute são os efeitos — partilha, guarda, convivência e pensão."}},
+    {"@type":"Question","name":"Quanto tempo demora?","acceptedAnswer":{"@type":"Answer","text":"Depende da comarca, da complexidade do patrimônio e do grau de acordo entre as partes. Um caso consensual e simples tende a ser bem mais rápido do que um litigioso — mas qualquer prazo específico dito por uma página seria chute."}}
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var raiz = document.documentElement;
+  var botao = document.getElementById('tema');
+  var salvo = null;
+  try { salvo = localStorage.getItem('qf-tema'); } catch (e) {}
+  if (salvo) raiz.setAttribute('data-tema', salvo);
+  function escuro() {
+    var t = raiz.getAttribute('data-tema');
+    return t ? t === 'escuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function rotular() {
+    var e = escuro();
+    botao.textContent = e ? 'Tema claro' : 'Tema escuro';
+    botao.setAttribute('aria-pressed', String(e));
+  }
+  botao.addEventListener('click', function () {
+    var novo = escuro() ? 'claro' : 'escuro';
+    raiz.setAttribute('data-tema', novo);
+    try { localStorage.setItem('qf-tema', novo); } catch (e) {}
+    rotular();
+  });
+  rotular();
+})();
+</script>
+</body>
+</html>

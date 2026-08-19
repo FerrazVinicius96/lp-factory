@@ -1,0 +1,70 @@
+---
+/**
+ * Bloco de PENDENCIA DO CLIENTE.
+ *
+ * Regra de integridade da fabrica: nome de advogado, inscricao na OAB,
+ * fotografia, endereco e canal de contato so existem se vierem do brief.
+ * Nenhum deles veio. Em vez de preencher com ficcao, a informacao que falta
+ * fica visivel como falta — e o motivo grafico assume o estado: o fio passa
+ * a tracejado e o bloco ganha o unico canto cortado do sistema, que imita o
+ * canto dobrado de um documento ausente.
+ */
+interface Props {
+  selo?: string;
+  itens?: string[];
+}
+
+const { selo = 'Pendência do cliente', itens = [] } = Astro.props;
+---
+
+<div class="pendencia">
+  <span class="pendencia__selo">{selo}</span>
+  <slot />
+  {
+    itens.length > 0 && (
+      <ul>
+        {itens.map((i) => (
+          <li>{i}</li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<style>
+  .pendencia {
+    border: var(--spacing-fio) dashed var(--color-anotacao);
+    border-radius: var(--radius-recorte-pendencia);
+    padding: var(--spacing-interno);
+    background: var(--color-superficie-alt);
+    max-width: 40em;
+  }
+
+  .pendencia__selo {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-anotacao);
+    display: inline-block;
+    border-bottom: var(--spacing-fio) solid var(--color-anotacao);
+    padding-bottom: 0.3rem;
+    margin-bottom: var(--spacing-entre-linhas-bloco);
+  }
+
+  .pendencia :global(p) { color: var(--color-conteudo); }
+
+  .pendencia ul {
+    margin: var(--spacing-entre-linhas-bloco) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--color-conteudo-suave);
+    font-size: 1rem;
+  }
+
+  .pendencia li {
+    border-left: var(--spacing-fio) dashed var(--color-fio);
+    padding-left: 0.9rem;
+  }
+</style>

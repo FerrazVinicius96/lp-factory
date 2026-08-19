@@ -1,0 +1,111 @@
+{
+  "basico": {
+    "secoes": [
+      4,
+      6
+    ],
+    "jsBudgetKb": 0,
+    "motion": [
+      "css-state-transitions"
+    ],
+    "webgl": false,
+    "video": false,
+    "midia": "artlist",
+    "temaEscuro": "nao",
+    "interatividade": [
+      "form",
+      "whatsapp"
+    ],
+    "seo": [
+      "meta",
+      "og",
+      "sitemap",
+      "alt"
+    ],
+    "copyPasses": 1,
+    "gate": "checklist",
+    "notaMinima": 3,
+    "tetoGeracoesMidia": 0,
+    "jsBudgetKbEscopo": "JS de aplicacao (motion, ilhas, interatividade). O beacon de Web Vitals tem cap proprio de 1.5 KB e nao entra nesta conta."
+  },
+  "intermediario": {
+    "secoes": [
+      7,
+      9
+    ],
+    "jsBudgetKb": 15,
+    "motion": [
+      "css-scroll-driven",
+      "intersection-observer-fallback"
+    ],
+    "webgl": false,
+    "video": false,
+    "midia": "higgsfield-image",
+    "temaEscuro": "opcional",
+    "interatividade": [
+      "form",
+      "whatsapp",
+      "tabs",
+      "accordion",
+      "mapa-estilizado"
+    ],
+    "seo": [
+      "meta",
+      "og",
+      "sitemap",
+      "alt",
+      "schema-org",
+      "canonical",
+      "heading-tree"
+    ],
+    "copyPasses": 2,
+    "gate": "tech-lead",
+    "notaMinima": 4,
+    "tetoGeracoesMidia": 8,
+    "jsBudgetKbEscopo": "JS de aplicacao (motion, ilhas, interatividade). O beacon de Web Vitals tem cap proprio de 1.5 KB e nao entra nesta conta."
+  },
+  "avancado": {
+    "secoes": [
+      10,
+      99
+    ],
+    "jsBudgetKb": 60,
+    "motion": [
+      "css-scroll-driven",
+      "scroll-linked-timeline",
+      "parallax",
+      "scroll-zoom"
+    ],
+    "webgl": "com-justificativa-no-brief",
+    "video": "motion-background-loop",
+    "midia": "higgsfield-image-video",
+    "temaEscuro": "obrigatorio-tokens-semanticos",
+    "interatividade": [
+      "form",
+      "whatsapp",
+      "tabs",
+      "accordion",
+      "mapa-estilizado",
+      "simulador",
+      "canvas"
+    ],
+    "seo": [
+      "meta",
+      "og",
+      "sitemap",
+      "alt",
+      "schema-org",
+      "canonical",
+      "heading-tree",
+      "faqpage",
+      "service-schema",
+      "cwv-budget"
+    ],
+    "copyPasses": 3,
+    "variantesHeadline": true,
+    "gate": "tech-lead+perf-a11y",
+    "notaMinima": 5,
+    "tetoGeracoesMidia": 20,
+    "jsBudgetKbEscopo": "JS de aplicacao (motion, ilhas, interatividade). O beacon de Web Vitals tem cap proprio de 1.5 KB e nao entra nesta conta."
+  }
+}

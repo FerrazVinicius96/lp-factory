@@ -1,0 +1,137 @@
+---
+/**
+ * LISTA DE DEFINIÇÕES — termo + explicação, um item por linha.
+ *
+ * Dois usos com a mesma forma editorial, decididos por `ordenada`:
+ *   - ordenada: etapas de um processo, com o numeral da etapa na coluna interna;
+ *   - não ordenada: verbetes, serviços conexos, critérios.
+ *
+ * Sem cartão, sem caixa, sem sombra: o filete à esquerda de cada item basta para
+ * separar, e a hierarquia vem do tamanho do termo. Três itens aqui NÃO viram três
+ * cartões lado a lado — a leitura é vertical de propósito.
+ *
+ * O numeral vive dentro do bloco, em coluna própria, e não em deslocamento
+ * negativo para uma margem externa: o bloco não pode presumir a grade da página.
+ *
+ * Árvore de títulos: o nível do termo entra por prop. Confira o heading anterior
+ * na página antes de escolher — o padrão (3) supõe um h2 de seção acima.
+ */
+interface Item {
+  termo: string;
+  texto: string;
+}
+
+interface Props {
+  itens: Item[];
+  /** Numera os itens e usa <ol>. Só quando a ordem for real. */
+  ordenada?: boolean;
+  /** Nível do heading de cada termo. Escolha pelo contexto da página. */
+  nivelTitulo?: 2 | 3 | 4 | 5;
+  classe?: string;
+}
+
+const { itens, ordenada = false, nivelTitulo = 3, classe = '' } = Astro.props;
+
+const Lista = ordenada ? 'ol' : 'ul';
+const Titulo = `h${nivelTitulo}` as 'h2' | 'h3' | 'h4' | 'h5';
+---
+
+<Lista class:list={['verbetes', ordenada && 'verbetes--ordenada', classe]}>
+  {
+    itens.map((item) => (
+      <li class="verbete">
+        <Titulo class="verbete__termo">{item.termo}</Titulo>
+        <p class="verbete__texto">{item.texto}</p>
+      </li>
+    ))
+  }
+</Lista>
+
+<style>
+  .verbetes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .verbete {
+    border-left: var(--spacing-fio, 1px) solid var(--color-fio);
+    padding: var(--spacing-interno, 2rem) 0 var(--spacing-interno, 2rem)
+      var(--spacing-interno, 2rem);
+    position: relative;
+  }
+
+  .verbete:first-child {
+    padding-top: 0;
+  }
+
+  .verbete:last-child {
+    padding-bottom: 0;
+  }
+
+  .verbete__termo {
+    font-family: var(--font-titulo, inherit);
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin: 0 0 var(--spacing-chamada, 0.5rem);
+    max-width: 26ch;
+  }
+
+  .verbete__texto {
+    margin: 0;
+    max-width: var(--medida, 34em);
+    color: var(--color-conteudo-suave);
+  }
+
+  /* Numeral da etapa em coluna própria, dentro do bloco. */
+  .verbetes--ordenada {
+    counter-reset: etapa;
+  }
+
+  .verbetes--ordenada .verbete {
+    counter-increment: etapa;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    column-gap: var(--spacing-chamada, 0.5rem);
+  }
+
+  .verbetes--ordenada .verbete::before {
+    content: counter(etapa, decimal-leading-zero);
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    text-align: right;
+    font-family: var(--font-titulo, inherit);
+    font-size: 0.875rem;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+    color: var(--color-anotacao, var(--color-conteudo-suave));
+  }
+
+  .verbetes--ordenada .verbete__termo,
+  .verbetes--ordenada .verbete__texto {
+    grid-column: 2;
+  }
+
+  /* Sem largura para a coluna do numeral: ele sobe para cima do termo. */
+  @media (max-width: 40rem) {
+    .verbetes--ordenada .verbete {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .verbetes--ordenada .verbete::before {
+      grid-column: 1;
+      grid-row: auto;
+      text-align: left;
+      line-height: 1.4;
+      margin-bottom: 0.35rem;
+    }
+
+    .verbetes--ordenada .verbete__termo,
+    .verbetes--ordenada .verbete__texto {
+      grid-column: 1;
+    }
+  }
+</style>

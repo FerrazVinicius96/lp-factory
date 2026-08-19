@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./**/secrets/**)",
+      "Bash(git push --force:*)",
+      "Bash(rm -rf /:*)"
+    ],
+    "ask": [
+      "Bash(railway up:*)",
+      "Bash(git push:*)"
+    ]
+  },
+  "env": {
+    "TZ": "America/Sao_Paulo"
+  }
+}

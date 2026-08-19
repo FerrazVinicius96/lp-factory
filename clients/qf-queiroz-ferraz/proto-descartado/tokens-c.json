@@ -1,0 +1,115 @@
+{
+  "direcao": "C — Contemporânea e técnica",
+  "tese": "Quem chega perdido não quer ser acalmado, quer ser situado. A página não fala de clareza: ela é visivelmente organizada — malha aparente, seções numeradas, cada bloco delimitado por filete em vez de cartão. A frieza que essa gramática pode carregar é compensada com espaço e corpo de texto grande, nunca com decoração.",
+
+  "tipografia": {
+    "familia": "Archivo (variável, eixos wdth 62–125 e wght 300–800) — fallback: 'Helvetica Neue', Arial, system-ui, sans-serif",
+    "razao": "Archivo é um grotesco americano de sinalização e impresso oficial redesenhado para tela — a mesma linhagem tipográfica da placa de fórum, do formulário e da certidão que esta pessoa vai encontrar no cartório —, e seu eixo de largura variável permite construir toda a rotulação e a numeração da página (largura expandida, versalete) sem importar uma segunda família nem recorrer a monoespaçada de terminal, que soaria a ferramenta de programador e não a documento público.",
+    "papeis": {
+      "titulo": "wdth 94 · wght 600 · line-height 1.04 · tracking -0.02em",
+      "corpo": "wdth 100 · wght 400 · 1.125rem–1.1875rem · line-height 1.65",
+      "rotulo": "wdth 116 · wght 600 · 0.72rem · tracking 0.18em · caixa alta",
+      "indice": "wdth 116 · wght 600 · font-variant-numeric tabular-nums",
+      "principio": "Escala tipográfica de três degraus (rótulo, corpo, título). Nada entre eles: o intervalo grande é o que torna a hierarquia legível de longe, e é onde mora a generosidade que impede a direção de soar distante."
+    }
+  },
+
+  "cor": {
+    "origem": "Os materiais do próprio procedimento, não preferência estética: papel offset morno de certidão e escritura pública (neutros quentes), grafite de anotação de margem (a rampa de cinzas) e um único acento tirado do azul de assinatura em documento de registro civil — no cartório é a tinta azul que distingue original de cópia, então azul aqui significa 'ato formalizado', não 'produto de tecnologia'. O quase-monocromático é deliberadamente QUENTE: é o antídoto direto ao cinza-ardósia frio de painel de SaaS, que é exatamente onde a direção técnica vira clichê.",
+    "escala": {
+      "papel-100": "#F5F3EE",
+      "papel-200": "#EBE8E0",
+      "papel-300": "#E2DED3",
+      "papel-400": "#CFCBBE",
+      "grafite-300": "#A3A096",
+      "grafite-400": "#8A8478",
+      "grafite-500": "#6A6C61",
+      "grafite-600": "#54524A",
+      "tinta-700": "#2E302C",
+      "tinta-800": "#202220",
+      "tinta-850": "#191A18",
+      "tinta-900": "#141412",
+      "tinta-950": "#101110",
+      "assinatura-600": "#1B3A9E",
+      "assinatura-300": "#9CB2E4"
+    },
+    "semantica": {
+      "claro": {
+        "--cor-superficie": "papel-100",
+        "--cor-superficie-recuo": "papel-200",
+        "--cor-superficie-campo": "papel-300",
+        "--cor-conteudo": "tinta-900",
+        "--cor-conteudo-suave": "grafite-600",
+        "--cor-filete": "papel-400",
+        "--cor-filete-forte": "grafite-400",
+        "--cor-acento": "assinatura-600",
+        "--cor-acento-contraste": "papel-100"
+      },
+      "escuro": {
+        "--cor-superficie": "tinta-950",
+        "--cor-superficie-recuo": "tinta-850",
+        "--cor-superficie-campo": "tinta-800",
+        "--cor-conteudo": "#EDEAE1",
+        "--cor-conteudo-suave": "grafite-300",
+        "--cor-filete": "tinta-700",
+        "--cor-filete-forte": "grafite-500",
+        "--cor-acento": "assinatura-300",
+        "--cor-acento-contraste": "tinta-950"
+      }
+    },
+    "contraste_verificado": {
+      "claro": "conteudo/superfície 16,6:1 · conteúdo-suave/superfície 7,1:1 · acento/superfície 8,8:1 · acento-contraste sobre acento 8,8:1 · filete-forte (borda de controle) 3,3:1",
+      "escuro": "conteudo/superfície 15,7:1 · conteúdo-suave/superfície 7,2:1 · acento/superfície 8,9:1 · acento-contraste sobre acento 8,9:1 · filete-forte (borda de controle) 3,5:1",
+      "conclusao": "AA em texto e em componentes nos dois temas; a maior parte do texto passa AAA."
+    },
+    "gradiente": "nenhum. A direção é de filete e chapado; qualquer transição de cor seria ornamento."
+  },
+
+  "motivo": {
+    "nome": "Pauta",
+    "descricao": "A malha de composição não é escondida, é o desenho: filetes de 1px verticais (colunas) e horizontais (abertura de seção) que atravessam a página; todo bloco é delimitado por filete, nunca por cartão com sombra e raio; sobre cada filete de abertura vive um índice de dois dígitos em versalete expandido, na margem esquerda, seguido do rótulo da seção. Deriva do papel pautado do processo — a folha de registro, o formulário, a planta arquitetônica —, e tem uma variante funcional: onde falta material do cliente, a célula da pauta não é preenchida com ficção, ela aparece HACHURADA a 45°, a mesma convenção do desenho técnico para 'área não resolvida'. Assim a pendência é linguagem do sistema visual, não falha dele.",
+    "aplicacao": [
+      "hero — colunas verticais visíveis atrás do título, masthead sobre filete, índice 00",
+      "reconhecimento — cada dúvida do público em uma linha da pauta, com filete próprio e índice",
+      "os dois caminhos — filete vertical único separando consensual e litigioso, índices 01 e 02",
+      "orientador de próximos passos — as três perguntas como linhas numeradas de formulário e as saídas como tabela de pauta",
+      "FAQ — perguntas como linhas indexadas da mesma pauta",
+      "quem atende — célula hachurada: o campo em branco declarado como pendência do cliente",
+      "rodapé — filete de fechamento, índice e segunda célula hachurada de identificação"
+    ]
+  },
+
+  "espacamento": {
+    "unidade": "4px",
+    "e1": "4px",
+    "e2": "8px",
+    "e3": "12px",
+    "e4": "16px",
+    "e5": "24px",
+    "e6": "32px",
+    "e7": "48px",
+    "e8": "64px",
+    "e9": "96px",
+    "e10": "128px",
+    "e11": "176px",
+    "medianiz": "clamp(24px, 3.2vw, 48px)",
+    "margem-secao": "clamp(72px, 9vw, 160px)",
+    "margem-lateral": "clamp(16px, 4vw, 56px)",
+    "largura-max": "1280px",
+    "medida-texto": "64ch",
+    "principio": "O espaço é o único recurso de acolhimento que esta direção se permite. Nas aberturas de seção o intervalo é deliberadamente maior do que a legibilidade exige — respiro é o que impede a malha de virar planilha."
+  },
+
+  "raio": {
+    "nenhum": "0px",
+    "campo": "2px",
+    "marcador": "999px",
+    "principio": "Raio 0 é o padrão do sistema — a página é feita de filetes retos e a curva seria ruído. Duas exceções com razão funcional: 2px nos campos e nas células de opção do orientador, para diferenciar o que é preenchível do que é estrutura; e 999px apenas no ponto de acento e no alvo do botão de tema, formas que precisam ser lidas como marcador e não como bloco. Nenhum raio uniforme aplicado a tudo."
+  },
+
+  "sombra": {
+    "nenhuma": "none",
+    "foco": "0 0 0 2px var(--cor-superficie), 0 0 0 4px var(--cor-acento)",
+    "principio": "Não há sombra decorativa em nenhum elemento: profundidade nesta direção é dada por filete e por valor de superfície, não por elevação falsa. A única box-shadow do sistema é o anel de foco de teclado, que é informação e não estilo."
+  }
+}

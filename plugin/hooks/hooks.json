@@ -1,0 +1,73 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/guard.mjs\" write"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/guard.mjs\" bash"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/log-event.mjs\" build"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/anti-slop-copy.mjs\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/anti-slop-visual.mjs\""
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "lp-designer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/log-event.mjs\" ciclo"
+          }
+        ]
+      },
+      {
+        "matcher": "lp-builder",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/log-event.mjs\" ciclo"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/rotate-logs.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

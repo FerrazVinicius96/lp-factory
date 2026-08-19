@@ -1,0 +1,322 @@
+---
+/**
+ * ORIENTADOR DE PROXIMOS PASSOS — a unica ilha interativa da pagina.
+ *
+ * Vanilla, sem framework. Todo o texto ja esta no HTML: o script apenas
+ * decide o que mostrar. Consequencias:
+ *   - sem JS, a pessoa ve as quatro saidas possiveis, como no prototipo;
+ *   - o gate de copy enxerga o texto (ele zera blocos <script>);
+ *   - o custo de JS fica na casa de centenas de bytes.
+ *
+ * Limites de escopo, por conformidade: nao estima prazo, nao estima valor e
+ * nao avalia o caso concreto. Mostra o caminho tipico e os documentos a separar.
+ *
+ * Acessibilidade: fieldset/legend por pergunta, radios nativos (navegacao por
+ * setas de graca) e foco devolvido a primeira opcao ao limpar as respostas.
+ *
+ * A regiao de resultado inclui a mensagem de pendencia: com ela fora, marcar a
+ * 1a e a 2a resposta esvaziava a regiao viva e o leitor de tela nao anunciava
+ * nada. `role="status"` e aplicado por JS DEPOIS da primeira pintura, para que
+ * o ajuste de estado inicial nao vire um anuncio na carga da pagina.
+ *
+ * Estado: tres variaveis em memoria. Nada de localStorage.
+ */
+interface Opcao {
+  valor: string;
+  texto: string;
+}
+
+interface Pergunta {
+  nome: string;
+  numero: string;
+  texto: string;
+  opcoes: Opcao[];
+}
+
+interface Saida {
+  chave: string;
+  termo: string;
+  texto: string;
+}
+
+interface Documento {
+  condicao: string;
+  texto: string;
+}
+
+interface Props {
+  perguntas: Pergunta[];
+  saidas: Saida[];
+  documentos: Documento[];
+  aviso: string;
+}
+
+const { perguntas, saidas, documentos, aviso } = Astro.props;
+---
+
+<div class="orientador" data-orientador>
+  {
+    perguntas.map((p) => (
+      <fieldset class="pergunta">
+        <legend class="pergunta__legenda">
+          <span class="pergunta__num" aria-hidden="true">
+            {p.numero}
+          </span>
+          <span class="pergunta__texto">{p.texto}</span>
+        </legend>
+        <div class="opcoes">
+          {p.opcoes.map((o) => (
+            <label class="opcao">
+              <input type="radio" name={p.nome} value={o.valor} />
+              <span>{o.texto}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))
+  }
+
+  <p class="orientador__controles" data-controles hidden>
+    <button class="botao-fio" type="button" data-limpar>Limpar respostas</button>
+  </p>
+
+  <div class="saidas" data-resultado>
+    <p class="orientador__pendente" data-pendente hidden>
+      Responda às três perguntas para ver o caminho típico.
+    </p>
+    <p class="rotulo" data-rotulo="todas">Saídas possíveis</p>
+    <p class="rotulo" data-rotulo="uma" hidden>Caminho típico</p>
+    <dl>
+      {
+        saidas.map((s) => (
+          <div data-saida={s.chave}>
+            <dt>{s.termo}</dt>
+            <dd>{s.texto}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <div class="documentos" data-documentos hidden>
+      <p class="rotulo">Documentos a separar</p>
+      <ul class="lista-fio">
+        {documentos.map((d) => <li data-doc={d.condicao}>{d.texto}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <p class="rodape-bloco">{aviso}</p>
+</div>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-orientador]');
+
+  if (raiz) {
+    const saidas = Array.from(raiz.querySelectorAll<HTMLElement>('[data-saida]'));
+    const docs = Array.from(raiz.querySelectorAll<HTMLElement>('[data-doc]'));
+    const blocoDocs = raiz.querySelector<HTMLElement>('[data-documentos]')!;
+    const rotuloTodas = raiz.querySelector<HTMLElement>('[data-rotulo="todas"]')!;
+    const rotuloUma = raiz.querySelector<HTMLElement>('[data-rotulo="uma"]')!;
+    const pendente = raiz.querySelector<HTMLElement>('[data-pendente]')!;
+    const controles = raiz.querySelector<HTMLElement>('[data-controles]')!;
+    const radios = Array.from(raiz.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
+
+    // Estado: so na memoria, so enquanto a aba estiver aberta.
+    const resposta: Record<string, string> = {};
+
+    const marcar = (el: HTMLElement, visivel: boolean) => {
+      el.hidden = !visivel;
+    };
+
+    const caminho = () => {
+      const { consenso, filhos } = resposta;
+      if (!consenso || !filhos || !resposta.bens) return null;
+      if (consenso === 'parcial') return 'parcial';
+      if (consenso === 'nao') return 'litigioso';
+      return filhos === 'sim' ? 'judicial-consensual' : 'extrajudicial';
+    };
+
+    const pintar = () => {
+      const alvo = caminho();
+      marcar(rotuloTodas, false);
+      marcar(pendente, !alvo);
+      marcar(rotuloUma, !!alvo);
+      for (const s of saidas) marcar(s, s.dataset.saida === alvo);
+      marcar(blocoDocs, !!alvo);
+      if (alvo) {
+        for (const d of docs) {
+          const c = d.dataset.doc;
+          marcar(
+            d,
+            c === 'sempre' ||
+              (c === 'filhos' && resposta.filhos === 'sim') ||
+              (c === 'bens' && resposta.bens !== 'nao')
+          );
+        }
+      }
+      marcar(controles, radios.some((r) => r.checked));
+    };
+
+    for (const r of radios) {
+      r.addEventListener('change', () => {
+        resposta[r.name] = r.value;
+        pintar();
+      });
+    }
+
+    raiz.querySelector<HTMLButtonElement>('[data-limpar]')!.addEventListener('click', () => {
+      for (const r of radios) r.checked = false;
+      for (const k of Object.keys(resposta)) delete resposta[k];
+      pintar();
+      radios[0].focus();
+    });
+
+    pintar();
+
+    // A partir daqui toda mudanca e resposta a uma acao da pessoa: pode anunciar.
+    const resultado = raiz.querySelector<HTMLElement>('[data-resultado]')!;
+    resultado.setAttribute('role', 'status');
+    resultado.setAttribute('aria-live', 'polite');
+  }
+</script>
+
+<style>
+  .pergunta {
+    border: 0;
+    border-top: var(--spacing-fio) solid var(--color-fio);
+    margin: 0;
+    padding: var(--spacing-interno) 0;
+    display: grid;
+    gap: var(--spacing-entre-linhas-bloco);
+  }
+
+  .pergunta__legenda {
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+    max-width: 26em;
+  }
+
+  @media (min-width: 56rem) {
+    .pergunta__legenda {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: var(--spacing-gutter);
+      align-items: baseline;
+      max-width: none;
+    }
+
+    .opcoes { padding-left: calc(3.5rem + var(--spacing-gutter)); }
+  }
+
+  .pergunta__num {
+    font-family: var(--font-titulo);
+    font-size: 1rem;
+    color: var(--color-anotacao);
+    letter-spacing: 0.08em;
+  }
+
+  .pergunta__texto {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    max-width: 26em;
+  }
+
+  .opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .opcao {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--alvo-toque);
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-conteudo-suave);
+    border: var(--spacing-fio) solid var(--color-conteudo-suave);
+    border-radius: var(--radius-controle);
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  }
+
+  /* O radio continua no fluxo de foco: recortado, nunca display:none. */
+  .opcao input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+
+  .opcao:hover {
+    border-color: var(--color-acento);
+    color: var(--color-acento);
+  }
+
+  /* Estado escolhido nao depende so de cor: o fundo enche e a borda vira acento. */
+  .opcao:has(input:checked) {
+    background: var(--color-acento);
+    border-color: var(--color-acento);
+    color: var(--color-acento-conteudo);
+  }
+
+  /* `:focus`, nao `:focus-visible`: ao limpar as respostas o foco volta por JS
+     para o primeiro radio, e depois de um clique de ponteiro o :focus-visible
+     nao casa — o anel some justamente na hora em que ele e necessario.
+     O radio esta recortado a 1px, entao o anel tem de vir do rotulo. */
+  .opcao:has(input:focus) {
+    outline: 2px solid var(--color-foco);
+    outline-offset: 3px;
+  }
+
+  .orientador__controles {
+    margin: 0 0 var(--spacing-interno);
+    font-size: 1rem;
+    color: var(--color-conteudo-suave);
+  }
+
+  .orientador__pendente {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--color-conteudo-suave);
+  }
+
+  .saidas {
+    border-top: var(--spacing-fio) solid var(--color-fio);
+    padding-top: var(--spacing-interno);
+  }
+
+  .saidas dl {
+    margin: 0;
+    display: grid;
+    gap: var(--spacing-interno);
+  }
+
+  .saidas dt {
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-acento);
+    margin-bottom: 0.35rem;
+  }
+
+  .saidas dd {
+    margin: 0;
+    max-width: var(--medida);
+    color: var(--color-conteudo-suave);
+  }
+
+  .documentos {
+    margin-top: var(--spacing-interno);
+    padding-top: var(--spacing-interno);
+    border-top: var(--spacing-fio) dashed var(--color-fio);
+  }
+
+  .documentos li { color: var(--color-conteudo-suave); }
+</style>

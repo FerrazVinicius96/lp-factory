@@ -1,0 +1,132 @@
+{
+  "descricao": "Lista viva. Adicione padroes conforme o tech-lead identificar reincidencia. Regex aplicadas com flags 'iu' sobre texto normalizado sem acentos.",
+  "copy": [
+    {
+      "id": "revolucionario",
+      "re": "\\brevolucionari[oa]\\b",
+      "msg": "Adjetivo vazio. Diga o que muda, com numero."
+    },
+    {
+      "id": "transforme-sua-vida",
+      "re": "transforme (a )?sua vida",
+      "msg": "Promessa generica sem mecanismo."
+    },
+    {
+      "id": "segredo",
+      "re": "descubra o segredo",
+      "msg": "Clickbait. Nomeie o metodo."
+    },
+    {
+      "id": "nao-perca",
+      "re": "n[ao]o perca (essa|esta) oportunidade",
+      "msg": "Escassez artificial sem fato."
+    },
+    {
+      "id": "solucao-completa",
+      "re": "solucao completa",
+      "msg": "Nao diz nada. Liste o que faz."
+    },
+    {
+      "id": "em-um-mundo",
+      "re": "em um mundo cada vez mais",
+      "msg": "Abertura de redacao escolar. Comece pela dor concreta."
+    },
+    {
+      "id": "eleve",
+      "re": "\\beleve (seu|sua|seus|suas)\\b",
+      "msg": "Verbo de palestra motivacional."
+    },
+    {
+      "id": "desbloqueie",
+      "re": "\\bdesbloqueie\\b",
+      "msg": "Metafora de videogame aplicada a negocio."
+    },
+    {
+      "id": "potencialize",
+      "re": "\\bpotencializ",
+      "msg": "Verbo sem referente mensuravel."
+    },
+    {
+      "id": "jornada",
+      "re": "\\b(sua|essa|nossa) jornada\\b",
+      "msg": "Metafora de funil vazada para a copy."
+    },
+    {
+      "id": "sinergia",
+      "re": "\\bsinergia\\b",
+      "msg": "Jargao corporativo."
+    },
+    {
+      "id": "disruptivo",
+      "re": "\\bdisruptiv[oa]\\b",
+      "msg": "Jargao de pitch."
+    },
+    {
+      "id": "game-changer",
+      "re": "game.?changer",
+      "msg": "Cliche importado."
+    },
+    {
+      "id": "nunca-foi-tao-facil",
+      "re": "nunca foi tao facil",
+      "msg": "Formula batida."
+    },
+    {
+      "id": "tudo-que-precisa",
+      "re": "tudo (o )?que voce precisa",
+      "msg": "Promessa nao verificavel."
+    },
+    {
+      "id": "feito-para-voce",
+      "re": "feito para voce\\b",
+      "msg": "Personalizacao falsa."
+    },
+    {
+      "id": "nao-e-apenas",
+      "re": "nao e (apenas|so) .{2,40}, e ",
+      "msg": "Antitese de efeito. Corte a primeira metade."
+    },
+    {
+      "id": "pergunta-retorica",
+      "re": "^#{1,3} .*voce ja se sentiu",
+      "msg": "Pergunta retorica como headline."
+    },
+    {
+      "id": "emoji-headline",
+      "re": "^#{1,3} .*[\\u{1F300}-\\u{1FAFF}\\u{2700}-\\u{27BF}]",
+      "msg": "Emoji em headline."
+    },
+    {
+      "id": "exclamacao-dupla",
+      "re": "!!",
+      "msg": "Pontuacao gritada."
+    },
+    {
+      "id": "tricolon-vazio",
+      "re": "mais rapido, mais (simples|facil), mais (inteligente|eficiente)",
+      "msg": "Tricolon vazio: tres adjetivos sem substantivo mensuravel."
+    }
+  ],
+  "visual": [
+    {
+      "id": "ai-purple",
+      "re": "#(6366f1|818cf8|a855f7|7c3aed|8b5cf6|c084fc)",
+      "msg": "Roxo generico de IA. Derive a cor da marca ou do setor."
+    },
+    {
+      "id": "lorem",
+      "re": "lorem ipsum|placeholder|texto de exemplo|preencher depois|todo:",
+      "msg": "Placeholder em arquivo de producao."
+    },
+    {
+      "id": "prova-social-falsa",
+      "re": "(depoimento|testemunho|avaliacao)s? (de exemplo|ficticio|ficticios|fake|generico)",
+      "msg": "Prova social inventada. Integridade: reprovacao imediata."
+    },
+    {
+      "id": "blob-decorativo",
+      "re": "class=\"[^\"]*\\b(blob|glassmorphism|particles)\\b",
+      "msg": "Ornamento sem funcao."
+    }
+  ]
+}
