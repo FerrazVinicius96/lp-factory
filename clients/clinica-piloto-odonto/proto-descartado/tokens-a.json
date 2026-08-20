@@ -1,0 +1,112 @@
+{
+  "direcao": "A — Laudo de condição",
+  "tese": "A clínica promete que nada irreversível acontece antes de existir um registro do estado atual. Esse é, literalmente, o protocolo de um laudo de condição de conservação: fotografa-se a peça sob luz rasante, mapeia-se cada perda numa folha sobreposta, declara-se por escrito o que será e o que não será intervindo — e só então alguém encosta no objeto. A página adota esse mundo inteiro, e com ele trata a boca do paciente como peça que merece conservação, não como defeito a corrigir.",
+  "tipografia": {
+    "familia": "Archivo (variável, eixo de largura wdth 62–125) — largura ampliada nos títulos, largura normal no texto, largura estreita nos rótulos de registro",
+    "razao": "Etiqueta de parede de museu e cabeçalho de laudo de conservação são compostos em grotesca institucional, e a hierarquia deles vem da LARGURA da letra, não do peso nem da cor — é o que permite uma página inteira em um só tom de tinta parecer catalogada em vez de gritada. Archivo é uma grotesca desenhada pela Omnibus-Type para uso impresso institucional, tem eixo variável de largura real (62–125) e numerais tabulares, então a escala inteira sai de um único arquivo de fonte: uma decisão de sistema, não um par de fontes escolhido por gosto. Atende a exigência do brief (sem serifa, elegante, moderna) sem cair na grotesca neutra de produto digital, que é o que o público de 30–55 anos já viu em toda página de clínica que recusou.",
+    "escala": {
+      "registro": "0.6875rem / 0.14em de entreletra / wdth 88 / versalete",
+      "corpo": "1.0625rem–1.1875rem / 1.6",
+      "corpo-conduzido": "1.25rem–1.5rem / 1.45 (parágrafo de abertura de seção)",
+      "titulo-secao": "clamp(1.75rem, 3.2vw, 2.75rem) / 1.1 / wdth 112",
+      "titulo-hero": "clamp(2.35rem, 5.6vw, 4.35rem) / 1.04 / wdth 105",
+      "numeral": "tabular, sempre — códigos de observação e números de autoridade",
+      "medida": "36em (≈68 caracteres)"
+    },
+    "pilha": {
+      "titulo": "'Archivo', 'Archivo Expanded', system-ui, sans-serif",
+      "texto": "'Archivo', system-ui, sans-serif"
+    }
+  },
+  "cor": {
+    "origem": "A paleta do brief (azul marinho, branco gelo, dourado) foi mantida como restrição de marca e reatribuída a funções do laudo de conservação, para que nenhuma das três seja decoração: BRANCO GELO é o cartão de algodão do passe-partout — o suporte neutro, ligeiramente frio, sobre o qual a peça é montada; AZUL MARINHO é o fundo de registro fotográfico sob luz rasante, a superfície escura contra a qual o objeto é medido; DOURADO não é ostentação e não é selo — é a cor da anotação do conservador, o traço com que se marca PERDA no mapa. Essa terceira decisão é a que sustenta a página: o dourado marca ausência. E, como esta entrega tem ausência real (foto, vídeo, nome, CRO, endereço, condição comercial), a mesma cor que marca a perda no objeto marca a pendência do cliente. A paleta ganha uma gramática em vez de um par de acentos.",
+    "escala": {
+      "algodao": "#F2F4F6",
+      "algodao-fundo": "#E6EAEE",
+      "algodao-fio": "#BAC4CD",
+      "tinta": "#0E1B2B",
+      "tinta-suave": "#46586C",
+      "marinho": "#12253E",
+      "marinho-profundo": "#0B1626",
+      "marinho-alt": "#122033",
+      "marinho-fio": "#2B3D53",
+      "gelo-conteudo": "#E9EEF3",
+      "nevoa": "#A9B8C7",
+      "ouro-registro": "#7A5B14",
+      "ouro-lampada": "#D9B25E"
+    },
+    "semanticos": {
+      "--cor-superficie": "algodao / marinho-profundo",
+      "--cor-superficie-alt": "algodao-fundo / marinho-alt",
+      "--cor-superficie-registro": "marinho / marinho (bloco de registro escuro nos dois temas)",
+      "--cor-conteudo": "tinta / gelo-conteudo",
+      "--cor-conteudo-suave": "tinta-suave / nevoa",
+      "--cor-anotacao": "ouro-registro / ouro-lampada",
+      "--cor-fio": "algodao-fio / marinho-fio",
+      "--cor-acao": "marinho / ouro-lampada",
+      "--cor-acao-conteudo": "algodao / marinho-profundo"
+    },
+    "estrategia": "Restrita com um acento operante. Neutro de dois tons (algodão e marinho) ocupando toda a superfície; o dourado nunca preenche área — ele só traça, hachura e etiqueta. Um dourado que preenchesse bloco viraria o selo de luxo genérico que a política bloqueia.",
+    "contraste": "Menor razão medida: 5,21:1 (ouro-registro sobre algodao-fundo). Corpo de texto 15,74:1 no claro e 15,55:1 no escuro. Anotação 5,71:1 no claro e 9,06:1 no escuro. CTA 14,01:1 no claro e 9,06:1 no escuro. AA em ambos os temas, corpo e CTA.",
+    "cena-fisica": "Adulto de 40 e poucos anos, no celular, à noite, depois de mais um jantar escolhido pelo que dava para mastigar. O tema claro é o padrão porque a leitura é longa e argumentativa; o escuro existe porque essa pessoa lê no escuro do quarto — e porque o laudo de conservação tem, ele próprio, uma versão sob luz rasante em sala escurecida, que é o modo escuro nativo deste mundo."
+  },
+  "motivo": {
+    "nome": "Mapa de perda",
+    "descricao": "No laudo de conservação, o conservador sobrepõe uma folha translúcida à fotografia da peça e desenha ali o que falta: fio de cabelo para trinca, hachura diagonal para material ausente, uma etiqueta numerada por observação. A página inteira é essa folha. Cada seção tem uma OBSERVAÇÃO com código tabular na margem esquerda, ligada por um fio de chamada ao ponto do argumento que ela registra — o código não é ornamento de cabeçalho, é o endereço que a legenda de fechamento no rodapé usa para dizer quais observações estão completas e quais estão marcadas MATERIAL AUSENTE. Onde o cliente ainda não entregou material (nome, CRO, foto, vídeo, endereço, condição comercial), o campo recebe a mesma hachura diagonal dourada que marca perda no objeto: a página declara sua própria ausência na gramática do mundo que adotou, em vez de esconder buraco. A folha de registro tem deslocamento físico real — 12px de offset e sombra com blur — porque no laudo ela é uma folha de verdade sobre a fotografia, e não um painel plano.",
+    "aplicacao": [
+      "S1 hero — OBS 01 na margem; a marca {{NOME_CLINICA}} nasce hachurada, porque o logotipo é a primeira ausência da página",
+      "S2 espelho da dor — os quatro itens recebem fio de chamada em vez de marcador, sem ícone (ícone transformaria dor em feature)",
+      "S3 a virada — 'estado registrado' e 'estado proposto' são duas folhas: a segunda sobrepõe a primeira com o offset físico de 12px",
+      "S4 a avaliação — os quatro passos são as quatro etapas do exame, numeradas em tabular, com o fio de chamada crescendo a cada passo",
+      "S5 os dois caminhos — cada aba é uma etiqueta de gaveta de acervo; o bloco 'o que NÃO resolve' recebe a hachura, porque limite declarado é o oposto de omissão",
+      "S6 o medo do artificial — o mapa é redesenhado como diagrama de proporção anterior, com cotas sobre os centrais",
+      "S7 quem vai atender — nome, titulação e CRO hachurados; os dois números do brief ficam legíveis, com data-source",
+      "S11 FAQ — fio de chamada por pergunta, sem cartão e sem caixa",
+      "S13 rodapé — legenda de fechamento do laudo: a lista das observações e o estado de cada uma"
+    ],
+    "escopo-piloto": "A legenda de MATERIAL AUSENTE no rodapé é comportamento de piloto e de handoff. Em publicação real, ela lista apenas as observações entregues; a hachura permanece como gramática de campo vazio, nunca como texto público sobre a operação do cliente."
+  },
+  "espacamento": {
+    "base": "8px",
+    "fio": "1px",
+    "chamada": "0.375rem",
+    "entre-linhas": "1.15rem",
+    "interno": "1.75rem",
+    "entre-blocos": "3rem",
+    "entre-secoes": "clamp(4.5rem, 10vh, 8.5rem)",
+    "respiro-hero": "clamp(5rem, 14vh, 10rem)",
+    "margem-registro": "clamp(2.5rem, 8vw, 8rem)",
+    "gutter": "clamp(1.25rem, 5vw, 4rem)",
+    "sobreposicao": "12px",
+    "medida": "36em",
+    "nota": "Escala deliberadamente não uniforme. O salto entre seções é maior que qualquer outro intervalo porque é o espaço negativo — o passe-partout — que estabelece a hierarquia; o brief pediu muito white space e white space só existe se a régua permitir que um intervalo seja incomparavelmente maior que os outros. Acima de um título há sempre mais espaço que abaixo dele."
+  },
+  "raio": {
+    "nenhum": "0",
+    "controle": "3px",
+    "canto-folha": "0 10px 0 0",
+    "nota": "Corte reto é o padrão: montagem de conservação é cortada a régua. Duas exceções, cada uma com razão: 3px em controle interativo (botão, aba, resumo de FAQ), para que a área clicável se leia como controle e não como bloco de texto; e um único canto chanfrado de 10px na folha de registro sobreposta, que é o canto cortado da folha translúcida de mapeamento. Raio uniforme em todos os componentes é sinal de ausência de sistema e reprova na política."
+  },
+  "sombra": {
+    "nenhuma": "none",
+    "folha": "12px 12px 28px -18px color-mix(in srgb, var(--cor-conteudo) 55%, transparent)",
+    "folha-borda": "0 0 0 1px var(--cor-fio)",
+    "nota": "Uma única sombra na página, e ela não é elevação genérica de cartão: é o offset da folha translúcida sobre a fotografia do laudo, com deslocamento e blur reais (halo colorido de offset zero é decoração). Seção, aba, campo e etiqueta não recebem sombra nenhuma."
+  },
+  "motion": {
+    "principio": "Um momento autoral, não efeito espalhado. O fio de chamada de cada observação se DESENHA conforme a seção entra na viewport (stroke-dashoffset em animation-timeline: view()), porque é o laudo sendo escrito enquanto o leitor lê — a única animação com função narrativa da página.",
+    "segundo-momento": "Em S3, a folha 'estado proposto' desliza sobre 'estado registrado' com scroll-linked timeline. É a inversão de ordem que a página inteira defende, executada uma vez.",
+    "restricoes": [
+      "tudo dentro de @supports (animation-timeline: view())",
+      "@media (prefers-reduced-motion: reduce) neutraliza: conteúdo já visível por padrão, nenhuma informação existe só no movimento",
+      "nada no caminho crítico; o LCP é o bloco de headline de S1 e não recebe animação de entrada",
+      "sem contador animado sobre número — os dois números de autoridade são texto estático"
+    ]
+  },
+  "handoff": {
+    "tema-escuro": "obrigatório no nível avançado e implementado por tokens semânticos: nenhum componente conhece cor bruta, só as variáveis de --cor-*. O alternador expõe três estados (sistema, claro, escuro) via data-tema no elemento raiz.",
+    "interacoes-reais": "duas, e só duas: tablist em S5 (setas, Home/End, roving tabindex, conteúdo das duas abas no HTML) e accordion em S11 (details/summary nativo, primeira pergunta aberta).",
+    "secoes-nao-renderizadas": "S8 (consultório), S9 (antes e depois) e S10 (depoimentos em vídeo) não existem no markup — dependem de arquivo real do cliente. Aparecem apenas como observação MATERIAL AUSENTE na legenda de fechamento.",
+    "estrutura-hero": "laudo-observacao-margem-mapa-direita"
+  }
+}

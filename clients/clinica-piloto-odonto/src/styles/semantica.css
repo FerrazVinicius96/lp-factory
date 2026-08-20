@@ -1,0 +1,42 @@
+/* ============================================================
+   CAMADA SEMÂNTICA — papéis, não cores.
+
+   Este arquivo e o `theme.css` gerado são os DOIS únicos lugares onde uma cor
+   pode ser nomeada. No ponto de uso só existe `var(--color-*)` semântico;
+   hex literal ou token bruto direto em componente reprova no gate visual.
+
+   Os tokens brutos (--color-visor, --color-gelo, ...) vêm de `theme.css`,
+   gerado por `npm run tokens` a partir de `tokens.json > cor.escala`. Aqui
+   eles viram papéis: superfície, conteúdo, medida (acento), fio, ação.
+
+   Tema: `color-scheme: light dark` + `light-dark()`. Segue a preferência do
+   sistema sem JS e sem flash. `data-tema` no <html> sobrepõe a preferência
+   quando a pessoa escolhe pelo botão do cabeçalho, trocando só `color-scheme`.
+
+   O campo do visor (`--color-visor`) É O ÚNICO TOKEN QUE NÃO INVERTE: é
+   escuro nos dois temas, porque a tese da direção B é que o viewport de
+   escaneamento é sempre um campo escuro — o tema claro é a folha de laudo
+   que sai dele, não uma inversão dele. Ver tokens.json > cor.estrategia.
+
+   Contraste medido em tokens.json > cor.contraste: pior caso 5,01:1, por
+   isso o campo sintético do herói tem alfa zero sob qualquer texto — ver
+   VisorHero.astro.
+   ============================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  --color-superficie:      light-dark(var(--color-gelo),         var(--color-visor));
+  --color-superficie-alt:  light-dark(var(--color-gelo-alt),     var(--color-visor-alt));
+  --color-conteudo:        light-dark(var(--color-grafite),      var(--color-gelo-conteudo));
+  --color-conteudo-suave:  light-dark(var(--color-grafite-suave), var(--color-leitura-escura));
+  --color-acento:          light-dark(var(--color-medida),       var(--color-medida-clara));
+  --color-fio:             light-dark(var(--color-gelo-fio),     var(--color-visor-fio));
+  --color-acao:            light-dark(var(--color-visor),        var(--color-medida-clara));
+  --color-acao-conteudo:   light-dark(var(--color-gelo),         var(--color-visor));
+  --color-foco:            var(--color-acento);
+}
+
+/* Escolha explícita da pessoa. Só o color-scheme muda; light-dark() faz o resto. */
+:root[data-tema='claro']  { color-scheme: light; }
+:root[data-tema='escuro'] { color-scheme: dark; }

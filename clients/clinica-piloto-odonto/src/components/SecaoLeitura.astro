@@ -1,0 +1,22 @@
+---
+/**
+ * Unidade de seção do motivo "malha de captura": régua de leitura na margem
+ * (código "Leitura NN") e corpo em coluna. Toda seção numerada da página
+ * passa por aqui — S2 a S7 e S11. S1 (herói) e S12 (fecho) são o visor e
+ * têm layout próprio; S8/S9/S10 não renderizam em produção (ver PROJECT.md).
+ */
+interface Props {
+  leitura: string;
+  id?: string;
+  rotuladaPor: string;
+}
+
+const { leitura, id, rotuladaPor } = Astro.props;
+---
+
+<section class="secao" id={id} aria-labelledby={rotuladaPor}>
+  <div class="secao__marca"><span class="leitura" aria-hidden="true">{leitura}</span></div>
+  <div class="secao__corpo">
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,313 @@
+/* ============================================================
+   SISTEMA VISUAL — DIREÇÃO B, "VISOR"
+   Tradução do protótipo aprovado (proto/direcao-b.html) para produção.
+
+   Motivo gráfico: MALHA DE CAPTURA.
+   A página é o próprio visor do scanner intraoral: campo escuro contra o
+   qual o modelo 3D é renderizado, malha triangulada em fio de cabelo que
+   se fecha onde há dado e abre onde falta, régua de leitura com código de
+   seção e cotas. Ver tokens.json > motivo.
+
+   Regra deste arquivo: nenhuma cor literal. Cor vem de semantica.css
+   (papéis) e theme.css (tokens brutos, gerados). Espaço, raio, sombra e
+   fonte vêm só de theme.css.
+   ============================================================ */
+
+:root {
+  /* Alvo mínimo de toque (WCAG 2.5.8 Target Size, nível AA). */
+  --alvo-toque: 44px;
+}
+
+/* ═══ VISOR — papel compartilhado do campo escuro (S1 e S12) ═══
+   As sete sobreposições de token abaixo viviam duplicadas, literalmente,
+   dentro de VisorHero.astro e CtaFinal.astro. Um só lugar agora. */
+.visor {
+  background: var(--color-visor);
+  color: var(--color-gelo-conteudo);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  --color-conteudo: var(--color-gelo-conteudo);
+  --color-conteudo-suave: var(--color-leitura-escura);
+  --color-acento: var(--color-medida-clara);
+  --color-fio: var(--color-visor-fio);
+  --color-acao: var(--color-medida-clara);
+  --color-acao-conteudo: var(--color-visor);
+  --color-superficie: var(--color-visor);
+  /* distância mínima entre o fim do texto e a primeira camada decorativa
+     (tokens.json > zona-campo). Vive aqui porque as duas ocorrências do
+     visor (herói e fecho) precisam do mesmo valor. */
+  --campo-folga: 2em;
+}
+
+/* O outro lado do contrato de zona de campo: nenhuma coluna de texto do
+   visor passa da medida de leitura. Sem isto, um h2 sem max-width (era o
+   caso do fecho) entra na rampa da máscara em telas largas e reabre o
+   defeito que devolveu o gate por outro caminho (tokens.json > zona-campo). */
+.visor__coluna { max-width: var(--spacing-medida); }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--color-superficie);
+  color: var(--color-conteudo);
+  font-family: var(--font-texto);
+  font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem);
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-acento);
+  accent-color: var(--color-acao);
+}
+
+::selection { background: var(--color-acento); color: var(--color-superficie); }
+* { scrollbar-color: var(--color-fio) var(--color-superficie); scrollbar-width: thin; }
+
+:focus-visible { outline: 2px solid var(--color-foco); outline-offset: 3px; }
+
+h1, h2, h3 {
+  margin: 0 0 var(--spacing-entre-linhas);
+  line-height: 1.12;
+  font-weight: 700;
+  font-family: var(--font-titulo);
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1.05; letter-spacing: -0.02em; max-width: 15ch; }
+h2 { font-size: clamp(1.7rem, 3vw, 2.6rem); letter-spacing: -0.015em; }
+
+p { margin: 0 0 var(--spacing-entre-linhas); max-width: var(--spacing-medida); }
+p:last-child { margin-bottom: 0; }
+
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-color: var(--color-acento); }
+
+/* ---------- rótulo de leitura (Chivo Mono, versalete) ---------- */
+.leitura {
+  font-family: var(--font-leitura);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-acento);
+}
+
+.sem-dado {
+  display: inline-block;
+  font-family: var(--font-leitura);
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  padding: 0.1em 0.45em;
+  border-radius: var(--radius-leitura);
+  border: var(--spacing-fio) dashed var(--color-acento);
+  color: var(--color-acento);
+  white-space: nowrap;
+}
+
+/* S7 usa `.sem-dado` sozinho como conteúdo do h2 (token `{{NOME_ESPECIALISTA}}`):
+   o texto do campo `{{...}}` mede mais que 320px de viewport e, com nowrap
+   sem limite, empurra o documento inteiro (overflow horizontal a 320px —
+   achado do gate). Em qualquer outro lugar `.sem-dado` vive dentro de
+   parágrafo, cabe na linha e o nowrap continua intacto — este seletor não
+   toca lá. */
+h1 .sem-dado, h2 .sem-dado {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.pular {
+  position: absolute; left: -9999px; top: 0; z-index: 20;
+  background: var(--color-acao); color: var(--color-acao-conteudo);
+  padding: 0.7rem 1.1rem;
+}
+.pular:focus { left: 0.5rem; top: 0.5rem; }
+
+/* ---------- folha de laudo: largura e miolo ---------- */
+.pagina { max-width: 84rem; margin: 0 auto; padding: 0 var(--spacing-gutter); }
+
+/* ---------- régua de leitura (marca de margem, reutilizada por Secao) ---------- */
+.regua { display: grid; gap: 0.35rem; align-content: start; }
+.regua__item { display: grid; gap: 0.1rem; border-left: var(--spacing-fio) solid var(--color-fio); padding-left: 0.6rem; }
+.regua__item b { font-family: var(--font-leitura); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; color: var(--color-acento); }
+.regua__item span { font-size: 0.625rem; color: var(--color-conteudo-suave); letter-spacing: 0.04em; }
+
+/* ---------- botão de ação ---------- */
+.acao {
+  display: inline-flex; align-items: center; gap: 0.7rem; width: 100%;
+  min-height: var(--alvo-toque);
+  background: var(--color-acao); color: var(--color-acao-conteudo);
+  font: inherit; font-weight: 700; font-size: 1rem; line-height: 1.25; text-decoration: none;
+  padding: 1rem 1.35rem; border: 0; border-radius: var(--radius-controle); cursor: pointer;
+}
+@media (min-width: 40rem) { .acao { width: auto; } }
+.acao:hover { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-acao-conteudo) 45%, transparent); }
+.acao__marca { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.acao-linha { margin-top: var(--spacing-leitura); font-size: 0.8125rem; color: var(--color-conteudo-suave); }
+
+/* ---------- grid de seção: régua à esquerda, corpo à direita ---------- */
+.secao {
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--spacing-entre-secoes);
+  border-top: var(--spacing-fio) solid var(--color-fio);
+}
+.secao:first-child { border-top: 0; }
+@media (min-width: 60rem) {
+  .secao { grid-template-columns: var(--spacing-regua) minmax(0, 1fr); column-gap: var(--spacing-gutter); }
+  .secao__marca { grid-column: 1; }
+  .secao__corpo { grid-column: 2; min-width: 0; }
+}
+.secao__marca .leitura { display: block; margin-bottom: var(--spacing-leitura); }
+
+/* ---------- S2: lista de estado (dor, sem ícone) ---------- */
+.lista-estado { list-style: none; margin: var(--spacing-entre-blocos) 0; padding: 0; max-width: var(--spacing-medida); }
+.lista-estado li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.8rem; border-top: var(--spacing-fio) solid var(--color-fio); align-items: baseline; }
+.lista-estado li:last-child { border-bottom: var(--spacing-fio) solid var(--color-fio); }
+.lista-estado .leitura { font-size: 0.625rem; }
+
+/* ---------- S3: dois estados (sem captura / com captura) ---------- */
+.dois-estados { display: grid; gap: var(--spacing-interno); margin: var(--spacing-entre-blocos) 0; }
+@media (min-width: 52rem) { .dois-estados { grid-template-columns: 1fr 1fr; } }
+.estado { border: var(--spacing-fio) solid var(--color-fio); padding: var(--spacing-interno); }
+.estado--capturado { border-color: var(--color-acento); }
+.estado h3 { font-size: 0.6875rem; font-family: var(--font-leitura); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-conteudo-suave); margin-bottom: 0.8rem; }
+.estado--capturado h3 { color: var(--color-acento); }
+
+/* ---------- S4: etapas numeradas ---------- */
+.etapas { list-style: none; margin: var(--spacing-entre-blocos) 0; padding: 0; counter-reset: p; max-width: var(--spacing-medida); }
+.etapas li { counter-increment: p; display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 0.75rem; padding-block: var(--spacing-entre-linhas); border-top: var(--spacing-fio) solid var(--color-fio); }
+.etapas li:last-child { border-bottom: var(--spacing-fio) solid var(--color-fio); }
+.etapas li::before { content: "P" counter(p, decimal-leading-zero); font-family: var(--font-leitura); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; color: var(--color-acento); padding-top: 0.35em; }
+.etapas b { display: block; margin-bottom: 0.18rem; }
+.etapas p { color: var(--color-conteudo-suave); }
+.destaque { margin-top: var(--spacing-interno); font-weight: 600; padding-left: 0.9rem; border-left: var(--spacing-fio) solid var(--color-acento); }
+
+/* ---------- S5: abas de tratamento ---------- */
+.abas { display: flex; gap: 0; margin: var(--spacing-entre-blocos) 0 0; flex-wrap: wrap; }
+.aba {
+  font: inherit; font-family: var(--font-leitura); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  min-height: var(--alvo-toque);
+  background: transparent; color: var(--color-conteudo-suave);
+  border: var(--spacing-fio) solid var(--color-fio); border-right: 0; padding: 0.7rem 1rem; cursor: pointer;
+}
+.aba:last-of-type { border-right: var(--spacing-fio) solid var(--color-fio); }
+.aba[aria-selected="true"] { color: var(--color-acao-conteudo); background: var(--color-acao); border-color: var(--color-acao); }
+.painel { border: var(--spacing-fio) solid var(--color-fio); border-top: 0; padding: var(--spacing-interno); }
+.painel[hidden] { display: none; }
+.linha-caso { padding-block: var(--spacing-entre-linhas); border-top: var(--spacing-fio) solid var(--color-fio); }
+.linha-caso:first-of-type { border-top: 0; padding-top: 0; }
+.linha-caso h3 { margin: 0 0 0.3rem; font-family: var(--font-leitura); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-conteudo-suave); }
+.linha-caso--limite { border-top: var(--spacing-fio) dashed var(--color-acento); margin-top: var(--spacing-entre-linhas); padding: var(--spacing-entre-linhas) 0; }
+.linha-caso--limite h3 { color: var(--color-acento); }
+.linha-caso--limite p { font-size: 1.125rem; font-weight: 600; }
+
+/* ---------- S6: diagrama de proporção ---------- */
+.proporcao svg { width: 100%; max-width: 30rem; height: auto; display: block; margin-top: var(--spacing-entre-blocos); }
+.prop-dente { fill: none; stroke: var(--color-conteudo); stroke-width: 1.4; }
+.prop-cota, .prop-cota-serifa { fill: none; stroke: var(--color-acento); stroke-width: 1; }
+.prop-linha { fill: none; stroke: var(--color-fio); stroke-width: 1; }
+.prop-guia { fill: none; stroke: var(--color-fio); stroke-width: 1; stroke-dasharray: 2 3; }
+.fig-rotulo { font-family: var(--font-leitura); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--color-acento); font-weight: 600; }
+.legenda-fig { margin-top: 0.7rem; font-size: 0.75rem; color: var(--color-conteudo-suave); max-width: 46ch; }
+
+/* ---------- S7: números de autoridade ---------- */
+.numeros { display: grid; gap: var(--spacing-entre-linhas); margin-top: var(--spacing-entre-blocos); max-width: var(--spacing-medida); }
+@media (min-width: 40rem) { .numeros { grid-template-columns: 1fr 1fr; gap: var(--spacing-gutter); } }
+.numeros div { border-top: var(--spacing-fio) solid var(--color-fio); padding-top: 0.6rem; }
+.numeros b { display: block; font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 700; }
+.numeros span { font-size: 0.8125rem; color: var(--color-conteudo-suave); }
+
+/* ---------- S11: FAQ (accordion nativo) ---------- */
+.faq { margin-top: var(--spacing-entre-blocos); max-width: var(--spacing-medida); }
+.faq details { border-top: var(--spacing-fio) solid var(--color-fio); }
+.faq details:last-of-type { border-bottom: var(--spacing-fio) solid var(--color-fio); }
+.faq summary { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.6rem; align-items: start; padding-block: var(--spacing-entre-linhas); cursor: pointer; list-style: none; font-weight: 600; min-height: var(--alvo-toque); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--color-acento); }
+.faq .sinal { margin-top: 0.42em; stroke: var(--color-acento); stroke-width: 1.4; }
+.faq details[open] .sinal .vertical { display: none; }
+.faq .resposta { padding: 0 0 var(--spacing-interno) 2.2rem; color: var(--color-conteudo-suave); }
+.faq .resposta p + p { margin-top: var(--spacing-entre-linhas); }
+
+/* ---------- rodapé ---------- */
+.rodape { padding-block: var(--spacing-entre-secoes); color: var(--color-conteudo-suave); font-size: 0.875rem; }
+.rodape p { margin-bottom: 0.45rem; }
+.balanco { margin-top: var(--spacing-entre-blocos); border-top: var(--spacing-fio) solid var(--color-fio); padding-top: var(--spacing-interno); display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; }
+
+/* ---------- telas estreitas ---------- */
+@media (max-width: 40rem) {
+  .secao__corpo { min-width: 0; }
+}
+
+/* ═══ CTA FLUTUANTE MOBILE (BarraAcao.astro) ═══
+   tokens.json > handoff.cta-flutuante-mobile: linha de estado do visor, não
+   pílula flutuante genérica — campo escuro, fio no topo, leitura em mono à
+   esquerda, ação em dourado à direita. Só abaixo de 60rem. Nunca cobre
+   conteúdo: o body reserva a altura da barra abaixo. */
+.marco-s2 { height: 0; }
+.barra-acao { display: none; }
+@media (max-width: 59.999rem) {
+  .barra-acao {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-interno);
+    background: var(--color-visor);
+    border-top: var(--spacing-fio) solid var(--color-visor-fio);
+    padding: 0.7rem var(--spacing-gutter);
+    padding-bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+    transform: translateY(101%);
+    visibility: hidden;
+    --color-acao: var(--color-medida-clara);
+    --color-acao-conteudo: var(--color-visor);
+  }
+  /* reserva de espaço para a barra não cobrir o rodapé — 4,5rem cobre a
+     altura real da barra em qualquer largura móvel medida (ver PROJECT.md). */
+  body:has(.barra-acao) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .barra-acao__leitura {
+    font-family: var(--font-leitura);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.35;
+    color: var(--color-medida-clara);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .acao--compacta { width: auto; flex: 0 0 auto; font-size: 0.9375rem; padding: 0.8rem 1.05rem; }
+  .barra-acao.esta-visivel { transform: none; visibility: visible; }
+}
+@supports (animation-timeline: view()) {
+  @media (max-width: 59.999rem) {
+    :root { timeline-scope: --marco-s2; }
+    .marco-s2 { view-timeline: --marco-s2 block; }
+    /* Longhands puros, de propósito — nunca `animation:` (shorthand) numa
+       regra que também tem `animation-timeline`: o minificador do build
+       (Lightning CSS) funde as duas e o Chrome descarta o resultado inteiro.
+       Ver motion.css, cabeçalho, e PROJECT.md > defeito raiz do Ciclo III. */
+    .barra-acao {
+      animation-name: subir-acao;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --marco-s2;
+      animation-range: cover 92% cover 100%;
+    }
+  }
+  @media (max-width: 59.999rem) and (prefers-reduced-motion: reduce) {
+    /* sem deslocamento: a barra revela por opacidade, ainda amarrada ao mesmo gatilho */
+    .barra-acao { transform: none; opacity: 0; animation-name: revelar-acao; }
+  }
+}
+@keyframes subir-acao { to { transform: none; visibility: visible; } }
+@keyframes revelar-acao { to { opacity: 1; visibility: visible; } }

@@ -1,0 +1,105 @@
+{
+  "direcao": "C — Ciclorama",
+  "tese": "A página é um plano de luz. No ciclorama do teatro, a parede curva atrás dos atores não carrega imagem nenhuma — só luz — e passa do preto sem profundidade ao cobalto, do cobalto ao dourado da primeira luz, e daí ao dia branco. A página faz esse percurso: abre na noite em que o visitante vive o problema, a primeira luz aparece quando o mecanismo é explicado, e a superfície chega ao dia inteiro na hora da decisão. O argumento decisivo desta direção neste projeto é material, não poético: é a única das três cujo sistema visual inteiro foi desenhado para funcionar com zero ativos fotográficos — e todas as fotos deste cliente são pendência.",
+  "tipografia": {
+    "familia": "Familjen Grotesk (títulos e rótulos de cena) + Hanken Grotesk (texto corrido)",
+    "razao": "Cartaz de teatro e de dança escandinavo é o registro gráfico exato deste mundo: grotesca contemporânea de terminações levemente irregulares, composta em caixa alta apertada para o nome da cena e em corpo generoso para o texto. Familjen Grotesk tem personalidade suficiente para o rótulo de cena não parecer interface, e Hanken Grotesk foi desenhada para leitura longa em tela — que é o que esta página exige de um público de 30 a 55 anos lendo argumento no celular. Nenhuma das duas é a grotesca de produto digital que o brief recusou ao pedir 'elegante e moderna' em vez de 'neutra'.",
+    "escala": {
+      "cena": "0.6875rem / 0.18em de entreletra / caixa alta / numeral tabular",
+      "corpo": "1.0625rem–1.1875rem / 1.65",
+      "titulo-secao": "clamp(1.8rem, 3.4vw, 2.9rem) / 1.1",
+      "titulo-hero": "clamp(2.4rem, 5.8vw, 4.5rem) / 1.03",
+      "medida": "35em"
+    },
+    "pilha": {
+      "titulo": "'Familjen Grotesk', system-ui, sans-serif",
+      "texto": "'Hanken Grotesk', system-ui, sans-serif"
+    }
+  },
+  "cor": {
+    "origem": "O ciclorama não recebe a paleta do brief como restrição: ele a explica. AZUL MARINHO é a banda de cobalto que aparece no fundo da parede quando a primeira luz sobe — a cor exata do início da manhã cênica; DOURADO é o que se junta acima do cobalto antes do dia, a segunda cor da sequência de luz; BRANCO GELO é o dia inteiro, reservado ao estado plenamente ativo — no caso, o bloco de agendamento. A escala não foi inventada para a marca: é a ordem física da luz num ciclorama, e a marca já estava nela. Precaução deliberada contra o gradiente genérico que a política bloqueia: a rampa NUNCA aparece como degradê. Cada passagem é uma banda de valor chapada, com aresta definida, do jeito que um refletor de cena entrega um degrau de luz e não uma transição contínua.",
+    "escala": {
+      "noite": "#070C16",
+      "noite-alt": "#0D1524",
+      "cobalto": "#14304F",
+      "cobalto-claro": "#1E3E60",
+      "cobalto-fio": "#23405F",
+      "aurora": "#C9963F",
+      "aurora-funda": "#8A5F16",
+      "dia": "#F4F5F7",
+      "dia-alt": "#E7EAEE",
+      "dia-fio": "#BFC7D0",
+      "tinta-noite": "#101825",
+      "tinta-noite-suave": "#4C5765",
+      "bruma": "#AEB9C7",
+      "luz-conteudo": "#E8ECF2"
+    },
+    "semanticos": {
+      "--cor-superficie": "dia / noite",
+      "--cor-superficie-alt": "dia-alt / noite-alt",
+      "--cena-noite": "cobalto / noite (fundo do primeiro ato)",
+      "--cena-dia": "dia / cobalto (fundo do ato final)",
+      "--cor-conteudo": "tinta-noite / luz-conteudo",
+      "--cor-conteudo-suave": "tinta-noite-suave / bruma",
+      "--cor-cena": "aurora-funda / aurora",
+      "--cor-fio": "dia-fio / cobalto-fio",
+      "--cor-acao": "cobalto / aurora",
+      "--cor-acao-conteudo": "dia / noite"
+    },
+    "estrategia": "Paleta completa com quatro papéis nomeados (noite, cobalto, aurora, dia), e a cor ocupa região inteira em vez de acento espalhado. O tema é o mais caro dos três para o Ciclo III: trocar de tema aqui não é trocar dois tokens, é reancorar as duas pontas da rampa de luz — no claro a rampa termina em branco-dia, no escuro ela termina em cobalto e o dourado passa a carregar o brilho.",
+    "contraste": "Menor razão medida: 4,67:1 (aurora-funda sobre dia-alt). Corpo 16,32:1 no claro e 16,50:1 no escuro. Aurora sobre cobalto 5,06:1; luz-conteudo sobre cobalto 11,31:1; CTA 12,30:1 no claro e 7,38:1 no escuro. AA em ambos os temas.",
+    "cena-fisica": "A pessoa lendo no escuro do quarto, à noite, é literalmente o primeiro ato da página. Por isso o tema escuro é o estado emocionalmente correto, e o claro é o destino da leitura, não o padrão de conforto."
+  },
+  "motivo": {
+    "nome": "Banda de horizonte",
+    "descricao": "Entre uma seção e a seguinte corre uma banda de horizonte: uma faixa horizontal de valor chapado, com aresta definida, que avança um degrau na sequência de luz a cada passagem — noite, cobalto, aurora, dia. Presa a cada banda vive o rótulo de cena, na margem direita: número tabular e nome da fase (CENA 03 · PRIMEIRA LUZ). O rótulo não é um chapéu de título: ele pertence à aresta de luz, marca a posição do leitor na sequência e garante que a cor nunca seja o único sinal de estado — exigência de acessibilidade e disciplina do próprio mundo, onde toda deixa tem nome escrito no plano de luz. Nas duas seções em que o argumento vira (S3, a inversão de método, e S12, a decisão), a banda ganha altura e o fundo inteiro da seção assume o valor da cena.",
+    "aplicacao": [
+      "S1 hero — CENA 01 · ESCURO; fundo cobalto no claro, noite no escuro, e a arcada aparece só como contorno de fio, sem preenchimento: ainda não há luz sobre ela",
+      "S2 — CENA 02 · a banda ainda não subiu; a lista de dor fica no valor mais baixo da página",
+      "S3 — CENA 03 · PRIMEIRA LUZ; a banda ganha altura e o fundo da seção assume o cobalto: é onde o mecanismo entra",
+      "S4 e S5 — CENA 04 e 05; o valor sobe um degrau por seção",
+      "S6 — CENA 06 · o diagrama de proporção é iluminado em aurora",
+      "S11 — CENA 07 · o FAQ está em plena luz de trabalho, valor alto e contraste alto",
+      "S12 — CENA 08 · DIA; a superfície inteira chega ao branco-dia, reservado ao estado plenamente ativo",
+      "rodapé — BLACKOUT; o valor cai de volta e a sequência fecha"
+    ]
+  },
+  "espacamento": {
+    "base": "8px",
+    "fio": "1px",
+    "banda": "6px",
+    "banda-alta": "22px",
+    "cena": "0.5rem",
+    "entre-linhas": "1.2rem",
+    "interno": "1.75rem",
+    "entre-blocos": "3rem",
+    "entre-secoes": "clamp(4.5rem, 11vh, 9rem)",
+    "respiro-hero": "clamp(5.5rem, 16vh, 11rem)",
+    "margem-cena": "clamp(3rem, 7vw, 7rem)",
+    "gutter": "clamp(1.25rem, 5vw, 4rem)",
+    "medida": "35em",
+    "nota": "O intervalo entre seções é o escuro entre duas deixas de luz e por isso é o maior salto da escala; a banda de horizonte tem dois valores (6px de passagem comum, 22px nas duas viradas de argumento) porque no plano de luz nem toda deixa tem o mesmo peso."
+  },
+  "raio": {
+    "nenhum": "0",
+    "controle": "4px",
+    "nota": "Aresta reta em tudo: banda de luz não tem canto arredondado. A única exceção é 4px em controle interativo, um pouco maior que nas outras direções porque aqui o botão é o único objeto sólido de uma página feita de bandas — precisa se ler como objeto."
+  },
+  "sombra": {
+    "nenhuma": "none",
+    "aresta": "0 1px 0 var(--cor-cena)",
+    "nota": "Nenhuma elevação e nenhum blur: no ciclorama a profundidade vem do valor da luz, não de sombra projetada. A única 'sombra' declarada é uma aresta de 1px sob a banda, que é o limite duro do foco de cena. Sombra suave aqui destruiria a premissa do mundo."
+  },
+  "motion": {
+    "principio": "Uma deixa só: cada banda de horizonte SOBE — cresce da altura zero até a altura de cena — conforme a seção entra na viewport, com scroll-linked timeline. É a luz subindo, executada uma vez por passagem.",
+    "restricoes": [
+      "@supports (animation-timeline: view()) e @media (prefers-reduced-motion: no-preference)",
+      "com movimento reduzido as bandas já nascem na altura final: nenhuma informação existe só no movimento",
+      "o LCP é a headline de S1 e não recebe animação de entrada"
+    ]
+  },
+  "handoff": {
+    "estrutura-hero": "ciclorama-banda-escura-rotulo-cena-direita",
+    "risco-declarado": "Atmosfera pode engolir a oferta: uma página que abre no escuro precisa deixar o CTA e a natureza da oferta legíveis no primeiro viewport, ou vira cartaz bonito que não converte. Mitigação implementada: o CTA aparece em aurora sólida sobre o fundo de cena logo abaixo da subheadline, e a headline nomeia a avaliação. Segundo risco: é a mais cara das três no Ciclo III, porque o tema escuro reancora a rampa inteira em vez de trocar dois tokens."
+  }
+}

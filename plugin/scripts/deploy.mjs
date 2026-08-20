@@ -32,6 +32,7 @@ const tem = (f) => args.includes(f);
 const slug = val('--slug');
 const preview = tem('--preview');
 const dryRun = tem('--dry-run');
+const registrarUrl = val('--registrar');
 
 if (!slug) {
   console.error('uso: deploy.mjs --slug <slug> [--preview] [--dry-run]');
@@ -55,7 +56,13 @@ function abortar(motivo, extra = {}) {
 }
 
 function rodar(cmd, argv, cwd) {
-  const r = spawnSync(cmd, argv, { cwd, encoding: 'utf8', stdio: 'pipe' });
+  // No Windows, npm/git/railway sao shims .cmd/.bat: sem shell:true o spawnSync
+  // nao os localiza e falha com ENOENT (code null), sem log de erro legivel. Mas
+  // shell:true so vale para esses shims por nome — para um executavel chamado
+  // por caminho absoluto (ex.: process.execPath), o shell reintroduz o problema
+  // que resolve: cmd.exe corta o caminho no primeiro espaco ("C:\Program").
+  const usarShell = process.platform === 'win32' && !cmd.includes('\\') && !cmd.includes('/');
+  const r = spawnSync(cmd, argv, { cwd, encoding: 'utf8', stdio: 'pipe', shell: usarShell });
   return { code: r.status, out: ((r.stdout || '') + (r.stderr || '')).trim() };
 }
 
@@ -113,28 +120,48 @@ if (dryRun) {
   process.exit(0);
 }
 
-const servico = process.env.RAILWAY_SERVICE || slug;
-const railwayArgs = ['up', '--service', servico, '--detach'];
-if (preview) railwayArgs.push('--environment', process.env.RAILWAY_ENV_PREVIEW || 'preview');
+let pub = { out: '' };
+if (!registrarUrl) {
+  // Preflight, em vez de so ler a mensagem de erro: em locale nao-ingles (ex.: cmd.exe
+  // em pt-BR) a mensagem de "comando nao encontrado" nao bate com nenhum regex fixo,
+  // e ainda sai com mojibake porque a saida vem em OEM/CP850, nao UTF-8. Testar a
+  // disponibilidade antes evita depender de string de erro localizada.
+  const sonda = rodar('railway', ['--version'], base);
+  if (sonda.code !== 0) {
+    console.error(
+      '\n  A CLI da Railway nao esta disponivel neste ambiente.\n' +
+      '  Publique pelo conector Railway (create-deployment / redeploy) e depois rode:\n' +
+      `    node plugin/scripts/deploy.mjs --slug ${slug} --registrar <url>\n`
+    );
+    logEvent(slug, { ev: 'deploy', status: 'pendente', motivo: 'cli-ausente', nivel, sha });
+    process.exit(3);
+  }
 
-const pub = rodar('railway', railwayArgs, base);
-if (pub.code === null || /not found|command not found|ENOENT/i.test(pub.out)) {
-  console.error(
-    '\n  A CLI da Railway nao esta disponivel neste ambiente.\n' +
-    '  Publique pelo conector Railway (create-deployment / redeploy) e depois rode:\n' +
-    `    node plugin/scripts/deploy.mjs --slug ${slug} --registrar <url>\n`
-  );
-  logEvent(slug, { ev: 'deploy', status: 'pendente', motivo: 'cli-ausente', nivel, sha });
-  process.exit(3);
+  const servico = process.env.RAILWAY_SERVICE || slug;
+  const railwayArgs = ['up', '--service', servico, '--detach'];
+  if (preview) railwayArgs.push('--environment', process.env.RAILWAY_ENV_PREVIEW || 'preview');
+
+  pub = rodar('railway', railwayArgs, base);
+  if (pub.code === null || /not found|command not found|ENOENT|is not recognized/i.test(pub.out)) {
+    console.error(
+      '\n  A CLI da Railway nao esta disponivel neste ambiente.\n' +
+      '  Publique pelo conector Railway (create-deployment / redeploy) e depois rode:\n' +
+      `    node plugin/scripts/deploy.mjs --slug ${slug} --registrar <url>\n`
+    );
+    logEvent(slug, { ev: 'deploy', status: 'pendente', motivo: 'cli-ausente', nivel, sha });
+    process.exit(3);
+  }
+  if (pub.code !== 0) {
+    console.error(pub.out.slice(-2000));
+    abortar('publicacao recusada pela Railway.', { fase: 'publicacao' });
+  }
+  console.log('  publicacao: enviada');
+} else {
+  console.log(`  publicacao: pulada (--registrar) — assumindo que ja foi publicada pelo conector Railway`);
 }
-if (pub.code !== 0) {
-  console.error(pub.out.slice(-2000));
-  abortar('publicacao recusada pela Railway.', { fase: 'publicacao' });
-}
-console.log('  publicacao: enviada');
 
 /* ------------------------------------------------- 5. verificar a URL viva */
-const url =
+const url = registrarUrl ||
   val('--url') ||
   process.env.LP_URL ||
   (pub.out.match(/https?:\/\/[^\s"']+/) || [])[0];

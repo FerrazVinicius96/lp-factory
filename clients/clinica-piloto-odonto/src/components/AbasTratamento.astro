@@ -1,0 +1,96 @@
+---
+/**
+ * S5 — "Os dois caminhos". Abas, não colunas paralelas: colunas convidam à
+ * comparação entre tratamentos, e a decisão aqui não é essa — é de encaixe.
+ * O leitor escolhe a sua aba (wireframe.md > S5).
+ *
+ * Tablist com teclado (seta esquerda/direita). Conteúdo das duas abas
+ * presente no HTML desde o carregamento, e nenhum painel nasce com `hidden`
+ * estático: sem JS, as duas aparecem inteiras (nenhuma oferta fica
+ * inacessível), então SEO e leitura sem JS não perdem nada. É o próprio
+ * script que esconde o painel não selecionado, como melhoria progressiva —
+ * não o HTML de partida.
+ * Única ilha interativa da página, além do accordion nativo do FAQ.
+ */
+---
+
+<div class="abas" role="tablist" aria-label="Caminhos de tratamento">
+  <button class="aba" role="tab" id="aba-implante" aria-controls="painel-implante" aria-selected="true" tabindex="0" type="button">
+    Implantes
+  </button>
+  <button class="aba" role="tab" id="aba-lente" aria-controls="painel-lente" aria-selected="false" tabindex="-1" type="button">
+    Lentes de porcelana
+  </button>
+</div>
+
+<div class="painel" role="tabpanel" id="painel-implante" aria-labelledby="aba-implante" tabindex="0">
+  <div class="linha-caso">
+    <h3>Para quem</h3>
+    <p>Perdeu um ou mais dentes, usa prótese removível, ou mastiga só de um lado para não incomodar a região.</p>
+  </div>
+  <div class="linha-caso">
+    <h3>O que resolve</h3>
+    <p>A raiz. O implante substitui o que sustenta o dente, então a mordida volta a distribuir força dos dois lados.</p>
+  </div>
+  <div class="linha-caso linha-caso--limite">
+    <h3>O que não resolve sozinho</h3>
+    <p>Cor e formato do resto da arcada. Muita gente chega querendo implante e sai com um plano que também toca no que já existe.</p>
+  </div>
+  <div class="linha-caso">
+    <h3>O que o escaneamento mostra antes</h3>
+    <p>Onde há osso, quanto há, e em que sequência os dentes precisam ser resolvidos.</p>
+  </div>
+</div>
+
+<div class="painel" role="tabpanel" id="painel-lente" aria-labelledby="aba-lente" tabindex="0">
+  <div class="linha-caso">
+    <h3>Para quem</h3>
+    <p>Tem os dentes, mas não gosta deles. Formato irregular, desgaste, manchas que clareamento não tira, espaços entre um dente e outro.</p>
+  </div>
+  <div class="linha-caso">
+    <h3>O que resolve</h3>
+    <p>A face visível do dente — proporção, alinhamento aparente e cor.</p>
+  </div>
+  <div class="linha-caso linha-caso--limite">
+    <h3>O que não resolve</h3>
+    <p>Ausência de dente, problema de gengiva não tratado ou mordida desequilibrada. Lente aplicada sobre um problema de base é dinheiro que volta a doer depois.</p>
+  </div>
+  <div class="linha-caso">
+    <h3>O que o escaneamento mostra antes</h3>
+    <p>O formato e a proporção que o seu rosto comporta — antes de qualquer desgaste no dente.</p>
+  </div>
+</div>
+
+<script>
+  const abas = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+
+  function ativar(aba: HTMLButtonElement) {
+    for (const a of abas) {
+      const sel = a === aba;
+      a.setAttribute('aria-selected', String(sel));
+      a.tabIndex = sel ? 0 : -1;
+      const painel = document.getElementById(a.getAttribute('aria-controls')!);
+      if (painel) painel.hidden = !sel;
+    }
+  }
+
+  abas.forEach((aba, i) => {
+    aba.addEventListener('click', () => ativar(aba));
+    aba.addEventListener('keydown', (e) => {
+      let alvo: HTMLButtonElement | null = null;
+      if (e.key === 'ArrowRight') alvo = abas[(i + 1) % abas.length];
+      if (e.key === 'ArrowLeft') alvo = abas[(i - 1 + abas.length) % abas.length];
+      if (alvo) {
+        e.preventDefault();
+        ativar(alvo);
+        alvo.focus();
+      }
+    });
+  });
+
+  // Melhoria progressiva: o HTML de partida mostra as duas abas inteiras
+  // (nenhum `hidden` estático). É este script, já confirmado em execução,
+  // que reduz para uma — nunca o contrário.
+  const inicial = abas.find((a) => a.getAttribute('aria-selected') === 'true');
+  if (inicial) ativar(inicial);
+</script>

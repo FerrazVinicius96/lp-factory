@@ -1,0 +1,265 @@
+---
+/**
+ * {{NOME_CLINICA}} — avaliação com escaneamento 3D (piloto técnico, nível avançado).
+ * Direção B, "Visor" — motivo gráfico "malha de captura" (tokens.json).
+ *
+ * Todo o texto vem verbatim de copy.md, aprovado em três passes. O bloco
+ * `data-proto-only` de S8/S9/S10 do protótipo NÃO existe aqui: a página
+ * publicada tem 10 seções, não 13 (PROJECT.md §6). Nenhum dado de
+ * identificação real foi inventado — tudo o que falta permanece como
+ * token `{{...}}`, nunca preenchido com ficção.
+ *
+ * O conteúdo mora no frontmatter, não em módulo externo, de propósito: o
+ * gate de copy varre .astro e precisa enxergar cada frase que vai ao ar.
+ */
+import Base from '../layouts/Base.astro';
+import FaixaPiloto from '../components/FaixaPiloto.astro';
+import ControleTema from '../components/ControleTema.astro';
+import VisorHero from '../components/VisorHero.astro';
+import SecaoLeitura from '../components/SecaoLeitura.astro';
+import AbasTratamento from '../components/AbasTratamento.astro';
+import FiguraProporcao from '../components/FiguraProporcao.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import Rodape from '../components/Rodape.astro';
+import BarraAcao from '../components/BarraAcao.astro';
+
+const titulo = 'Avaliação com escaneamento 3D — {{NOME_CLINICA}}';
+const descricao =
+  'Avaliação com escaneamento 3D: você vê o seu caso desenhado em imagem — implante ou lente de porcelana — e decide fora da cadeira.';
+
+/* Piloto técnico publicado em URL de demonstração. Não existe domínio de
+   cliente: o endereço canônico é o do próprio serviço de demonstração e
+   pode ser sobrescrito no deploy por LP_SITE (astro.config.mjs). */
+const site = Astro.site ?? new URL('https://clinica-piloto-odonto.up.railway.app/');
+const canonical = new URL(Astro.url.pathname, site).href;
+
+/* --- S11 · FAQ — alimenta a seção e o FAQPage schema a partir de um único lugar --- */
+const faq = [
+  {
+    pergunta: 'Vou sentir dor?',
+    aberta: true,
+    respostaHtml: `
+      <p>O que quase todo mundo teme é a memória da agulha e do barulho do motor, mais que o procedimento em si. Vale separar as duas coisas.</p>
+      <p><b>Durante:</b> a região é anestesiada e o procedimento acontece com você sem sensação de dor na área. <span class="sem-dado">{{PROTOCOLO_ANESTESIA}}</span></p>
+      <p><b>Depois:</b> o incômodo do pós é sensibilidade de região operada, com conduta e medicação previstas no seu plano. <span class="sem-dado">{{CONDUTA_POS}}</span></p>
+      <p>Na avaliação não há procedimento nenhum: é conversa e escaneamento.</p>
+    `,
+    respostaTexto:
+      'O que quase todo mundo teme é a memória da agulha e do barulho do motor, mais que o procedimento em si. Durante: a região é anestesiada e o procedimento acontece sem sensação de dor na área. Depois: o incômodo do pós é sensibilidade de região operada, com conduta e medicação previstas no plano. Na avaliação não há procedimento nenhum: é conversa e escaneamento.',
+  },
+  {
+    pergunta: 'Quanto tempo até eu voltar à minha rotina?',
+    respostaHtml: `
+      <p>A avaliação não tem recuperação: você sai e segue o dia.</p>
+      <p>Para o tratamento, o tempo depende do caso — e é exatamente o que o plano por escrito responde na consulta, com número, para o <b>seu</b> caso. <span class="sem-dado">{{TEMPO_RETORNO_ROTINA}}</span> <span class="sem-dado">{{RESTRICOES_INICIAIS}}</span></p>
+      <p>Nenhum prazo genérico é dado aqui de propósito: prazo de recuperação que serve para todo mundo não serve para ninguém.</p>
+    `,
+    respostaTexto:
+      'A avaliação não tem recuperação: você sai e segue o dia. Para o tratamento, o tempo depende do caso, e é exatamente o que o plano por escrito responde na consulta, para o seu caso. Nenhum prazo genérico é dado aqui de propósito.',
+  },
+  {
+    pergunta: 'Vou ficar sem dente em algum momento do processo?',
+    respostaHtml: `<p>Essa é a pergunta que a maioria não faz em voz alta. <span class="sem-dado">{{POLITICA_PROVISORIO}}</span> — a resposta entra no plano por escrito, na primeira consulta.</p>`,
+    respostaTexto:
+      'Essa é a pergunta que a maioria não faz em voz alta. A resposta entra no plano por escrito, na primeira consulta.',
+  },
+  {
+    pergunta: 'A lente de porcelana estraga o dente por baixo?',
+    respostaHtml: `<p>Depende do quanto de estrutura precisa sair para a lente assentar, e isso varia caso a caso. <span class="sem-dado">{{POLITICA_DESGASTE}}</span> O escaneamento mostra essa medida antes de qualquer desgaste — é uma das razões de o plano vir primeiro.</p>`,
+    respostaTexto:
+      'Depende do quanto de estrutura precisa sair para a lente assentar, e isso varia caso a caso. O escaneamento mostra essa medida antes de qualquer desgaste.',
+  },
+  {
+    pergunta: 'Quantas consultas até terminar?',
+    respostaHtml: `<p>Varia com o caso. O plano entregue na avaliação traz a sequência e a contagem de sessões previstas para o seu, e não uma média de clínica.</p>`,
+    respostaTexto:
+      'Varia com o caso. O plano entregue na avaliação traz a sequência e a contagem de sessões previstas para o seu caso, e não uma média de clínica.',
+  },
+  {
+    pergunta: 'Preciso decidir na hora?',
+    respostaHtml: `<p>Não. A avaliação termina com o plano na sua mão. Você decide fora da cadeira, no seu tempo.</p>`,
+    respostaTexto: 'Não. A avaliação termina com o plano na sua mão. Você decide fora da cadeira, no seu tempo.',
+  },
+  {
+    pergunta: 'Quanto custa?',
+    respostaHtml: `<p>O valor depende do que o seu caso exige, e por isso não aparece nesta página. <span class="sem-dado">{{CONDICAO_ESPECIAL}}</span> vale para agendamentos feitos até <span class="sem-dado">{{DATA_LIMITE}}</span> e é apresentada junto com o plano.</p>`,
+    respostaTexto:
+      'O valor depende do que o seu caso exige, e por isso não aparece nesta página. A condição especial vale para agendamentos feitos até a data-limite e é apresentada junto com o plano.',
+  },
+];
+
+/* --- Dados estruturados --- */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.respostaTexto },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dentist',
+    name: '{{NOME_CLINICA}}',
+    description: descricao,
+    disambiguatingDescription:
+      'Marca e clínica fictícias. Esta página é um piloto técnico de demonstração e não presta atendimento odontológico real.',
+    url: canonical,
+    inLanguage: 'pt-BR',
+    availableService: [
+      { '@type': 'MedicalProcedure', name: 'Implante dentário' },
+      { '@type': 'MedicalProcedure', name: 'Lente de contato em porcelana' },
+      { '@type': 'MedicalProcedure', name: 'Avaliação com escaneamento 3D' },
+    ],
+  },
+];
+
+/* --- Balanço do rodapé (S13) — derivado da contagem real da página, não
+   digitado à mão (achado do tech-lead: os literais anteriores {7, 5} não
+   batiam nem com os rótulos "Leitura" nem com os campos `{{...}}` reais).
+
+   "Leituras completas": marcos numerados que a régua mostra ao longo da
+   página. Vai de "Leitura 02" (S2) a "Leitura 09" (S12, o fecho) — o herói
+   tem régua própria (CAP 01/CAP 02/CAMPO), sem numerar como as demais.
+
+   "Sem dado": um item por campo `{{...}}` que aparece como `.sem-dado`
+   fora do FAQ — hero (VisorHero.astro, 4), S4 (1), S7 (4), diagrama de S6
+   (FiguraProporcao.astro, 1), fecho (CtaFinal.astro, 3) e rodapé
+   (Rodape.astro, 6). Contagem batida linha a linha com o código nesta
+   rodada; se um componente ganhar ou perder um campo `{{...}}`, este
+   comentário precisa ser atualizado junto (não há introspecção automática
+   do HTML renderizado a partir daqui). As perguntas do FAQ têm campos
+   `{{...}}` próprios dentro de `respostaHtml` e não entram nesta métrica de
+   identificação — são objeção de conteúdo, não dado cadastral pendente. */
+const LEITURAS_NUMERADAS = 8;
+const CAMPOS_SEM_DADO = 4 /* hero */ + 1 /* S4 */ + 4 /* S7 */ + 1 /* S6, FiguraProporcao */ + 3 /* S12, CtaFinal */ + 6; /* S13, Rodape */
+---
+
+<Base titulo={titulo} descricao={descricao} canonical={canonical} schema={schema}>
+  <FaixaPiloto>
+    <ControleTema />
+  </FaixaPiloto>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <VisorHero />
+
+  <div class="pagina">
+    <main id="conteudo">
+      {/* S2 — O espelho da dor. Sem CTA: seção de reconhecimento. */}
+      <SecaoLeitura leitura="Leitura 02" rotuladaPor="t-s2">
+        <h2 id="t-s2">A mão que sobe na frente da boca na hora da foto</h2>
+        <p>Ninguém comenta isso em voz alta. Só faz.</p>
+        <ul class="lista-estado">
+          <li><span class="leitura">Mastigação</span><span>Mastigar de um lado só há tanto tempo que já virou jeito de comer.</span></li>
+          <li><span class="leitura">Alimentação</span><span>Escolher o prato pelo que dá para morder, não pelo que dá vontade.</span></li>
+          <li><span class="leitura">Convívio</span><span>Sorrir de boca fechada em foto de casamento, de formatura, de crachá.</span></li>
+          <li><span class="leitura">Adiamento</span><span>Adiar a consulta ano após ano porque a lembrança do barulho do motor pesa mais que o incômodo do dente.</span></li>
+        </ul>
+        <p>Isso não se resolve com força de vontade. Resolve com um plano — e um plano começa por enxergar o que está acontecendo dentro da sua boca.</p>
+        {/* Marco de ativação do CTA flutuante mobile (BarraAcao.astro): altura
+            zero, sem conteúdo, no fim de S2 — tokens.json > handoff.cta-flutuante-mobile. */}
+        <div class="marco-s2" id="marco-s2" aria-hidden="true"></div>
+      </SecaoLeitura>
+
+      {/* S3 — A virada (mecanismo) */}
+      <SecaoLeitura leitura="Leitura 03" rotuladaPor="t-s3">
+        <h2 id="t-s3">Primeiro a imagem. Depois a decisão. Só então o procedimento.</h2>
+        <div class="dois-estados">
+          <div class="estado">
+            <h3>Sem captura</h3>
+            <p>O caminho antigo é conhecido: massa de moldagem, um orçamento com nomes de procedimento que você não conhece, e a promessa de que "vai ficar bom". O resultado, você descobre no espelho — quando já não dá para voltar atrás.</p>
+          </div>
+          <div class="estado estado--capturado">
+            <h3>Com captura</h3>
+            <p>O escaneamento 3D inverte a ordem. A sua arcada é lida por um scanner intraoral e aparece na tela, em três dimensões, na mesma consulta. O que precisa ser resolvido para de ser uma explicação e passa a ser uma imagem que você olha junto com o profissional.</p>
+          </div>
+        </div>
+        <p>Decidir sobre o próprio sorriso olhando para ele é diferente de decidir sobre ele ouvindo falar dele.</p>
+      </SecaoLeitura>
+
+      {/* S4 — Como é a avaliação, passo a passo */}
+      <SecaoLeitura leitura="Leitura 04" rotuladaPor="t-s4">
+        <h2 id="t-s4">O que acontece na sua avaliação</h2>
+        <ol class="etapas">
+          <li><div><b>Conversa.</b><p>O que te incomoda, com as suas palavras. Foto, mastigação, dor, estética — o motivo é seu, não precisa ser técnico.</p></div></li>
+          <li><div><b>Escaneamento 3D.</b><p>Um scanner passa pela arcada e monta o modelo digital. Sem massa de moldagem, sem a ânsia da bandeja.</p></div></li>
+          <li><div><b>Leitura na tela, com você junto.</b><p>O que dá para fazer, o que não dá, o que é prioridade e o que pode esperar.</p></div></li>
+          <li><div><b>Plano na sua mão.</b><p>Etapas, sequência e tempo estimado, por escrito. Você leva embora e decide fora da cadeira.</p></div></li>
+        </ol>
+        <p class="destaque">Sem compromisso de fechar tratamento na hora.</p>
+        <p class="legenda-fig">Duração da consulta: <span class="sem-dado">{'{{DURACAO_AVALIACAO}}'}</span></p>
+      </SecaoLeitura>
+
+      {/* S5 — Os dois caminhos (abas) */}
+      <SecaoLeitura leitura="Leitura 05" rotuladaPor="t-s5">
+        <h2 id="t-s5">Em qual dos dois caminhos o seu caso se encaixa</h2>
+        <AbasTratamento />
+        <p style="margin-top: var(--spacing-entre-blocos)">
+          <a
+            class="acao lp-interativo"
+            href={`https://wa.me/{{WHATSAPP_NUMERO}}?text=${encodeURIComponent('Olá, vim pelo site e quero agendar a avaliação com escaneamento 3D. Meu nome é ')}`}
+            data-track="cta_meio"
+          >
+            <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"
+              ><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z" /></svg
+            >
+            Agendar minha avaliação com escaneamento 3D
+          </a>
+        </p>
+      </SecaoLeitura>
+
+      {/* S6 — O medo de que fique artificial. Seção-assinatura. */}
+      <SecaoLeitura leitura="Leitura 06" rotuladaPor="t-s6">
+        <h2 id="t-s6">Dente novo que ninguém percebe que é dente novo</h2>
+        <p>Você conhece o resultado que não quer: branco demais, todos do mesmo tamanho, aquele sorriso que se anuncia antes da pessoa falar.</p>
+        <p>Isso não é acidente de execução. É consequência de decidir formato, proporção e cor no meio do procedimento, quando já não há tempo de discutir.</p>
+        <p>No modelo digital, essas três coisas são discutidas antes — com a sua cara na frente, comparando com o que você tinha e com o que faz sentido para a sua idade e o seu rosto. Se ficar artificial na tela, muda na tela.</p>
+        <FiguraProporcao />
+      </SecaoLeitura>
+
+      {/* S7 — Quem vai atender */}
+      <SecaoLeitura leitura="Leitura 07" rotuladaPor="t-s7">
+        <h2 id="t-s7"><span class="sem-dado">{'{{NOME_ESPECIALISTA}}'}</span></h2>
+        <p><span class="sem-dado">{'{{ESPECIALIDADE_TITULACAO}}'}</span> · <span class="sem-dado">CRO {'{{CRO_NUMERO}}'}</span></p>
+        <div class="numeros">
+          <div data-source="brief.md §4 · Autoridade (números)"><b>+ de 15 anos</b><span>de experiência clínica</span></div>
+          <div data-source="brief.md §4 · Autoridade (números)"><b>+ de 5.000</b><span>sorrisos transformados</span></div>
+        </div>
+        <p class="legenda-fig">
+          <span class="sem-dado">{'{{FRASE_DO_ESPECIALISTA}}'}</span> — frase escrita ou aprovada pelo responsável.
+          Foto do responsável: sem dado. A seção existe sem ela.
+        </p>
+      </SecaoLeitura>
+
+      {/*
+        S8, S9 e S10 (consultório, antes/depois, depoimentos) não renderizam.
+        Faltam fotos, vídeos e autorização de uso — a política de integridade
+        da fábrica proíbe preencher com ficção, mesmo como exemplo estrutural.
+        O bloco de reserva `data-proto-only` existe só em proto/direcao-b.html
+        e não faz parte deste build (PROJECT.md §6). A régua de leitura não
+        pula número nenhum: "Leitura 07" (S7) é seguida por "Leitura 08"
+        (S11, FAQ, logo abaixo) porque a numeração conta seções publicadas,
+        não posições do wireframe — o "buraco" é de conteúdo (S8–S10 não
+        existem nesta página), não de contagem.
+      */}
+
+      {/* S11 — FAQ */}
+      <SecaoLeitura leitura="Leitura 08" rotuladaPor="t-s11">
+        <h2 id="t-s11">As perguntas que travam a decisão</h2>
+        <Faq itens={faq} />
+      </SecaoLeitura>
+    </main>
+  </div>
+
+  {/* S12 — CTA final: o visor volta, mais baixo de tom */}
+  <CtaFinal />
+
+  {/* S13 — Rodapé */}
+  <Rodape leiturasCompletas={LEITURAS_NUMERADAS} semDado={CAMPOS_SEM_DADO} secoesPendentes={3} />
+
+  {/* CTA flutuante mobile — só abaixo de 60rem, ativado no fim de S2 (#marco-s2) */}
+  <BarraAcao />
+</Base>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="sistema">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo II — três direções visuais · {{NOME_CLINICA}}</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --algodao: #F2F4F6; --algodao-fundo: #E6EAEE; --algodao-fio: #BAC4CD;
+  --tinta: #0E1B2B; --tinta-suave: #46586C;
+  --marinho: #12253E; --marinho-profundo: #0B1626; --marinho-alt: #122033; --marinho-fio: #2B3D53;
+  --gelo-conteudo: #E9EEF3; --nevoa: #A9B8C7;
+  --ouro-registro: #7A5B14; --ouro-lampada: #D9B25E;
+  --e-fio: 1px; --e-linha: 1.15rem; --e-interno: 1.75rem; --e-bloco: 3rem;
+  --gutter: clamp(1.25rem, 5vw, 4rem); --raio-controle: 3px; --raio-folha: 0 10px 0 0;
+}
+:root {
+  --cor-superficie: var(--algodao); --cor-superficie-alt: var(--algodao-fundo);
+  --cor-conteudo: var(--tinta); --cor-conteudo-suave: var(--tinta-suave);
+  --cor-anotacao: var(--ouro-registro); --cor-fio: var(--algodao-fio);
+  --cor-acao: var(--marinho); --cor-acao-conteudo: var(--algodao);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --cor-superficie: var(--marinho-profundo); --cor-superficie-alt: var(--marinho-alt);
+    --cor-conteudo: var(--gelo-conteudo); --cor-conteudo-suave: var(--nevoa);
+    --cor-anotacao: var(--ouro-lampada); --cor-fio: var(--marinho-fio);
+    --cor-acao: var(--ouro-lampada); --cor-acao-conteudo: var(--marinho-profundo);
+  }
+}
+:root[data-tema="escuro"] {
+  --cor-superficie: var(--marinho-profundo); --cor-superficie-alt: var(--marinho-alt);
+  --cor-conteudo: var(--gelo-conteudo); --cor-conteudo-suave: var(--nevoa);
+  --cor-anotacao: var(--ouro-lampada); --cor-fio: var(--marinho-fio);
+  --cor-acao: var(--ouro-lampada); --cor-acao-conteudo: var(--marinho-profundo);
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; padding: clamp(2rem, 7vh, 5rem) var(--gutter);
+  background: var(--cor-superficie); color: var(--cor-conteudo);
+  font-family: "Archivo", system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.6;
+  font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--cor-anotacao); color: var(--cor-superficie); }
+:focus-visible { outline: 2px solid var(--cor-anotacao); outline-offset: 3px; }
+.limite { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: clamp(1.9rem, 4vw, 3rem); font-stretch: 108%; font-weight: 500; line-height: 1.08; margin: 0 0 var(--e-linha); max-width: 20ch; }
+.intro { color: var(--cor-conteudo-suave); max-width: 60ch; }
+.obs { font-size: .6875rem; font-stretch: 88%; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--cor-anotacao); margin: 0 0 .5rem; }
+.cartoes { display: grid; gap: var(--e-interno); margin-top: var(--e-bloco); }
+@media (min-width: 60rem) { .cartoes { grid-template-columns: repeat(3, 1fr); } }
+.cartao {
+  border: var(--e-fio) solid var(--cor-fio); border-radius: var(--raio-folha);
+  padding: var(--e-interno); display: flex; flex-direction: column; gap: .8rem;
+}
+.cartao--vencedora { box-shadow: 12px 12px 28px -18px color-mix(in srgb, var(--cor-conteudo) 55%, transparent); }
+.cartao h2 { font-size: 1.35rem; font-stretch: 108%; font-weight: 500; margin: 0; }
+.cartao p { margin: 0; color: var(--cor-conteudo-suave); font-size: .9375rem; }
+.amostras { display: flex; gap: .35rem; }
+.amostra { width: 1.9rem; height: 1.9rem; border: var(--e-fio) solid var(--cor-fio); }
+.risco { font-size: .8125rem; padding-top: .7rem; border-top: var(--e-fio) solid var(--cor-fio); color: var(--cor-conteudo-suave); }
+.risco b { color: var(--cor-anotacao); font-weight: 600; font-stretch: 88%; letter-spacing: .08em; text-transform: uppercase; font-size: .6875rem; display: block; margin-bottom: .2rem; }
+.abrir {
+  margin-top: auto; display: inline-flex; align-items: center; justify-content: space-between; gap: .6rem;
+  background: var(--cor-acao); color: var(--cor-acao-conteudo); text-decoration: none;
+  font-weight: 600; font-size: .9375rem; padding: .8rem 1rem; border-radius: var(--raio-controle);
+}
+.abrir:hover { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--cor-anotacao) 85%, transparent); }
+.nota { margin-top: var(--e-bloco); padding-top: var(--e-interno); border-top: var(--e-fio) solid var(--cor-fio); font-size: .875rem; color: var(--cor-conteudo-suave); max-width: 70ch; }
+.tema { font: inherit; font-size: .75rem; font-stretch: 88%; color: var(--cor-conteudo); background: transparent; border: var(--e-fio) solid var(--cor-fio); border-radius: var(--raio-controle); padding: .3rem .6rem; cursor: pointer; float: right; }
+</style>
+</head>
+<body>
+<div class="limite">
+  <button class="tema" type="button" id="tema">Tema: sistema</button>
+  <p class="obs">Ciclo II · direções divergentes</p>
+  <h1>Três direções visuais para a mesma copy aprovada</h1>
+  <p class="intro">Mesma estrutura, mesmo texto, mesma oferta. O que muda é o mundo visual — e cada um deles resolve de um jeito diferente o mesmo problema real deste projeto: nenhuma fotografia do cliente foi entregue. <b>Decidido:</b> o usuário aprovou a direção B, que passou a ser a canônica; A e C ficam aqui como registro da divergência.</p>
+
+  <div class="cartoes">
+    <article class="cartao">
+      <p class="obs">Direção A · descartada</p>
+      <h2>Laudo de condição</h2>
+      <div class="amostras" aria-hidden="true">
+        <span class="amostra" style="background: var(--algodao)"></span>
+        <span class="amostra" style="background: var(--marinho)"></span>
+        <span class="amostra" style="background: var(--ouro-registro)"></span>
+      </div>
+      <p>A página é o laudo de conservação de uma peça antes da restauração: registra o estado, mapeia a perda e declara o limite da intervenção antes de qualquer decisão. O dourado do brief vira a cor da anotação — a mesma que marca perda no objeto marca pendência do cliente.</p>
+      <p class="risco"><b>Risco declarado</b>O vocabulário de laudo pode soar frio se a tipografia não segurar o calor; o brief avisa contra parecer ambiente hospitalar.</p>
+      <a class="abrir" href="../proto-descartado/direcao-a.html">Abrir direção A <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="cartao cartao--vencedora">
+      <p class="obs">Direção B · aprovada e canônica</p>
+      <h2>Visor</h2>
+      <div class="amostras" aria-hidden="true">
+        <span class="amostra" style="background: var(--marinho-profundo)"></span>
+        <span class="amostra" style="background: var(--algodao)"></span>
+        <span class="amostra" style="background: var(--ouro-lampada)"></span>
+      </div>
+      <p>A página é o próprio visor do scanner: campo escuro, malha triangulada da arcada, régua de leitura com códigos e cotas. A promessa deixa de ser afirmação e vira demonstração no primeiro viewport.</p>
+      <p class="risco"><b>Risco declarado</b>É a mais familiar das três. Clínica de odontologia digital que investe em página já gravita para o visor escuro com malha.</p>
+      <a class="abrir" href="direcao-b.html">Abrir direção B <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="cartao">
+      <p class="obs">Direção C · descartada</p>
+      <h2>Ciclorama</h2>
+      <div class="amostras" aria-hidden="true">
+        <span class="amostra" style="background: var(--marinho-profundo)"></span>
+        <span class="amostra" style="background: var(--marinho)"></span>
+        <span class="amostra" style="background: var(--ouro-lampada)"></span>
+      </div>
+      <p>A página é um plano de luz: abre no escuro em que o visitante vive o problema, a primeira luz sobe quando o mecanismo aparece e a superfície chega ao dia inteiro na hora de agendar. Nenhuma passagem é degradê — toda mudança é banda chapada com aresta.</p>
+      <p class="risco"><b>Risco declarado</b>Atmosfera pode engolir a oferta, e é a mais cara no Ciclo III: o tema escuro reancora a rampa inteira em vez de trocar dois tokens.</p>
+      <a class="abrir" href="../proto-descartado/direcao-c.html">Abrir direção C <span aria-hidden="true">→</span></a>
+    </article>
+  </div>
+
+  <p class="nota">Cada direção tem o seu próprio <code>tokens.json</code>: <code>proto/tokens-b.json</code> é o da direção aprovada e está espelhado em <code>clients/clinica-piloto-odonto/tokens.json</code>; <code>proto-descartado/tokens-a.json</code> e <code>proto-descartado/tokens-c.json</code> ficam como registro. Nenhuma foto, depoimento, nome ou número de contato foi inventado em nenhuma das três: onde falta material do cliente, a página declara a ausência na gramática do seu próprio mundo visual.</p>
+  <p class="nota">A direção B recebeu, depois da escolha, o campo sintético do herói e as reservas estruturais de S8, S9 e S10. As reservas mostram só a área que o arquivo real do cliente vai ocupar, marcadas <b>ATIVO PENDENTE</b>, e não vão para produção. A e C ficaram no estado em que foram apresentadas.</p>
+</div>
+<script>
+(function () {
+  var raiz = document.documentElement, btn = document.getElementById('tema'), ordem = ['sistema', 'claro', 'escuro'];
+  btn.addEventListener('click', function () {
+    var prox = ordem[(ordem.indexOf(raiz.getAttribute('data-tema') || 'sistema') + 1) % 3];
+    raiz.setAttribute('data-tema', prox); btn.textContent = 'Tema: ' + prox;
+  });
+})();
+</script>
+</body>
+</html>

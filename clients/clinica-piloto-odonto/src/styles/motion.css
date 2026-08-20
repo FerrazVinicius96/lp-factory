@@ -1,0 +1,70 @@
+/* Motion da fabrica. Custo zero de JS onde o navegador suporta.
+   Basico       : apenas transicoes de estado (hover, focus).
+   Intermediario: revelar na rolagem via animation-timeline.
+   Avancado     : timeline ligada a rolagem, parallax e zoom.
+   Firefox ainda nao implementa scroll-driven animations: o fallback e o estado final estatico,
+   que continua legivel. Se o projeto exigir paridade total, o builder liga o IntersectionObserver. */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- estado (todos os niveis) --- */
+.lp-interativo {
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+/* Regra de todo este arquivo: NUNCA escrever a propriedade shorthand
+   `animation:` numa regra que também tenha `animation-timeline`. O
+   minificador do build (Lightning CSS) funde as duas num único `animation:`
+   combinado — e o Chrome rejeita esse shorthand por inteiro (confirmado com
+   CSS.supports('animation', <valor fundido>) === false; separado em
+   longhands, CSS.supports('animation-timeline', ...) === true e a regra
+   sobrevive). Sempre `animation-name` + `animation-timing-function` +
+   `animation-fill-mode` (+ `animation-duration` se precisar) em vez de
+   `animation:`. Ver PROJECT.md > histórico do Ciclo III, defeito raiz do gate. */
+
+/* --- revelar na rolagem (intermediario e avancado) --- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lp-revelar {
+      animation-name: lp-fade-up;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+}
+
+@keyframes lp-fade-up {
+  from { opacity: 0; transform: translateY(1.25rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- parallax e zoom (apenas avancado) --- */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lp-parallax {
+      animation-name: lp-deslocar;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+    .lp-zoom-scroll {
+      animation-name: lp-zoom;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+@keyframes lp-deslocar { to { translate: 0 -12%; } }
+@keyframes lp-zoom { from { scale: 1.08; } to { scale: 1; } }

@@ -18,6 +18,23 @@
         "motivo": "Fio de margem",
         "estruturaHero": "titulo-esquerda-numeral-margem"
       }
+    },
+    {
+      "slug": "clinica-piloto-odonto",
+      "data": "2026-08-20",
+      "nicho": "odontologia-estetica",
+      "nivel": "avancado",
+      "direcao": "B — Visor",
+      "assinatura": {
+        "tipografia": [
+          "Chivo",
+          "Chivo Mono"
+        ],
+        "paletaBase": "#0A1420",
+        "acento": "#E8C06A",
+        "motivo": "Malha de captura",
+        "estruturaHero": "visor-campo-cheio-malha-regua-esquerda"
+      }
     }
   ]
 }

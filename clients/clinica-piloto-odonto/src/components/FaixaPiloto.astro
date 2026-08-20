@@ -1,0 +1,61 @@
+---
+/**
+ * RF11 — faixa de aviso de piloto/demonstracao, visivel no topo, no fluxo
+ * normal do documento (nunca `position: fixed`): em telas estreitas o aviso
+ * pode quebrar em 2-3 linhas, e uma faixa fixa cobriria o link de pular
+ * conteudo e o inicio do herói. Primeiro elemento do <body>.
+ */
+---
+
+<p class="faixa">
+  <span class="faixa__aviso">
+    <span class="faixa__selo">Demonstração</span>
+    <span
+      >Página de demonstração técnica do pipeline. A clínica é fictícia, os dados de identificação
+      não foram fornecidos e os botões desta página são links de WhatsApp para um número ainda não
+      preenchido — não abrem conversa real.</span
+    >
+  </span>
+  <span class="faixa__controle"><slot /></span>
+</p>
+
+<style>
+  .faixa {
+    margin: 0;
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 1.25rem;
+    padding: 0.6rem var(--spacing-gutter);
+    background: var(--color-superficie-alt);
+    border-bottom: var(--spacing-fio) solid var(--color-acento);
+    color: var(--color-conteudo);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .faixa__aviso {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.85rem;
+  }
+
+  .faixa__controle { display: flex; align-items: center; }
+
+  .faixa__selo {
+    font-family: var(--font-leitura);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-acento);
+    border-bottom: var(--spacing-fio) solid var(--color-acento);
+    padding-bottom: 0.15rem;
+    white-space: nowrap;
+  }
+</style>

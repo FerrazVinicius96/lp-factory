@@ -1,0 +1,53 @@
+---
+/**
+ * S11 — FAQ, quebra de objeção (RF2). Accordion nativo `<details>/<summary>`:
+ * conteúdo no HTML desde o carregamento, exigência do FAQPage schema (RF6)
+ * e de leitura sem JS. Zero JS de aplicação — o navegador já faz o trabalho.
+ *
+ * A pergunta 1 nasce aberta: é a objeção principal do público (dor); a
+ * ordem sobe da objeção física para a comercial (wireframe.md > S11).
+ *
+ * A mesma lista alimenta o FAQPage schema em index.astro — pergunta e
+ * resposta existem em um único lugar, para o dado estruturado nunca
+ * divergir da tela.
+ *
+ * [TRACK] abertura de cada item, via `data-track="faq_N"` em cada
+ * `<details>` (wireframe.md > S11: "quais objeções o tráfego abre é o dado
+ * mais útil desta página"). Sem JS de aplicação: o toggle nativo já dispara
+ * o evento `toggle` do elemento, que é o que o GTM/Pixel real vai escutar
+ * quando os IDs chegarem (RF10 — indicativo de integração, não integração).
+ */
+interface Item {
+  pergunta: string;
+  respostaHtml: string;
+  aberta?: boolean;
+}
+
+interface Props {
+  itens: Item[];
+}
+
+const { itens } = Astro.props;
+---
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mais" viewBox="0 0 13 13">
+    <line x1="0" y1="6.5" x2="13" y2="6.5"></line>
+    <line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"></line>
+  </symbol>
+</svg>
+<div class="faq">
+  {
+    itens.map((item, i) => (
+      <details open={item.aberta} data-track={`faq_${i + 1}`}>
+        <summary>
+          <svg class="sinal" width="13" height="13" aria-hidden="true">
+            <use href="#mais" />
+          </svg>
+          <span>{item.pergunta}</span>
+        </summary>
+        <div class="resposta" set:html={item.respostaHtml} />
+      </details>
+    ))
+  }
+</div>

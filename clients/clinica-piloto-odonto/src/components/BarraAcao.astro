@@ -1,0 +1,64 @@
+---
+/**
+ * CTA flutuante mobile — linha de estado do visor, não pílula flutuante
+ * genérica (tokens.json > handoff.cta-flutuante-mobile; wireframe.md >
+ * Regras estruturais). Existe porque a página tem um KPI só (clique no
+ * WhatsApp) e o percurso do mobile entre o CTA do herói e o do fim de S5 é
+ * longo — cortar este elemento para poupar trabalho seria a decisão fraca.
+ *
+ * Só abaixo de 60rem. Gatilho: o marco de altura zero no fim de S2
+ * (#marco-s2, inserido em index.astro), lido por `view-timeline` dentro de
+ * `@supports (animation-timeline: view())`. O `IntersectionObserver` abaixo
+ * só roda como fallback, onde a timeline de scroll não existe (Firefox) —
+ * nunca no caminho crítico, e nunca em paralelo com o CSS. Sob
+ * `prefers-reduced-motion`, a revelação é por opacidade, sem deslocamento
+ * (ver sistema.css). O `body` reserva a altura da barra para ela nunca
+ * cobrir o rodapé.
+ *
+ * Destino e ação idênticos aos outros três CTAs (cta_hero, cta_meio,
+ * cta_final); o rótulo é mais curto só por largura da barra.
+ */
+const mensagem = encodeURIComponent(
+  'Olá, vim pelo site e quero agendar a avaliação com escaneamento 3D. Meu nome é '
+);
+---
+
+<div class="barra-acao" id="barra-acao">
+  <span class="barra-acao__leitura">Sem compromisso</span>
+  <a
+    class="acao acao--compacta lp-interativo"
+    href={`https://wa.me/{{WHATSAPP_NUMERO}}?text=${mensagem}`}
+    data-track="cta_flutuante"
+  >
+    <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"
+      ><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z" /></svg
+    >
+    Agendar avaliação
+  </a>
+</div>
+
+<script>
+  // Fallback do CTA flutuante — só onde não há timeline de scroll (Firefox).
+  // Onde há, o CSS (sistema.css) já resolve e este bloco sai sem tocar no
+  // DOM. Não é motion no caminho crítico: o único trabalho é alternar uma
+  // classe quando o marco de fim de S2 cruza o topo da janela.
+  const barra = document.getElementById('barra-acao');
+  const marco = document.getElementById('marco-s2');
+
+  if (barra && marco) {
+    const temTimelineDeScroll = Boolean(
+      window.CSS && CSS.supports && CSS.supports('animation-timeline', 'view()')
+    );
+
+    if (!temTimelineDeScroll) {
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entradas) => {
+          barra.classList.toggle('esta-visivel', entradas[0].boundingClientRect.top < 0);
+        }).observe(marco);
+      } else {
+        // sem timeline e sem IntersectionObserver: revela direto, sem gatilho.
+        barra.classList.add('esta-visivel');
+      }
+    }
+  }
+</script>

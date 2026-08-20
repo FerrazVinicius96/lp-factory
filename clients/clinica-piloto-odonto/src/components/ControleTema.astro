@@ -1,0 +1,64 @@
+---
+/**
+ * Controle de tema. O padrao vem de `color-scheme: light dark` + `light-dark()`,
+ * sem JS (RF4 — tema claro/escuro com tokens semanticos, obrigatorio no avancado).
+ * Este botao apenas sobrepoe a preferencia do sistema escrevendo `data-tema` no
+ * <html>. Sem persistencia: nada desta pagina vai para o armazenamento do navegador.
+ *
+ * O botao nasce invisivel (`visibility: hidden`, nao `hidden` estatico) para
+ * nao ficar quebrado sem JS, mas o espaco fica reservado no layout desde o
+ * primeiro paint — a faixa acima da dobra e `flex-wrap`, e o botao aparecendo
+ * de repente (ir de `display:none` para presente) deslocava a linha. Com
+ * `visibility`, a caixa sempre existiu; so a pintura muda quando o script
+ * confirma que pode responder ao clique.
+ */
+---
+
+<button class="tema" type="button" data-tema-alternar aria-pressed="false">
+  Tema: sistema
+</button>
+
+<script>
+  const botao = document.querySelector<HTMLButtonElement>('[data-tema-alternar]');
+  if (botao) {
+    const raiz = document.documentElement;
+    const escuro = () => {
+      const t = raiz.dataset.tema;
+      return t ? t === 'escuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+    };
+    const rotular = () => {
+      const manual = raiz.dataset.tema;
+      botao.textContent = 'Tema: ' + (manual ?? 'sistema');
+      botao.setAttribute('aria-pressed', String(!!manual));
+    };
+    botao.addEventListener('click', () => {
+      const ordem = ['sistema', 'claro', 'escuro'] as const;
+      const atual = (raiz.dataset.tema as (typeof ordem)[number]) || 'sistema';
+      const proximo = ordem[(ordem.indexOf(atual) + 1) % ordem.length];
+      if (proximo === 'sistema') delete raiz.dataset.tema;
+      else raiz.dataset.tema = proximo;
+      rotular();
+    });
+    botao.classList.add('esta-pronto');
+    rotular();
+  }
+</script>
+
+<style>
+  .tema {
+    font: inherit;
+    font-size: 0.75rem;
+    min-height: var(--alvo-toque);
+    color: var(--color-conteudo);
+    background: transparent;
+    border: var(--spacing-fio) solid var(--color-fio);
+    border-radius: var(--radius-controle);
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    /* reserva o espaço desde o primeiro paint; só a pintura muda no script
+       (ver comentário no frontmatter — corrige o CLS do botão aparecendo tarde). */
+    visibility: hidden;
+  }
+  .tema.esta-pronto { visibility: visible; }
+  .tema:hover { border-color: var(--color-acento); color: var(--color-acento); }
+</style>

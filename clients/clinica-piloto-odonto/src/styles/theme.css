@@ -1,0 +1,39 @@
+/* Gerado por scripts/tokens-to-theme.mjs. Nao edite a mao.
+   Tipografia: Chivo (títulos e texto) + Chivo Mono (leituras, códigos e cotas) — Chivo é uma grotesca da Omnibus-Type com desenho de alta legibilidade em tela e terminações retas — a letra de painel de instrumento, não a de revista. O par com Chivo Mono não é o clichê de 'mono para parecer técnico': o mono aparece exclusivamente onde há medida, código ou leitura numérica, que é a função para a qual ele existe. Usar uma superfamília inteira (proporcional + monoespaçada do mesmo desenho) dá ao HUD e ao texto corrido a mesma voz, que é o que separa um instrumento real de uma decoração de instrumento. Atende a exigência do brief (sem serifa, moderna) num registro operacional em vez de editorial.
+   Cor: A paleta do brief reatribuída às três camadas de um viewport de odontologia digital: AZUL MARINHO é o fundo do visor — o campo escuro contra o qual o modelo 3D é renderizado em qualquer software de escaneamento intraoral, porque um fundo claro esconde a leitura de profundidade; BRANCO GELO é a superfície de laudo impresso, para onde a informação sai do visor e vira texto que o paciente leva embora; DOURADO é a cor de medição — em viewport de CAD, o elemento selecionado ou cotado é sempre um acento quente contra o campo frio, e é essa a única função que o dourado exerce aqui. Nenhuma das três cores decora: uma é campo, uma é papel, uma é medida.
+   Motivo grafico: Malha de captura — Uma malha triangulada de fio de cabelo, gerada sobre a geometria real de uma arcada superior, que se comporta como dado de escaneamento: onde a informação está confirmada, os triângulos são fechados e densos; onde falta dado, a malha abre — arestas tracejadas, vértices soltos, resolução caindo. Acompanha uma régua de leitura fixa na margem: código da seção em monoespaçada, e para cada campo pendente do cliente a leitura marca 'sem dado' em vez de número. O motivo é literalmente o estado do conhecimento sobre o caso: a página inteira mostra o que já foi capturado e onde a captura ainda não chegou. */
+@import "tailwindcss";
+
+@theme {
+  --color-visor: #0A1420;
+  --color-visor-alt: #10202F;
+  --color-visor-fio: #24384B;
+  --color-malha: #6E93B0;
+  --color-gelo: #EEF2F5;
+  --color-gelo-alt: #E0E7ED;
+  --color-gelo-fio: #B5C1CC;
+  --color-grafite: #0F1D29;
+  --color-grafite-suave: #4A5D6E;
+  --color-leitura-escura: #9FB3C4;
+  --color-gelo-conteudo: #E6EDF3;
+  --color-medida: #7E5A0E;
+  --color-medida-clara: #E8C06A;
+  --spacing-base: 8px;
+  --spacing-fio: 1px;
+  --spacing-leitura: 0.5rem;
+  --spacing-entre-linhas: 1.1rem;
+  --spacing-interno: 1.5rem;
+  --spacing-entre-blocos: 2.75rem;
+  --spacing-entre-secoes: clamp(4rem, 9vh, 7.5rem);
+  --spacing-respiro-hero: clamp(4rem, 12vh, 8rem);
+  --spacing-regua: clamp(3rem, 7vw, 7rem);
+  --spacing-gutter: clamp(1.25rem, 4.5vw, 3.5rem);
+  --spacing-medida: 34em;
+  --radius-nenhum: 0;
+  --radius-controle: 2px;
+  --radius-leitura: 1px;
+  --shadow-nenhuma: none;
+  --font-titulo: 'Chivo', system-ui, sans-serif;
+  --font-texto: 'Chivo', system-ui, sans-serif;
+  --font-leitura: 'Chivo Mono', ui-monospace, monospace;
+}

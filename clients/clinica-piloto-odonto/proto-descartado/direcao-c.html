@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="sistema">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avaliação com escaneamento 3D — {{NOME_CLINICA}} · direção C</title>
+<meta name="description" content="Avaliação com escaneamento 3D: você vê o seu caso desenhado em imagem e decide fora da cadeira.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Hanken+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DIREÇÃO C — CICLORAMA   ·   motivo gráfico: "Banda de horizonte"
+   Direção alternativa do Ciclo II. Valores derivam de tokens-c.json.
+   Regra dura deste mundo: nenhuma passagem de luz é degradê.
+   Toda mudança de valor é banda chapada com aresta definida.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --noite: #070C16;
+  --noite-alt: #0D1524;
+  --cobalto: #14304F;
+  --cobalto-claro: #1E3E60;
+  --cobalto-fio: #23405F;
+  --aurora: #C9963F;
+  --aurora-funda: #8A5F16;
+  --dia: #F4F5F7;
+  --dia-alt: #E7EAEE;
+  --dia-fio: #BFC7D0;
+  --tinta-noite: #101825;
+  --tinta-noite-suave: #4C5765;
+  --bruma: #AEB9C7;
+  --luz-conteudo: #E8ECF2;
+
+  --e-fio: 1px;
+  --e-banda: 6px;
+  --e-banda-alta: 22px;
+  --e-cena: .5rem;
+  --e-linha: 1.2rem;
+  --e-interno: 1.75rem;
+  --e-bloco: 3rem;
+  --e-secao: clamp(4.5rem, 11vh, 9rem);
+  --e-hero: clamp(5.5rem, 16vh, 11rem);
+  --margem-cena: clamp(3rem, 7vw, 7rem);
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --medida: 35em;
+
+  --raio-nenhum: 0;
+  --raio-controle: 4px;
+}
+:root {
+  --cor-superficie: var(--dia);
+  --cor-superficie-alt: var(--dia-alt);
+  --cena-noite: var(--cobalto);
+  --cena-dia: var(--dia);
+  --cor-conteudo: var(--tinta-noite);
+  --cor-conteudo-suave: var(--tinta-noite-suave);
+  --cor-cena: var(--aurora-funda);
+  --cor-fio: var(--dia-fio);
+  --cor-acao: var(--cobalto);
+  --cor-acao-conteudo: var(--dia);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --cor-superficie: var(--noite);
+    --cor-superficie-alt: var(--noite-alt);
+    --cena-noite: var(--noite);
+    --cena-dia: var(--cobalto);
+    --cor-conteudo: var(--luz-conteudo);
+    --cor-conteudo-suave: var(--bruma);
+    --cor-cena: var(--aurora);
+    --cor-fio: var(--cobalto-fio);
+    --cor-acao: var(--aurora);
+    --cor-acao-conteudo: var(--noite);
+  }
+}
+:root[data-tema="escuro"] {
+  --cor-superficie: var(--noite);
+  --cor-superficie-alt: var(--noite-alt);
+  --cena-noite: var(--noite);
+  --cena-dia: var(--cobalto);
+  --cor-conteudo: var(--luz-conteudo);
+  --cor-conteudo-suave: var(--bruma);
+  --cor-cena: var(--aurora);
+  --cor-fio: var(--cobalto-fio);
+  --cor-acao: var(--aurora);
+  --cor-acao-conteudo: var(--noite);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--cor-superficie); color: var(--cor-conteudo);
+  font-family: "Hanken Grotesk", system-ui, sans-serif;
+  font-size: clamp(1.0625rem, .3vw + 1rem, 1.1875rem);
+  line-height: 1.65; font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--cor-cena); accent-color: var(--cor-acao);
+}
+::selection { background: var(--cor-cena); color: var(--cor-superficie); }
+* { scrollbar-color: var(--cor-fio) var(--cor-superficie); scrollbar-width: thin; }
+:focus-visible { outline: 2px solid var(--cor-cena); outline-offset: 3px; }
+
+h1, h2 { font-family: "Familjen Grotesk", system-ui, sans-serif; font-weight: 600; margin: 0 0 var(--e-linha); line-height: 1.1; text-wrap: balance; }
+h1 { font-size: clamp(2.4rem, 5.8vw, 4.5rem); line-height: 1.03; letter-spacing: -.02em; max-width: 16ch; }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.9rem); letter-spacing: -.015em; }
+h3 { font-family: "Familjen Grotesk", sans-serif; font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; margin: 0 0 .8rem; }
+p { margin: 0 0 var(--e-linha); max-width: var(--medida); }
+p:last-child { margin-bottom: 0; }
+a { color: inherit; text-underline-offset: .22em; text-decoration-color: var(--cor-cena); }
+
+.pular { position: absolute; left: -9999px; top: 0; z-index: 20; background: var(--cor-acao); color: var(--cor-acao-conteudo); padding: .7rem 1.1rem; }
+.pular:focus { left: .5rem; top: .5rem; }
+.faixa-piloto {
+  background: var(--cor-superficie-alt); border-bottom: var(--e-fio) solid var(--cor-fio);
+  color: var(--cor-conteudo-suave); font-size: .75rem; padding: .5rem var(--gutter);
+  display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; justify-content: space-between;
+}
+.tema { font: inherit; font-size: .75rem; color: var(--cor-conteudo); background: transparent; border: var(--e-fio) solid var(--cor-fio); border-radius: var(--raio-controle); padding: .3rem .6rem; cursor: pointer; }
+.tema:hover { border-color: var(--cor-cena); color: var(--cor-cena); }
+
+/* ═══ MOTIVO — BANDA DE HORIZONTE ═══ */
+.horizonte {
+  position: relative;
+  height: var(--e-banda);
+  background: var(--luz, var(--cor-cena));
+  box-shadow: 0 1px 0 var(--cor-cena);
+  transform-origin: left center;
+}
+.horizonte--alta { height: var(--e-banda-alta); }
+.cena {
+  position: absolute; right: var(--gutter); top: calc(100% + .45rem);
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: .6875rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--cor-cena); white-space: nowrap;
+}
+
+/* ═══ atos ═══ */
+.ato { padding-block: var(--e-secao); position: relative; }
+.ato__interno { max-width: 84rem; margin: 0 auto; padding: 0 var(--gutter); }
+.ato--escuro {
+  background: var(--cena-noite);
+  --cor-conteudo: var(--luz-conteudo);
+  --cor-conteudo-suave: var(--bruma);
+  --cor-cena: var(--aurora);
+  --cor-fio: var(--cobalto-fio);
+  --cor-acao: var(--aurora);
+  --cor-acao-conteudo: var(--noite);
+  --cor-superficie: var(--cena-noite);
+  color: var(--luz-conteudo);
+}
+.ato--dia { background: var(--cena-dia); }
+.ato--alt { background: var(--cor-superficie-alt); }
+
+.hero { padding-block: var(--e-hero) var(--e-secao); }
+.marca { font-family: "Familjen Grotesk", sans-serif; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: .9375rem; margin: 0 0 var(--e-bloco); display: flex; flex-wrap: wrap; gap: .75rem; align-items: baseline; }
+.marca small { font-size: .625rem; letter-spacing: .16em; color: var(--cor-conteudo-suave); }
+.hero__grade { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-bloco); align-items: center; }
+@media (min-width: 62rem) { .hero__grade { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: var(--gutter); } }
+.hero__sub { font-size: clamp(1.125rem, .5vw + 1rem, 1.375rem); line-height: 1.45; color: var(--cor-conteudo-suave); max-width: 34ch; margin-top: var(--e-interno); }
+
+.acao {
+  display: inline-flex; align-items: center; gap: .7rem; width: 100%;
+  background: var(--cor-acao); color: var(--cor-acao-conteudo);
+  font-family: "Familjen Grotesk", sans-serif; font-weight: 600; font-size: 1rem; line-height: 1.25;
+  text-decoration: none; padding: 1.05rem 1.4rem; border: 0; border-radius: var(--raio-controle); cursor: pointer;
+}
+@media (min-width: 40rem) { .acao { width: auto; } }
+.acao:hover { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--cor-acao-conteudo) 45%, transparent); }
+.acao__marca { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.acao-linha { margin-top: var(--e-cena); font-size: .8125rem; color: var(--cor-conteudo-suave); }
+.tira { margin-top: var(--e-bloco); padding-top: var(--e-linha); border-top: var(--e-fio) solid var(--cor-fio); font-size: .8125rem; color: var(--cor-conteudo-suave); display: flex; flex-wrap: wrap; gap: .4rem .8rem; }
+.tira b { color: var(--cor-conteudo); }
+.campo { display: inline-block; padding: .05em .18em; border-bottom: 2px solid var(--cor-cena); white-space: nowrap; }
+
+/* figura: a arcada como contorno, sem luz sobre ela ainda */
+.silhueta svg { width: 100%; height: auto; display: block; }
+.cyc-contorno { fill: none; stroke: var(--cor-cena); stroke-width: 1.2; }
+.cyc-dente { fill: none; stroke: var(--cor-conteudo-suave); stroke-width: .9; }
+.silhueta figcaption { margin-top: .8rem; font-size: .75rem; color: var(--cor-conteudo-suave); }
+
+.lista { list-style: none; margin: var(--e-bloco) 0; padding: 0; max-width: var(--medida); }
+.lista li { padding-block: .85rem; border-top: var(--e-fio) solid var(--cor-fio); font-size: 1.0625rem; }
+.lista li:last-child { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.fecho { font-family: "Familjen Grotesk", sans-serif; font-size: clamp(1.25rem, 1.4vw + 1rem, 1.65rem); line-height: 1.3; max-width: 28ch; }
+
+.dois { display: grid; gap: var(--e-interno); margin: var(--e-bloco) 0; }
+@media (min-width: 52rem) { .dois { grid-template-columns: 1fr 1fr; } }
+.quadro { border: var(--e-fio) solid var(--cor-fio); padding: var(--e-interno); }
+.quadro--luz { border-color: var(--cor-cena); border-top-width: 3px; }
+.quadro h3 { color: var(--cor-conteudo-suave); }
+.quadro--luz h3 { color: var(--cor-cena); }
+
+.etapas { list-style: none; margin: var(--e-bloco) 0; padding: 0; counter-reset: e; max-width: var(--medida); }
+.etapas li { counter-increment: e; display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: .75rem; padding-block: var(--e-linha); border-top: var(--e-fio) solid var(--cor-fio); }
+.etapas li:last-child { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.etapas li::before { content: counter(e, decimal-leading-zero); font-family: "Familjen Grotesk", sans-serif; font-weight: 600; font-size: .8125rem; letter-spacing: .1em; color: var(--cor-cena); padding-top: .4em; }
+.etapas b { display: block; margin-bottom: .18rem; }
+.etapas p { color: var(--cor-conteudo-suave); }
+.destaque { margin-top: var(--e-interno); font-family: "Familjen Grotesk", sans-serif; font-weight: 600; padding-left: .9rem; border-left: 2px solid var(--cor-cena); }
+
+.abas { display: flex; gap: .5rem; margin: var(--e-bloco) 0 0; flex-wrap: wrap; }
+.aba { font-family: "Familjen Grotesk", sans-serif; font-size: .8125rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: transparent; color: var(--cor-conteudo-suave); border: 0; border-bottom: 3px solid transparent; padding: .6rem .2rem; cursor: pointer; }
+.aba[aria-selected="true"] { color: var(--cor-conteudo); border-bottom-color: var(--cor-cena); }
+.painel { border-top: var(--e-fio) solid var(--cor-fio); padding-top: var(--e-interno); margin-top: -1px; }
+.painel[hidden] { display: none; }
+.linha-caso { padding-block: var(--e-linha); border-top: var(--e-fio) solid var(--cor-fio); }
+.linha-caso:first-of-type { border-top: 0; padding-top: 0; }
+.linha-caso h4 { margin: 0 0 .3rem; font-family: "Familjen Grotesk", sans-serif; font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--cor-conteudo-suave); }
+.linha-caso--limite { border-top: 3px solid var(--cor-cena); margin-top: var(--e-linha); padding-top: var(--e-linha); }
+.linha-caso--limite h4 { color: var(--cor-cena); }
+.linha-caso--limite p { font-size: 1.15rem; font-weight: 600; }
+
+.proporcao svg { width: 100%; max-width: 30rem; height: auto; display: block; margin-top: var(--e-bloco); }
+.prop-dente { fill: none; stroke: var(--cor-conteudo); stroke-width: 1.4; }
+.prop-cota, .prop-cota-serifa { fill: none; stroke: var(--cor-cena); stroke-width: 1.4; }
+.prop-linha, .prop-guia { fill: none; stroke: var(--cor-fio); stroke-width: 1; }
+.prop-guia { stroke-dasharray: 2 3; }
+.fig-rotulo { font-family: "Familjen Grotesk", sans-serif; font-size: 8px; letter-spacing: .16em; text-transform: uppercase; fill: var(--cor-cena); font-weight: 600; }
+.legenda-fig { margin-top: .7rem; font-size: .75rem; color: var(--cor-conteudo-suave); max-width: 46ch; }
+
+.numeros { display: grid; gap: var(--e-linha); margin-top: var(--e-bloco); max-width: var(--medida); }
+@media (min-width: 40rem) { .numeros { grid-template-columns: 1fr 1fr; gap: var(--gutter); } }
+.numeros div { border-top: var(--e-fio) solid var(--cor-fio); padding-top: .6rem; }
+.numeros b { display: block; font-family: "Familjen Grotesk", sans-serif; font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 600; }
+.numeros span { font-size: .8125rem; color: var(--cor-conteudo-suave); }
+
+.faq { margin-top: var(--e-bloco); max-width: var(--medida); }
+.faq details { border-top: var(--e-fio) solid var(--cor-fio); }
+.faq details:last-of-type { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.faq summary { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: .6rem; align-items: start; padding-block: var(--e-linha); cursor: pointer; list-style: none; font-family: "Familjen Grotesk", sans-serif; font-weight: 600; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--cor-cena); }
+.faq .sinal { margin-top: .42em; stroke: var(--cor-cena); stroke-width: 1.6; }
+.faq details[open] .sinal .vertical { display: none; }
+.faq .resposta { padding: 0 0 var(--e-interno) 2.2rem; color: var(--cor-conteudo-suave); }
+.faq .resposta p + p { margin-top: var(--e-linha); }
+
+.rodape { padding-block: var(--e-secao); color: var(--cor-conteudo-suave); font-size: .875rem; }
+.rodape p { margin-bottom: .45rem; }
+.plano { margin-top: var(--e-bloco); border-top: var(--e-fio) solid var(--cor-fio); padding-top: var(--e-interno); display: grid; gap: .3rem; }
+.plano span { font-family: "Familjen Grotesk", sans-serif; font-size: .6875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cor-cena); }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .horizonte { scale: 0 1; animation: subir linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+  }
+}
+@keyframes subir { to { scale: 1 1; } }
+</style>
+</head>
+<body>
+<!--
+  THESIS: a página é um plano de luz de ciclorama — do escuro sem profundidade ao dia inteiro,
+  em degraus de valor com aresta definida. Recusa o hero fotográfico do nicho porque a única
+  direção honesta para um cliente sem UM ativo fotográfico entregue é uma que não precise de foto.
+  OWN-WORLD: quatro papéis nomeados (noite #070C16, cobalto #14304F, aurora #C9963F, dia #F4F5F7);
+  passagens sempre em banda chapada, nunca em degradê; Familjen Grotesk em caixa alta apertada
+  para o rótulo de cena, Hanken Grotesk para leitura longa.
+  STORY: o visitante entra na noite em que vive o problema, vê a primeira luz no mecanismo e
+  chega ao dia na hora de agendar.
+  FIRST VIEWPORT: ato escuro em campo cheio; marca e CENA 01 · ESCURO; H1 à esquerda como LCP;
+  CTA em aurora sólida logo abaixo da subheadline; à direita a arcada apenas em contorno, sem
+  preenchimento — a luz ainda não subiu sobre ela.
+  FORM: ciclorama de teatro — desafiante 6 da rolagem (stagecraft-theater-lighting-cyclorama-dawn),
+  veredito competitivo; seed key c5d258f0. Direção alternativa.
+-->
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="faixa-piloto">
+  <span>Página de demonstração técnica — direção C, alternativa do Ciclo II.</span>
+  <button class="tema" type="button" id="tema">Tema: sistema</button>
+</div>
+
+<header class="ato ato--escuro hero">
+  <div class="ato__interno">
+    <p class="marca">{{NOME_CLINICA}} <small>logotipo pendente</small></p>
+    <div class="hero__grade">
+      <div>
+        <h1 id="t-hero">Veja o seu sorriso planejado na tela antes de decidir qualquer coisa</h1>
+        <p class="hero__sub">Avaliação com escaneamento 3D em <span class="campo">{{CIDADE}}</span>. Você sai da consulta com o seu caso desenhado em imagem — implante, lente de porcelana ou nenhum dos dois — e decide depois, fora da cadeira.</p>
+        <p style="margin-top: var(--e-interno)">
+          <a class="acao" href="#agendar" data-track="cta_hero">
+            <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+            Agendar minha avaliação com escaneamento 3D
+          </a>
+        </p>
+        <p class="acao-linha">Atendimento por WhatsApp · <span class="campo">{{HORARIO_ATENDIMENTO}}</span> · sem compromisso de fechar tratamento</p>
+        <p class="tira">
+          <span class="campo">{{NOME_ESPECIALISTA}}</span> · <span class="campo">CRO {{CRO_NUMERO}}</span> ·
+          <span data-source="brief.md §4 · Autoridade (números)"><b>+ de 15 anos</b> de experiência clínica</span>
+        </p>
+      </div>
+      <figure class="silhueta" style="margin:0">
+        <svg viewBox="0 0 360 250" role="img" aria-label="Contorno de uma arcada superior em vista oclusal, desenhado apenas em linha, sem preenchimento.">
+          <path class="cyc-contorno" d="M 48 220 L 52.1 209.7 L 56.3 199.7 L 60.4 190 L 64.5 180.6 L 68.6 171.6 L 72.8 162.9 L 76.9 154.5 L 81 146.5 L 85.1 138.8 L 89.3 131.4 L 93.4 124.3 L 97.5 117.6 L 101.6 111.2 L 105.8 105.2 L 109.9 99.4 L 114 94 L 118.1 88.9 L 122.3 84.2 L 126.4 79.7 L 130.5 75.6 L 134.6 71.9 L 138.8 68.4 L 142.9 65.3 L 147 62.5 L 151.1 60 L 155.3 57.9 L 159.4 56.1 L 163.5 54.6 L 167.6 53.5 L 171.8 52.7 L 175.9 52.2 L 180 52 L 184.1 52.2 L 188.3 52.7 L 192.4 53.5 L 196.5 54.6 L 200.6 56.1 L 204.8 57.9 L 208.9 60 L 213 62.5 L 217.1 65.3 L 221.3 68.4 L 225.4 71.9 L 229.5 75.6 L 233.6 79.7 L 237.8 84.2 L 241.9 88.9 L 246 94 L 250.1 99.4 L 254.3 105.2 L 258.4 111.2 L 262.5 117.6 L 266.6 124.3 L 270.8 131.4 L 274.9 138.8 L 279 146.5 L 283.1 154.5 L 287.3 162.9 L 291.4 171.6 L 295.5 180.6 L 299.6 190 L 303.8 199.7 L 307.9 209.7 L 312 220"/>
+          <path class="cyc-dente" d="M 54.5 184 L 46.2 203.7 L 60.3 209.7 L 68.7 190 Z"/>
+          <path class="cyc-dente" d="M 73.6 143.1 L 64.6 161.1 L 79 168.3 L 88 150.3 Z"/>
+          <path class="cyc-dente" d="M 92.9 109 L 83.1 125.1 L 97.4 133.8 L 107.2 117.8 Z"/>
+          <path class="cyc-dente" d="M 112.5 81.7 L 101.7 95.5 L 115.5 106.3 L 126.3 92.5 Z"/>
+          <path class="cyc-dente" d="M 132.7 61.2 L 120.7 72.1 L 133 85.6 L 145 74.7 Z"/>
+          <path class="cyc-dente" d="M 153.7 47.8 L 140.6 55 L 149.7 71.6 L 162.8 64.4 Z"/>
+          <path class="cyc-dente" d="M 175.5 42 L 162.1 44.4 L 165.6 63.7 L 179 61.3 Z"/>
+          <path class="cyc-dente" d="M 197.9 44.4 L 184.5 42 L 181 61.3 L 194.4 63.7 Z"/>
+          <path class="cyc-dente" d="M 219.4 55 L 206.3 47.8 L 197.2 64.4 L 210.3 71.6 Z"/>
+          <path class="cyc-dente" d="M 239.3 72.1 L 227.3 61.2 L 215 74.7 L 227 85.6 Z"/>
+          <path class="cyc-dente" d="M 258.3 95.5 L 247.5 81.7 L 233.7 92.5 L 244.5 106.3 Z"/>
+          <path class="cyc-dente" d="M 276.9 125.1 L 267.1 109 L 252.8 117.8 L 262.6 133.8 Z"/>
+          <path class="cyc-dente" d="M 295.4 161.1 L 286.4 143.1 L 272 150.3 L 281 168.3 Z"/>
+          <path class="cyc-dente" d="M 313.8 203.7 L 305.5 184 L 291.3 190 L 299.7 209.7 Z"/>
+        </svg>
+        <figcaption>Desenho técnico de composição — não é imagem de paciente.</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<div class="horizonte" style="--luz: var(--cobalto-claro)"><span class="cena">Cena 02 · escuro</span></div>
+
+<main id="conteudo">
+
+  <section class="ato ato--escuro" aria-labelledby="t-s2">
+    <div class="ato__interno">
+      <h2 id="t-s2">A mão que sobe na frente da boca na hora da foto</h2>
+      <p>Ninguém comenta isso em voz alta. Só faz.</p>
+      <ul class="lista">
+        <li>Mastigar de um lado só há tanto tempo que já virou jeito de comer.</li>
+        <li>Escolher o prato pelo que dá para morder, não pelo que dá vontade.</li>
+        <li>Sorrir de boca fechada em foto de casamento, de formatura, de crachá.</li>
+        <li>Adiar a consulta ano após ano porque a lembrança do barulho do motor pesa mais que o incômodo do dente.</li>
+      </ul>
+      <p class="fecho">Isso não se resolve com força de vontade. Resolve com um plano — e um plano começa por enxergar o que está acontecendo dentro da sua boca.</p>
+    </div>
+  </section>
+
+  <div class="horizonte horizonte--alta" style="--luz: var(--aurora)"><span class="cena">Cena 03 · primeira luz</span></div>
+
+  <section class="ato ato--alt" aria-labelledby="t-s3">
+    <div class="ato__interno">
+      <h2 id="t-s3">Primeiro a imagem. Depois a decisão. Só então o procedimento.</h2>
+      <div class="dois">
+        <div class="quadro">
+          <h3>Antes da luz</h3>
+          <p>O caminho antigo é conhecido: massa de moldagem, um orçamento com nomes de procedimento que você não conhece, e a promessa de que “vai ficar bom”. O resultado, você descobre no espelho — quando já não dá para voltar atrás.</p>
+        </div>
+        <div class="quadro quadro--luz">
+          <h3>Com a luz em cena</h3>
+          <p>O escaneamento 3D inverte a ordem. A sua arcada é lida por um scanner intraoral e aparece na tela, em três dimensões, na mesma consulta. O que precisa ser resolvido para de ser uma explicação e passa a ser uma imagem que você olha junto com o profissional.</p>
+        </div>
+      </div>
+      <p class="fecho">Decidir sobre o próprio sorriso olhando para ele é diferente de decidir sobre ele ouvindo falar dele.</p>
+    </div>
+  </section>
+
+  <div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Cena 04 · luz de trabalho</span></div>
+
+  <section class="ato" aria-labelledby="t-s4">
+    <div class="ato__interno">
+      <h2 id="t-s4">O que acontece na sua avaliação</h2>
+      <ol class="etapas">
+        <li><div><b>Conversa.</b><p>O que te incomoda, com as suas palavras. Foto, mastigação, dor, estética — o motivo é seu, não precisa ser técnico.</p></div></li>
+        <li><div><b>Escaneamento 3D.</b><p>Um scanner passa pela arcada e monta o modelo digital. Sem massa de moldagem, sem a ânsia da bandeja.</p></div></li>
+        <li><div><b>Leitura na tela, com você junto.</b><p>O que dá para fazer, o que não dá, o que é prioridade e o que pode esperar.</p></div></li>
+        <li><div><b>Plano na sua mão.</b><p>Etapas, sequência e tempo estimado, por escrito. Você leva embora e decide fora da cadeira.</p></div></li>
+      </ol>
+      <p class="destaque">Sem compromisso de fechar tratamento na hora.</p>
+      <p class="legenda-fig">Duração da consulta: <span class="campo">{{DURACAO_AVALIACAO}}</span> — pendente de confirmação da clínica.</p>
+    </div>
+  </section>
+
+  <div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Cena 05 · encaixe</span></div>
+
+  <section class="ato ato--alt" aria-labelledby="t-s5">
+    <div class="ato__interno">
+      <h2 id="t-s5">Em qual dos dois caminhos o seu caso se encaixa</h2>
+      <div class="abas" role="tablist" aria-label="Caminhos de tratamento">
+        <button class="aba" role="tab" id="aba-implante" aria-controls="painel-implante" aria-selected="true" tabindex="0" type="button">Implantes</button>
+        <button class="aba" role="tab" id="aba-lente" aria-controls="painel-lente" aria-selected="false" tabindex="-1" type="button">Lentes de porcelana</button>
+      </div>
+      <div class="painel" role="tabpanel" id="painel-implante" aria-labelledby="aba-implante" tabindex="0">
+        <div class="linha-caso"><h4>Para quem</h4><p>Perdeu um ou mais dentes, usa prótese removível, ou mastiga só de um lado para não incomodar a região.</p></div>
+        <div class="linha-caso"><h4>O que resolve</h4><p>A raiz. O implante substitui o que sustenta o dente, então a mordida volta a distribuir força dos dois lados.</p></div>
+        <div class="linha-caso linha-caso--limite"><h4>O que não resolve sozinho</h4><p>Cor e formato do resto da arcada. Muita gente chega querendo implante e sai com um plano que também toca no que já existe.</p></div>
+        <div class="linha-caso"><h4>O que o escaneamento mostra antes</h4><p>Onde há osso, quanto há, e em que sequência os dentes precisam ser resolvidos.</p></div>
+      </div>
+      <div class="painel" role="tabpanel" id="painel-lente" aria-labelledby="aba-lente" tabindex="0" hidden>
+        <div class="linha-caso"><h4>Para quem</h4><p>Tem os dentes, mas não gosta deles. Formato irregular, desgaste, manchas que clareamento não tira, espaços entre um dente e outro.</p></div>
+        <div class="linha-caso"><h4>O que resolve</h4><p>A face visível do dente — proporção, alinhamento aparente e cor.</p></div>
+        <div class="linha-caso linha-caso--limite"><h4>O que não resolve</h4><p>Ausência de dente, problema de gengiva não tratado ou mordida desequilibrada. Lente aplicada sobre um problema de base é dinheiro que volta a doer depois.</p></div>
+        <div class="linha-caso"><h4>O que o escaneamento mostra antes</h4><p>O formato e a proporção que o seu rosto comporta — antes de qualquer desgaste no dente.</p></div>
+      </div>
+      <p style="margin-top: var(--e-bloco)">
+        <a class="acao" href="#agendar" data-track="cta_meio">
+          <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+          Agendar minha avaliação com escaneamento 3D
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Cena 06 · proporção</span></div>
+
+  <section class="ato" aria-labelledby="t-s6">
+    <div class="ato__interno">
+      <h2 id="t-s6">Dente novo que ninguém percebe que é dente novo</h2>
+      <p>Você conhece o resultado que não quer: branco demais, todos do mesmo tamanho, aquele sorriso que se anuncia antes da pessoa falar.</p>
+      <p>Isso não é acidente de execução. É consequência de decidir formato, proporção e cor no meio do procedimento, quando já não há tempo de discutir.</p>
+      <p>No modelo digital, essas três coisas são discutidas antes — com a sua cara na frente, comparando com o que você tinha e com o que faz sentido para a sua idade e o seu rosto. Se ficar artificial na tela, muda na tela.</p>
+      <figure class="proporcao" style="margin:0">
+        <svg viewBox="0 0 182 136" role="img" aria-label="Diagrama de proporção dos seis dentes anteriores superiores, com cotas sobre a largura dos incisivos centrais.">
+          <path class="prop-guia" d="M 16 44 L 172 44"/>
+          <path class="prop-dente" d="M 24 62 L 39 62 L 39 112 Q 31.5 122 24 112 Z"/>
+          <path class="prop-dente" d="M 41 56 L 62 56 L 62 112 Q 51.5 122 41 112 Z"/>
+          <path class="prop-dente" d="M 64 44 L 90 44 L 90 112 Q 77 122 64 112 Z"/>
+          <path class="prop-cota" d="M 64 32 L 90 32"/>
+          <path class="prop-cota-serifa" d="M 64 28 L 64 36 M 90 28 L 90 36"/>
+          <path class="prop-dente" d="M 92 44 L 118 44 L 118 112 Q 105 122 92 112 Z"/>
+          <path class="prop-cota" d="M 92 32 L 118 32"/>
+          <path class="prop-cota-serifa" d="M 92 28 L 92 36 M 118 28 L 118 36"/>
+          <path class="prop-dente" d="M 120 56 L 141 56 L 141 112 Q 130.5 122 120 112 Z"/>
+          <path class="prop-dente" d="M 143 62 L 158 62 L 158 112 Q 150.5 122 143 112 Z"/>
+          <path class="prop-linha" d="M 16 120 L 172 120"/>
+          <text class="fig-rotulo" x="16" y="20">Cota discutida antes do desgaste</text>
+        </svg>
+        <figcaption class="legenda-fig">Desenho técnico de composição — não é imagem de paciente. Ensaio visual prévio: <span class="campo">{{ETAPA_ENSAIO_VISUAL}}</span>, pendente de confirmação.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Cena 07 · responsável</span></div>
+
+  <section class="ato ato--alt" aria-labelledby="t-s7">
+    <div class="ato__interno">
+      <h2 id="t-s7"><span class="campo">{{NOME_ESPECIALISTA}}</span></h2>
+      <p><span class="campo">{{ESPECIALIDADE_TITULACAO}}</span> · <span class="campo">CRO {{CRO_NUMERO}}</span></p>
+      <div class="numeros">
+        <div data-source="brief.md §4 · Autoridade (números)"><b>+ de 15 anos</b><span>de experiência clínica</span></div>
+        <div data-source="brief.md §4 · Autoridade (números)"><b>+ de 5.000</b><span>sorrisos transformados</span></div>
+      </div>
+      <p class="legenda-fig"><span class="campo">{{FRASE_DO_ESPECIALISTA}}</span> — frase escrita ou aprovada pelo responsável. Foto do responsável: pendente. A seção existe sem ela.</p>
+    </div>
+  </section>
+
+  <div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Cena 08 · objeções</span></div>
+
+  <section class="ato" aria-labelledby="t-s11">
+    <div class="ato__interno">
+      <h2 id="t-s11">As perguntas que travam a decisão</h2>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mais" viewBox="0 0 13 13"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></symbol></svg>
+      <div class="faq">
+        <details open><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Vou sentir dor?</span></summary>
+          <div class="resposta">
+            <p>O que quase todo mundo teme é a memória da agulha e do barulho do motor, mais que o procedimento em si. Vale separar as duas coisas.</p>
+            <p><b>Durante:</b> a região é anestesiada e o procedimento acontece com você sem sensação de dor na área. <span class="campo">{{PROTOCOLO_ANESTESIA}}</span></p>
+            <p><b>Depois:</b> o incômodo do pós é sensibilidade de região operada, com conduta e medicação previstas no seu plano. <span class="campo">{{CONDUTA_POS}}</span></p>
+            <p>Na avaliação não há procedimento nenhum: é conversa e escaneamento.</p>
+          </div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Quanto tempo até eu voltar à minha rotina?</span></summary>
+          <div class="resposta">
+            <p>A avaliação não tem recuperação: você sai e segue o dia.</p>
+            <p>Para o tratamento, o tempo depende do caso — e é exatamente o que o plano por escrito responde na consulta, com número, para o <b>seu</b> caso. <span class="campo">{{TEMPO_RETORNO_ROTINA}}</span> <span class="campo">{{RESTRICOES_INICIAIS}}</span></p>
+            <p>Nenhum prazo genérico é dado aqui de propósito: prazo de recuperação que serve para todo mundo não serve para ninguém.</p>
+          </div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Vou ficar sem dente em algum momento do processo?</span></summary>
+          <div class="resposta"><p>Essa é a pergunta que a maioria não faz em voz alta. <span class="campo">{{POLITICA_PROVISORIO}}</span> — a resposta entra no plano por escrito, na primeira consulta.</p></div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>A lente de porcelana estraga o dente por baixo?</span></summary>
+          <div class="resposta"><p>Depende do quanto de estrutura precisa sair para a lente assentar, e isso varia caso a caso. <span class="campo">{{POLITICA_DESGASTE}}</span> O escaneamento mostra essa medida antes de qualquer desgaste — é uma das razões de o plano vir primeiro.</p></div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Quantas consultas até terminar?</span></summary>
+          <div class="resposta"><p>Varia com o caso. O plano entregue na avaliação traz a sequência e a contagem de sessões previstas para o seu, e não uma média de clínica.</p></div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Preciso decidir na hora?</span></summary>
+          <div class="resposta"><p>Não. A avaliação termina com o plano na sua mão. Você decide fora da cadeira, no seu tempo.</p></div>
+        </details>
+        <details><summary><svg class="sinal" width="13" height="13" aria-hidden="true"><use href="#mais"/></svg><span>Quanto custa?</span></summary>
+          <div class="resposta"><p>O valor depende do que o seu caso exige, e por isso não aparece nesta página. <span class="campo">{{CONDICAO_ESPECIAL}}</span> vale para agendamentos feitos até <span class="campo">{{DATA_LIMITE}}</span> e é apresentada junto com o plano.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="horizonte horizonte--alta" style="--luz: var(--dia)"><span class="cena">Cena 09 · dia</span></div>
+
+<section class="ato ato--dia" id="agendar" aria-labelledby="t-s12">
+  <div class="ato__interno">
+    <h2 id="t-s12">Agende a avaliação com escaneamento 3D</h2>
+    <p>Uma conversa, um escaneamento e um plano por escrito na sua mão. Sem compromisso de fechar tratamento.</p>
+    <p>As condições especiais de pagamento desta semana valem para agendamentos feitos até <span class="campo">{{DATA_LIMITE}}</span>.</p>
+    <p style="margin-top: var(--e-interno)">
+      <a class="acao" href="#agendar" data-track="cta_final">
+        <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+        Chamar no WhatsApp e agendar
+      </a>
+    </p>
+    <p class="acao-linha"><span class="campo">{{HORARIO_ATENDIMENTO}}</span> · <span class="campo">{{CIDADE}}</span></p>
+  </div>
+</section>
+
+<div class="horizonte" style="--luz: var(--cor-cena)"><span class="cena">Blackout</span></div>
+
+<footer class="ato rodape">
+  <div class="ato__interno">
+    <p>{{NOME_CLINICA}} · <span class="campo">{{ENDERECO}}</span> · <span class="campo">{{CIDADE}}</span></p>
+    <p>Responsável técnico: <span class="campo">{{NOME_ESPECIALISTA}}</span> — <span class="campo">CRO {{CRO_NUMERO}}</span></p>
+    <p><span class="campo">{{WHATSAPP_NUMERO}}</span> · <span class="campo">{{HORARIO_ATENDIMENTO}}</span></p>
+    <div class="plano">
+      <span>Cenas fora do plano de luz</span>
+      <p>Consultório, casos tratados e depoimentos em vídeo dependem de arquivo e autorização do cliente. Enquanto não chegarem, não são renderizados — a página fecha com nove cenas em vez de doze.</p>
+    </div>
+    <p style="margin-top:var(--e-interno)">Página de demonstração técnica. Conteúdo de identificação não preenchido.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var raiz = document.documentElement, btn = document.getElementById('tema'), ordem = ['sistema', 'claro', 'escuro'];
+  btn.addEventListener('click', function () {
+    var prox = ordem[(ordem.indexOf(raiz.getAttribute('data-tema') || 'sistema') + 1) % 3];
+    raiz.setAttribute('data-tema', prox); btn.textContent = 'Tema: ' + prox;
+  });
+})();
+(function () {
+  var abas = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function ativar(aba) {
+    abas.forEach(function (a) {
+      var sel = a === aba;
+      a.setAttribute('aria-selected', String(sel)); a.tabIndex = sel ? 0 : -1;
+      document.getElementById(a.getAttribute('aria-controls')).hidden = !sel;
+    });
+  }
+  abas.forEach(function (aba, i) {
+    aba.addEventListener('click', function () { ativar(aba); });
+    aba.addEventListener('keydown', function (e) {
+      var alvo = null;
+      if (e.key === 'ArrowRight') alvo = abas[(i + 1) % abas.length];
+      if (e.key === 'ArrowLeft') alvo = abas[(i - 1 + abas.length) % abas.length];
+      if (alvo) { e.preventDefault(); ativar(alvo); alvo.focus(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

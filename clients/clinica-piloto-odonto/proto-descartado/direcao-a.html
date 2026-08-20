@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="sistema">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avaliação com escaneamento 3D — {{NOME_CLINICA}}</title>
+<meta name="description" content="Avaliação com escaneamento 3D: você vê o seu caso desenhado em imagem, recebe o plano por escrito e decide fora da cadeira. Implantes e lentes de contato em porcelana.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DIREÇÃO A — LAUDO DE CONDIÇÃO
+   Motivo gráfico: "Mapa de perda"
+   Todo valor de cor, espaço, raio e sombra deriva de proto/tokens-a.json.
+   Nenhum hex existe fora da camada de tokens abaixo.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ---------- tokens brutos (espelham cor.escala do tokens-a.json) ---------- */
+:root {
+  --algodao: #F2F4F6;
+  --algodao-fundo: #E6EAEE;
+  --algodao-fio: #BAC4CD;
+  --tinta: #0E1B2B;
+  --tinta-suave: #46586C;
+  --marinho: #12253E;
+  --marinho-profundo: #0B1626;
+  --marinho-alt: #122033;
+  --marinho-fio: #2B3D53;
+  --gelo-conteudo: #E9EEF3;
+  --nevoa: #A9B8C7;
+  --ouro-registro: #7A5B14;
+  --ouro-lampada: #D9B25E;
+
+  /* espaçamento */
+  --e-fio: 1px;
+  --e-chamada: .375rem;
+  --e-linha: 1.15rem;
+  --e-interno: 1.75rem;
+  --e-bloco: 3rem;
+  --e-secao: clamp(4.5rem, 10vh, 8.5rem);
+  --e-hero: clamp(5rem, 14vh, 10rem);
+  --margem: clamp(2.5rem, 8vw, 8rem);
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --sobreposicao: 12px;
+  --medida: 36em;
+
+  /* raio */
+  --raio-nenhum: 0;
+  --raio-controle: 3px;
+  --raio-folha: 0 10px 0 0;
+}
+
+/* ---------- tokens semânticos · tema claro (padrão) ---------- */
+:root {
+  --cor-superficie: var(--algodao);
+  --cor-superficie-alt: var(--algodao-fundo);
+  --cor-superficie-registro: var(--marinho);
+  --cor-conteudo: var(--tinta);
+  --cor-conteudo-suave: var(--tinta-suave);
+  --cor-anotacao: var(--ouro-registro);
+  --cor-fio: var(--algodao-fio);
+  --cor-acao: var(--marinho);
+  --cor-acao-conteudo: var(--algodao);
+  --cor-registro-conteudo: var(--gelo-conteudo);
+  --cor-registro-fio: var(--marinho-fio);
+  --cor-registro-anotacao: var(--ouro-lampada);
+}
+
+/* ---------- tema escuro · preferência do sistema ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --cor-superficie: var(--marinho-profundo);
+    --cor-superficie-alt: var(--marinho-alt);
+    --cor-superficie-registro: var(--marinho);
+    --cor-conteudo: var(--gelo-conteudo);
+    --cor-conteudo-suave: var(--nevoa);
+    --cor-anotacao: var(--ouro-lampada);
+    --cor-fio: var(--marinho-fio);
+    --cor-acao: var(--ouro-lampada);
+    --cor-acao-conteudo: var(--marinho-profundo);
+  }
+}
+
+/* ---------- tema escuro · escolha explícita ---------- */
+:root[data-tema="escuro"] {
+  --cor-superficie: var(--marinho-profundo);
+  --cor-superficie-alt: var(--marinho-alt);
+  --cor-superficie-registro: var(--marinho);
+  --cor-conteudo: var(--gelo-conteudo);
+  --cor-conteudo-suave: var(--nevoa);
+  --cor-anotacao: var(--ouro-lampada);
+  --cor-fio: var(--marinho-fio);
+  --cor-acao: var(--ouro-lampada);
+  --cor-acao-conteudo: var(--marinho-profundo);
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--cor-superficie);
+  color: var(--cor-conteudo);
+  font-family: "Archivo", system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.0625rem, .3vw + 1rem, 1.1875rem);
+  font-weight: 400;
+  font-stretch: 100%;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--cor-anotacao);
+  accent-color: var(--cor-acao);
+}
+
+/* superfícies do navegador — parte do sistema, não default herdado */
+::selection { background: var(--cor-anotacao); color: var(--cor-superficie); }
+* { scrollbar-color: var(--cor-fio) var(--cor-superficie); scrollbar-width: thin; }
+:focus-visible { outline: 2px solid var(--cor-anotacao); outline-offset: 3px; border-radius: var(--raio-controle); }
+
+h1, h2, h3 { font-weight: 500; line-height: 1.1; margin: 0 0 var(--e-linha); text-wrap: balance; }
+/* medida em ch precisa viver no PRÓPRIO h1: em um invólucro, ch resolve
+   contra a fonte do invólucro e a headline quebra palavra a palavra. */
+h1 { font-size: clamp(2.2rem, 5.4vw, 4.35rem); font-stretch: 105%; line-height: 1.04; letter-spacing: -.015em; max-width: 16ch; }
+h2 { font-size: clamp(1.75rem, 3.2vw, 2.75rem); font-stretch: 112%; letter-spacing: -.01em; }
+h3 { font-size: 1.0625rem; font-stretch: 88%; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; }
+p  { margin: 0 0 var(--e-linha); max-width: var(--medida); }
+p:last-child { margin-bottom: 0; }
+a  { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; text-decoration-color: var(--cor-anotacao); }
+strong { font-weight: 600; }
+
+.pular {
+  position: absolute; left: -9999px; top: 0; z-index: 20;
+  background: var(--cor-acao); color: var(--cor-acao-conteudo);
+  padding: .7rem 1.1rem; border-radius: var(--raio-controle);
+}
+.pular:focus { left: .5rem; top: .5rem; }
+
+/* ═══ MOTIVO — MAPA DE PERDA ═══════════════════════════════════
+   1. observação: código tabular na margem + fio de chamada horizontal
+   2. hachura: material ausente, na cor da anotação
+   3. folha: deslocamento físico de 12px com sombra real
+   ═════════════════════════════════════════════════════════════ */
+
+.obs {
+  margin: 0 0 var(--e-chamada);
+  font-size: .6875rem;
+  font-stretch: 88%;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cor-anotacao);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.obs__fio { display: block; flex: 1; height: 1px; min-width: 1.5rem; max-width: 8rem; }
+.obs__fio line { stroke: var(--cor-anotacao); stroke-width: 1; }
+
+.hachura {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--cor-anotacao) 60%, transparent) 0 1px,
+    transparent 1px 6px
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor-anotacao) 38%, transparent);
+}
+
+/* campo que o cliente ainda não entregou: a ausência é declarada, não escondida */
+.campo {
+  display: inline-block;
+  padding: .06em .38em;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--cor-anotacao) 30%, transparent) 0 1px,
+    transparent 1px 6px
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor-anotacao) 30%, transparent);
+  font-stretch: 92%;
+  font-size: .94em;
+  white-space: nowrap;
+}
+
+.folha {
+  position: relative;
+  background: var(--cor-superficie);
+  border: var(--e-fio) solid var(--cor-fio);
+  border-radius: var(--raio-folha);
+  padding: var(--e-interno);
+}
+.folha--sobreposta {
+  box-shadow: 12px 12px 28px -18px color-mix(in srgb, var(--cor-conteudo) 55%, transparent);
+}
+
+/* ---------- estrutura ---------- */
+.faixa-piloto {
+  background: var(--cor-superficie-alt);
+  border-bottom: var(--e-fio) solid var(--cor-fio);
+  color: var(--cor-conteudo-suave);
+  font-size: .75rem;
+  font-stretch: 88%;
+  letter-spacing: .06em;
+  padding: .5rem var(--gutter);
+  display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
+  align-items: center; justify-content: space-between;
+}
+
+.tema {
+  font: inherit;
+  font-size: .75rem;
+  font-stretch: 88%;
+  letter-spacing: .06em;
+  color: var(--cor-conteudo);
+  background: transparent;
+  border: var(--e-fio) solid var(--cor-fio);
+  border-radius: var(--raio-controle);
+  padding: .3rem .6rem;
+  cursor: pointer;
+}
+.tema:hover { border-color: var(--cor-anotacao); color: var(--cor-anotacao); }
+
+.pagina { max-width: 84rem; margin: 0 auto; padding: 0 var(--gutter); }
+
+.secao {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding-block: var(--e-secao);
+  border-top: var(--e-fio) solid var(--cor-fio);
+}
+.secao:first-of-type { border-top: 0; }
+.secao__corpo { min-width: 0; }
+
+@media (min-width: 62rem) {
+  .secao { grid-template-columns: var(--margem) minmax(0, 1fr); column-gap: var(--gutter); }
+  .secao__marca { grid-column: 1; }
+  .secao__corpo { grid-column: 2; }
+  .obs { margin-bottom: 0; }
+  .obs__fio { max-width: none; }
+}
+
+/* ---------- topo e marca ---------- */
+.topo { padding-block: var(--e-bloco) 0; }
+.marca {
+  display: inline-flex; align-items: baseline; gap: .6rem;
+  font-stretch: 118%; font-weight: 600; font-size: 1.05rem;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.marca__nota { font-size: .6875rem; font-stretch: 80%; letter-spacing: .12em; color: var(--cor-conteudo-suave); text-transform: uppercase; }
+
+/* ---------- hero ---------- */
+.hero { padding-block: var(--e-hero) var(--e-secao); border-top: 0; }
+.hero__grade { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-bloco); }
+@media (min-width: 62rem) {
+  .hero__grade { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: var(--gutter); align-items: start; }
+}
+.hero__sub { font-size: clamp(1.125rem, .5vw + 1rem, 1.375rem); line-height: 1.45; color: var(--cor-conteudo-suave); max-width: 34ch; margin-top: var(--e-interno); }
+
+.acao {
+  display: inline-flex; align-items: center; gap: .7rem;
+  background: var(--cor-acao); color: var(--cor-acao-conteudo);
+  font: inherit; font-weight: 600; font-stretch: 96%; font-size: 1rem;
+  line-height: 1.25; text-align: left; text-decoration: none;
+  padding: 1rem 1.4rem; border: 0; border-radius: var(--raio-controle);
+  cursor: pointer; width: 100%;
+}
+@media (min-width: 40rem) { .acao { width: auto; } }
+.acao:hover { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--cor-anotacao) 85%, transparent); }
+.acao svg { flex: none; }
+.acao__marca { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.acao-linha { margin-top: var(--e-chamada); font-size: .8125rem; font-stretch: 90%; color: var(--cor-conteudo-suave); letter-spacing: .02em; }
+
+.tira {
+  margin-top: var(--e-bloco);
+  padding-top: var(--e-linha);
+  border-top: var(--e-fio) solid var(--cor-fio);
+  font-size: .8125rem; font-stretch: 90%;
+  color: var(--cor-conteudo-suave);
+  display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center;
+}
+.tira b { color: var(--cor-conteudo); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---------- figura: prova fotográfica + folha de mapeamento ---------- */
+.mapa { margin: 0; position: relative; }
+.mapa__prova {
+  background: var(--cor-superficie-registro);
+  border-radius: var(--raio-nenhum);
+  aspect-ratio: 6 / 5;
+  width: 100%;
+}
+.mapa__folha {
+  position: absolute; inset: var(--sobreposicao) 0 0 var(--sobreposicao);
+  background: color-mix(in srgb, var(--cor-superficie) 93%, transparent);
+  border: var(--e-fio) solid var(--cor-fio);
+  border-radius: var(--raio-folha);
+  box-shadow: 12px 12px 28px -18px color-mix(in srgb, var(--cor-conteudo) 55%, transparent);
+  padding: .9rem 1rem;
+  display: flex; flex-direction: column; gap: .5rem;
+}
+.mapa__cabeca {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-size: .625rem; font-stretch: 82%; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--cor-conteudo-suave);
+}
+.mapa svg.desenho { flex: 1; width: 100%; height: auto; min-height: 0; }
+.mapa__rodape { font-size: .625rem; font-stretch: 82%; letter-spacing: .1em; text-transform: uppercase; color: var(--cor-anotacao); }
+
+.fig-contorno { fill: none; stroke: var(--cor-fio); stroke-width: 1; }
+.fig-dente { fill: none; stroke: var(--cor-conteudo-suave); stroke-width: 1; }
+.fig-dente--obs { stroke: var(--cor-conteudo); stroke-width: 1.6; }
+.fig-ausente {
+  fill: color-mix(in srgb, var(--cor-anotacao) 26%, transparent);
+  stroke: var(--cor-anotacao); stroke-width: 1; stroke-dasharray: 3 2;
+}
+.fig-chamada { fill: none; stroke: var(--cor-anotacao); stroke-width: 1; }
+.fig-no { fill: var(--cor-anotacao); }
+.fig-cota, .fig-cota-serifa { fill: none; stroke: var(--cor-conteudo); stroke-width: 1; }
+.fig-cota-guia { fill: none; stroke: var(--cor-conteudo-suave); stroke-width: 1; stroke-dasharray: 2 3; }
+.fig-rotulo {
+  font-size: 9px; font-stretch: 82%; letter-spacing: .1em; text-transform: uppercase;
+  fill: var(--cor-anotacao); font-family: "Archivo", sans-serif; font-weight: 600;
+}
+.fig-rotulo--neutro { fill: var(--cor-conteudo-suave); }
+
+/* ---------- S2 lista de reconhecimento ---------- */
+.reconhecimento { list-style: none; margin: var(--e-bloco) 0; padding: 0; max-width: var(--medida); }
+.reconhecimento li {
+  display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); align-items: start;
+  gap: .5rem; padding-block: .8rem;
+  border-top: var(--e-fio) solid var(--cor-fio);
+}
+.reconhecimento li:last-child { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.reconhecimento svg { margin-top: .62em; width: 100%; height: 1px; }
+.reconhecimento svg line { stroke: var(--cor-anotacao); stroke-width: 1; }
+
+/* ---------- S3 duas folhas ---------- */
+.virada { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: var(--e-bloco) 0; }
+.virada__estado { max-width: none; }
+.virada__estado h3 { color: var(--cor-conteudo-suave); margin-bottom: .8rem; }
+.virada__estado--proposto {
+  margin-top: calc(var(--sobreposicao) * -1);
+  margin-left: var(--sobreposicao);
+  box-shadow: 12px 12px 28px -18px color-mix(in srgb, var(--cor-conteudo) 55%, transparent);
+}
+.virada__estado--proposto h3 { color: var(--cor-anotacao); }
+@media (min-width: 52rem) {
+  .virada { grid-template-columns: 1fr 1fr; }
+  .virada__estado--proposto { margin-top: var(--sobreposicao); margin-left: calc(var(--sobreposicao) * -1); }
+}
+.fecho {
+  font-size: clamp(1.25rem, 1.4vw + 1rem, 1.6rem); line-height: 1.35;
+  max-width: 30ch; font-stretch: 104%;
+}
+
+/* ---------- S4 etapas ---------- */
+.etapas { list-style: none; margin: var(--e-bloco) 0; padding: 0; counter-reset: etapa; max-width: var(--medida); }
+.etapas li {
+  counter-increment: etapa;
+  display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); gap: .75rem;
+  padding-block: var(--e-linha);
+  border-top: var(--e-fio) solid var(--cor-fio);
+}
+.etapas li:last-child { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.etapas li::before {
+  content: counter(etapa, decimal-leading-zero);
+  font-variant-numeric: tabular-nums;
+  font-size: .8125rem; font-weight: 600; font-stretch: 84%; letter-spacing: .1em;
+  color: var(--cor-anotacao);
+  padding-top: .28em;
+}
+.etapas b { display: block; font-weight: 600; font-stretch: 104%; margin-bottom: .18rem; }
+.etapas p { color: var(--cor-conteudo-suave); }
+.sem-compromisso {
+  margin-top: var(--e-interno); font-size: 1.0625rem; font-stretch: 104%; font-weight: 500;
+  padding-left: .9rem; border-left: 1px solid var(--cor-anotacao);
+}
+
+/* ---------- S5 abas ---------- */
+.abas { display: flex; gap: .5rem; margin: var(--e-bloco) 0 0; flex-wrap: wrap; }
+.aba {
+  font: inherit; font-size: .875rem; font-weight: 600; font-stretch: 92%;
+  letter-spacing: .06em; text-transform: uppercase;
+  background: transparent; color: var(--cor-conteudo-suave);
+  border: var(--e-fio) solid var(--cor-fio); border-bottom-color: transparent;
+  border-radius: var(--raio-controle) var(--raio-controle) 0 0;
+  padding: .7rem 1rem; cursor: pointer; margin-bottom: -1px;
+}
+.aba[aria-selected="true"] {
+  color: var(--cor-conteudo);
+  border-color: var(--cor-fio);
+  border-bottom-color: var(--cor-superficie);
+  background: var(--cor-superficie);
+  box-shadow: inset 0 2px 0 var(--cor-anotacao);
+}
+.aba:hover { color: var(--cor-conteudo); }
+.painel {
+  border: var(--e-fio) solid var(--cor-fio);
+  border-radius: 0 var(--raio-controle) var(--raio-controle) var(--raio-controle);
+  padding: var(--e-interno);
+}
+.painel[hidden] { display: none; }
+.linha-caso { padding-block: var(--e-linha); border-top: var(--e-fio) solid var(--cor-fio); }
+.linha-caso:first-of-type { border-top: 0; padding-top: 0; }
+.linha-caso h4 {
+  margin: 0 0 .3rem; font-size: .75rem; font-weight: 600; font-stretch: 84%;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--cor-conteudo-suave);
+}
+.linha-caso p { color: var(--cor-conteudo); }
+.linha-caso--limite {
+  padding: var(--e-linha) var(--e-interno);
+  margin-top: var(--e-linha);
+  border-top: var(--e-fio) solid var(--cor-anotacao);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--cor-anotacao) 22%, transparent) 0 1px,
+    transparent 1px 7px
+  );
+}
+.linha-caso--limite h4 { color: var(--cor-anotacao); }
+.linha-caso--limite p { font-size: 1.125rem; font-stretch: 104%; font-weight: 500; }
+
+/* ---------- S6 proporção ---------- */
+.proporcao { margin: var(--e-bloco) 0 0; }
+.proporcao svg { width: 100%; max-width: 30rem; height: auto; display: block; }
+.prop-dente { fill: none; stroke: var(--cor-conteudo); stroke-width: 1.4; }
+.prop-cota, .prop-cota-serifa { fill: none; stroke: var(--cor-anotacao); stroke-width: 1; }
+.prop-linha { fill: none; stroke: var(--cor-fio); stroke-width: 1; }
+.prop-guia { fill: none; stroke: var(--cor-fio); stroke-width: 1; stroke-dasharray: 2 3; }
+.legenda-fig {
+  margin-top: .7rem; font-size: .75rem; font-stretch: 88%; letter-spacing: .04em;
+  color: var(--cor-conteudo-suave); max-width: 46ch;
+}
+
+/* ---------- S7 responsável ---------- */
+.responsavel { margin-top: var(--e-bloco); display: grid; gap: var(--e-interno); max-width: var(--medida); }
+.numeros { display: grid; gap: var(--e-linha); }
+.numeros div { border-top: var(--e-fio) solid var(--cor-fio); padding-top: .6rem; }
+.numeros b { display: block; font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-stretch: 112%; font-weight: 500; font-variant-numeric: tabular-nums; }
+.numeros span { font-size: .8125rem; font-stretch: 88%; color: var(--cor-conteudo-suave); letter-spacing: .04em; }
+@media (min-width: 40rem) { .numeros { grid-template-columns: 1fr 1fr; gap: var(--gutter); } }
+
+/* ---------- S11 FAQ ---------- */
+.faq { margin-top: var(--e-bloco); max-width: var(--medida); }
+.faq details { border-top: var(--e-fio) solid var(--cor-fio); }
+.faq details:last-of-type { border-bottom: var(--e-fio) solid var(--cor-fio); }
+.faq summary {
+  display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: .6rem; align-items: start;
+  padding-block: var(--e-linha);
+  cursor: pointer; list-style: none;
+  font-size: 1.0625rem; font-weight: 600; font-stretch: 104%;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--cor-anotacao); }
+.faq .sinal { margin-top: .42em; }
+.faq .sinal line { stroke: var(--cor-anotacao); stroke-width: 1.4; }
+.faq details[open] .sinal .vertical { display: none; }
+.faq .resposta { padding: 0 0 var(--e-interno) 2.2rem; color: var(--cor-conteudo-suave); }
+.faq .resposta p { max-width: 62ch; }
+.faq .resposta p + p { margin-top: var(--e-linha); }
+
+/* ---------- S12 fecho ---------- */
+.fecho-bloco {
+  background: var(--cor-superficie-registro);
+  color: var(--cor-registro-conteudo);
+  padding: var(--e-secao) var(--gutter);
+  margin-top: var(--e-secao);
+  --cor-conteudo: var(--gelo-conteudo);
+  --cor-conteudo-suave: var(--nevoa);
+  --cor-anotacao: var(--ouro-lampada);
+  --cor-fio: var(--marinho-fio);
+  --cor-acao: var(--ouro-lampada);
+  --cor-acao-conteudo: var(--marinho-profundo);
+  --cor-superficie: var(--marinho);
+}
+.fecho-bloco__interno { max-width: 84rem; margin: 0 auto; }
+.fecho-bloco h2 { max-width: 18ch; }
+.fecho-bloco p { color: var(--cor-conteudo-suave); }
+.condicao { margin-top: var(--e-interno); padding-top: var(--e-linha); border-top: var(--e-fio) solid var(--cor-fio); }
+
+/* ---------- rodapé e legenda do laudo ---------- */
+.rodape {
+  padding-block: var(--e-secao);
+  color: var(--cor-conteudo-suave);
+  font-size: .875rem; font-stretch: 92%;
+}
+.rodape__identificacao { display: grid; gap: .45rem; margin-bottom: var(--e-bloco); }
+.legenda-laudo { border-top: var(--e-fio) solid var(--cor-fio); padding-top: var(--e-interno); }
+.legenda-laudo h3 { color: var(--cor-conteudo-suave); margin-bottom: var(--e-linha); }
+.legenda-laudo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.legenda-laudo li {
+  display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) auto; gap: .5rem 1rem;
+  padding-block: .35rem; border-top: var(--e-fio) solid var(--cor-fio);
+  font-size: .8125rem; align-items: baseline;
+}
+.legenda-laudo li:first-child { border-top: 0; }
+.legenda-laudo code {
+  font-family: inherit; font-stretch: 84%; font-weight: 600; letter-spacing: .1em;
+  color: var(--cor-anotacao); font-variant-numeric: tabular-nums;
+}
+.estado-ausente { color: var(--cor-anotacao); font-stretch: 84%; letter-spacing: .1em; text-transform: uppercase; font-size: .6875rem; font-weight: 600; }
+.estado-registrado { color: var(--cor-conteudo-suave); font-stretch: 84%; letter-spacing: .1em; text-transform: uppercase; font-size: .6875rem; }
+
+/* ---------- CTA flutuante mobile ---------- */
+.acao-flutuante {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 12;
+  padding: .6rem var(--gutter) calc(.6rem + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--cor-superficie) 94%, transparent);
+  border-top: var(--e-fio) solid var(--cor-fio);
+  transform: translateY(110%);
+  transition: transform .32s cubic-bezier(.2, .8, .2, 1);
+}
+.acao-flutuante[data-visivel="sim"] { transform: none; }
+.reserva-flutuante { height: 0; }
+@media (min-width: 62rem) { .acao-flutuante { display: none; } }
+@media (max-width: 61.99rem) { .reserva-flutuante { height: 5.5rem; } }
+@media (prefers-reduced-motion: reduce) { .acao-flutuante { transition: none; } }
+
+/* ═══ MOTION — um momento autoral: o laudo sendo escrito ═══════ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .obs__fio line, .reconhecimento svg line {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: escrever linear both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 32%;
+    }
+    .virada__estado--proposto {
+      animation: sobrepor linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+@keyframes escrever { to { stroke-dashoffset: 0; } }
+@keyframes sobrepor {
+  from { translate: calc(var(--sobreposicao) * -1.5) calc(var(--sobreposicao) * -0.5); }
+  to { translate: 0 0; }
+}
+</style>
+</head>
+<body>
+<!--
+  THESIS: A página é o laudo de condição de uma peça antes da restauração — registra o estado
+  atual, mapeia a perda e declara o limite da intervenção antes de qualquer decisão. Recusa o
+  arranjo padrão do nicho (foto de sorriso perfeito em tela cheia + cards de benefício com ícone
+  + slider de antes e depois), porque esse arranjo mostra o resultado antes de existir registro,
+  que é exatamente a ordem que esta clínica inverte.
+  OWN-WORLD: cartão de algodão frio (#F2F4F6) e prancha de registro azul-marinho (#12253E) como
+  as duas únicas superfícies; dourado exclusivamente como traço de anotação — hachura de material
+  ausente, código de observação, fio de chamada — nunca como preenchimento. Archivo variável, com
+  a hierarquia saindo do eixo de largura (88 nos rótulos, 105 no título, 112 nas seções). Corte
+  reto em tudo, salvo 3px de controle e o canto chanfrado de 10px da folha de mapeamento.
+  STORY: o visitante entende que a oferta é uma avaliação e não um tratamento; acredita que nada
+  irreversível acontece antes de ele ver o próprio caso em imagem; e chama no WhatsApp.
+  FIRST VIEWPORT: marca hachurada no topo à esquerda (o logotipo é a primeira ausência declarada
+  da página); H1 em três linhas no mobile, à esquerda, como elemento LCP; subheadline em 34ch; CTA
+  em largura total no mobile e automática acima de 40rem; tira de autoridade sob fio; à direita, em
+  desktop, a prancha de registro marinho com a folha de mapeamento deslocada 12px sobre ela,
+  carregando a arcada em contorno de fio de cabelo, a posição ausente hachurada e a cota entre os
+  centrais. Nenhuma foto de sorriso disputa o LCP.
+  FORM: laudo de conservação — candidato 5 da lista ordenada por ressonância; seed key c5d258f0.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the
+  verdict, DESIGN.md, and every shipping raster carrying its provenance.
+-->
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="faixa-piloto">
+  <span>Página de demonstração técnica — identificação da clínica ainda não preenchida.</span>
+  <button class="tema" type="button" id="tema" aria-live="polite">Tema: sistema</button>
+</div>
+
+<div class="pagina">
+
+  <header class="topo">
+    <p class="marca">
+      <span class="campo">{{NOME_CLINICA}}</span>
+      <span class="marca__nota">logotipo pendente</span>
+    </p>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ═══ S1 · HERO ═══ -->
+    <section class="secao hero" aria-labelledby="t-hero">
+      <div class="secao__marca">
+        <p class="obs">
+          <span>Obs 01</span>
+          <svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg>
+        </p>
+      </div>
+      <div class="secao__corpo">
+        <div class="hero__grade">
+          <div>
+            <h1 id="t-hero">Veja o seu sorriso planejado na tela antes de decidir qualquer coisa</h1>
+            <p class="hero__sub">Avaliação com escaneamento 3D em <span class="campo">{{CIDADE}}</span>. Você sai da consulta com o seu caso desenhado em imagem — implante, lente de porcelana ou nenhum dos dois — e decide depois, fora da cadeira.</p>
+
+            <p style="margin-top: var(--e-interno)">
+              <a class="acao" href="#agendar" data-track="cta_hero">
+                <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+                Agendar minha avaliação com escaneamento 3D
+              </a>
+            </p>
+            <p class="acao-linha">Atendimento por WhatsApp · <span class="campo">{{HORARIO_ATENDIMENTO}}</span> · sem compromisso de fechar tratamento</p>
+
+            <p class="tira">
+              <span class="campo">{{NOME_ESPECIALISTA}}</span> ·
+              <span class="campo">CRO {{CRO_NUMERO}}</span> ·
+              <span data-source="brief.md §4 · Autoridade (números)"><b>+ de 15 anos</b> de experiência clínica</span>
+            </p>
+          </div>
+
+          <figure class="mapa">
+            <div class="mapa__prova"></div>
+            <div class="mapa__folha">
+              <div class="mapa__cabeca">
+                <span>Folha de mapeamento</span>
+                <span>Arcada superior · vista oclusal</span>
+              </div>
+              <svg class="desenho" viewBox="0 0 360 250" role="img" aria-label="Desenho técnico de uma arcada superior em vista oclusal: contorno em fio de cabelo, cada dente marcado como célula, uma posição posterior esquerda hachurada como ausente e uma cota de largura sobre os incisivos centrais.">
+                <path class="fig-contorno" d="M 48 220 L 52.13 209.66 L 56.25 199.66 L 60.38 189.98 L 64.5 180.63 L 68.63 171.6 L 72.75 162.91 L 76.88 154.54 L 81 146.5 L 85.13 138.79 L 89.25 131.41 L 93.38 124.35 L 97.5 117.63 L 101.63 111.23 L 105.75 105.16 L 109.88 99.41 L 114 94 L 118.13 88.91 L 122.25 84.16 L 126.38 79.73 L 130.5 75.63 L 134.63 71.85 L 138.75 68.41 L 142.88 65.29 L 147 62.5 L 151.13 60.04 L 155.25 57.91 L 159.38 56.1 L 163.5 54.63 L 167.63 53.48 L 171.75 52.66 L 175.88 52.16 L 180 52 L 184.13 52.16 L 188.25 52.66 L 192.38 53.48 L 196.5 54.63 L 200.63 56.1 L 204.75 57.91 L 208.88 60.04 L 213 62.5 L 217.13 65.29 L 221.25 68.41 L 225.38 71.85 L 229.5 75.63 L 233.63 79.73 L 237.75 84.16 L 241.88 88.91 L 246 94 L 250.13 99.41 L 254.25 105.16 L 258.38 111.23 L 262.5 117.63 L 266.63 124.35 L 270.75 131.41 L 274.88 138.79 L 279 146.5 L 283.13 154.54 L 287.25 162.91 L 291.38 171.6 L 295.5 180.63 L 299.63 189.98 L 303.75 199.66 L 307.88 209.66 L 312 220"/>
+                <path class="fig-dente" d="M 54.52 184.03 L 46.2 203.7 L 60.34 209.68 L 68.66 190.01 Z"/>
+                <path class="fig-dente" d="M 73.59 143.14 L 64.61 161.1 L 78.98 168.28 L 87.96 150.33 Z"/>
+                <path class="fig-dente" d="M 92.88 109.04 L 83.08 125.07 L 97.41 133.82 L 107.2 117.79 Z"/>
+                <path class="fig-ausente" d="M 112.53 81.71 L 101.71 95.47 L 115.47 106.29 L 126.29 92.53 Z"/>
+                <path class="fig-dente" d="M 132.73 61.24 L 120.73 72.14 L 132.98 85.62 L 144.98 74.71 Z"/>
+                <path class="fig-dente" d="M 153.74 47.83 L 140.63 54.98 L 149.69 71.6 L 162.8 64.45 Z"/>
+                <path class="fig-dente fig-dente--obs" d="M 175.53 41.97 L 162.1 44.41 L 165.62 63.74 L 179.04 61.3 Z"/>
+                <path class="fig-dente fig-dente--obs" d="M 197.9 44.41 L 184.47 41.97 L 180.96 61.3 L 194.38 63.74 Z"/>
+                <path class="fig-dente fig-dente--obs" d="M 219.37 54.98 L 206.26 47.83 L 197.2 64.45 L 210.31 71.6 Z"/>
+                <path class="fig-dente" d="M 239.27 72.14 L 227.27 61.24 L 215.02 74.71 L 227.02 85.62 Z"/>
+                <path class="fig-dente" d="M 258.29 95.47 L 247.47 81.71 L 233.71 92.53 L 244.53 106.29 Z"/>
+                <path class="fig-dente" d="M 276.92 125.07 L 267.12 109.04 L 252.8 117.79 L 262.59 133.82 Z"/>
+                <path class="fig-dente" d="M 295.39 161.1 L 286.41 143.14 L 272.04 150.33 L 281.02 168.28 Z"/>
+                <path class="fig-dente" d="M 313.8 203.7 L 305.48 184.03 L 291.34 190.01 L 299.66 209.68 Z"/>
+                <path class="fig-chamada" d="M 114 94 L 44 94"/>
+                <circle class="fig-no" cx="114" cy="94" r="2.4"/>
+                <text class="fig-rotulo" x="44" y="84">Posição ausente</text>
+                <path class="fig-cota" d="M 170.57 20 L 189.43 20"/>
+                <path class="fig-cota-serifa" d="M 170.57 15 L 170.57 25 M 189.43 15 L 189.43 25"/>
+                <path class="fig-cota-guia" d="M 170.57 20 L 170.57 40.86 M 189.43 20 L 189.43 40.86"/>
+                <text class="fig-rotulo fig-rotulo--neutro" x="196" y="24">Largura discutida antes</text>
+              </svg>
+              <p class="mapa__rodape">Desenho técnico de composição — não é imagem de paciente</p>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ S2 · O ESPELHO DA DOR ═══ -->
+    <section class="secao" aria-labelledby="t-s2">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 02</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s2">A mão que sobe na frente da boca na hora da foto</h2>
+        <p>Ninguém comenta isso em voz alta. Só faz.</p>
+        <ul class="reconhecimento">
+          <li><svg viewBox="0 0 36 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="36" y2=".5"/></svg><span>Mastigar de um lado só há tanto tempo que já virou jeito de comer.</span></li>
+          <li><svg viewBox="0 0 36 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="36" y2=".5"/></svg><span>Escolher o prato pelo que dá para morder, não pelo que dá vontade.</span></li>
+          <li><svg viewBox="0 0 36 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="36" y2=".5"/></svg><span>Sorrir de boca fechada em foto de casamento, de formatura, de crachá.</span></li>
+          <li><svg viewBox="0 0 36 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="36" y2=".5"/></svg><span>Adiar a consulta ano após ano porque a lembrança do barulho do motor pesa mais que o incômodo do dente.</span></li>
+        </ul>
+        <p class="fecho">Isso não se resolve com força de vontade. Resolve com um plano — e um plano começa por enxergar o que está acontecendo dentro da sua boca.</p>
+      </div>
+    </section>
+
+    <!-- ═══ S3 · A VIRADA ═══ -->
+    <section class="secao" aria-labelledby="t-s3">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 03</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s3">Primeiro a imagem. Depois a decisão. Só então o procedimento.</h2>
+        <div class="virada">
+          <div class="folha virada__estado">
+            <h3>Estado registrado</h3>
+            <p>O caminho antigo é conhecido: massa de moldagem, um orçamento com nomes de procedimento que você não conhece, e a promessa de que “vai ficar bom”. O resultado, você descobre no espelho — quando já não dá para voltar atrás.</p>
+          </div>
+          <div class="folha virada__estado virada__estado--proposto">
+            <h3>Estado proposto</h3>
+            <p>O escaneamento 3D inverte a ordem. A sua arcada é lida por um scanner intraoral e aparece na tela, em três dimensões, na mesma consulta. O que precisa ser resolvido para de ser uma explicação e passa a ser uma imagem que você olha junto com o profissional.</p>
+          </div>
+        </div>
+        <p class="fecho" style="margin-top: var(--e-bloco)">Decidir sobre o próprio sorriso olhando para ele é diferente de decidir sobre ele ouvindo falar dele.</p>
+      </div>
+    </section>
+
+    <!-- ═══ S4 · COMO É A AVALIAÇÃO ═══ -->
+    <section class="secao" aria-labelledby="t-s4">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 04</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s4">O que acontece na sua avaliação</h2>
+        <ol class="etapas">
+          <li><div><b>Conversa.</b><p>O que te incomoda, com as suas palavras. Foto, mastigação, dor, estética — o motivo é seu, não precisa ser técnico.</p></div></li>
+          <li><div><b>Escaneamento 3D.</b><p>Um scanner passa pela arcada e monta o modelo digital. Sem massa de moldagem, sem a ânsia da bandeja.</p></div></li>
+          <li><div><b>Leitura na tela, com você junto.</b><p>O que dá para fazer, o que não dá, o que é prioridade e o que pode esperar.</p></div></li>
+          <li><div><b>Plano na sua mão.</b><p>Etapas, sequência e tempo estimado, por escrito. Você leva embora e decide fora da cadeira.</p></div></li>
+        </ol>
+        <p class="sem-compromisso">Sem compromisso de fechar tratamento na hora.</p>
+        <p class="legenda-fig">Duração da consulta: <span class="campo">{{DURACAO_AVALIACAO}}</span> — pendente de confirmação da clínica.</p>
+      </div>
+    </section>
+
+    <!-- ═══ S5 · OS DOIS CAMINHOS ═══ -->
+    <section class="secao" aria-labelledby="t-s5">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 05</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s5">Em qual dos dois caminhos o seu caso se encaixa</h2>
+
+        <div class="abas" role="tablist" aria-label="Caminhos de tratamento">
+          <button class="aba" role="tab" id="aba-implante" aria-controls="painel-implante" aria-selected="true" tabindex="0" type="button">Implantes dentários</button>
+          <button class="aba" role="tab" id="aba-lente" aria-controls="painel-lente" aria-selected="false" tabindex="-1" type="button">Lentes de porcelana</button>
+        </div>
+
+        <div class="painel" role="tabpanel" id="painel-implante" aria-labelledby="aba-implante" tabindex="0">
+          <div class="linha-caso"><h4>Para quem</h4><p>Perdeu um ou mais dentes, usa prótese removível, ou mastiga só de um lado para não incomodar a região.</p></div>
+          <div class="linha-caso"><h4>O que resolve</h4><p>A raiz. O implante substitui o que sustenta o dente, então a mordida volta a distribuir força dos dois lados.</p></div>
+          <div class="linha-caso linha-caso--limite"><h4>O que não resolve sozinho</h4><p>Cor e formato do resto da arcada. Muita gente chega querendo implante e sai com um plano que também toca no que já existe.</p></div>
+          <div class="linha-caso"><h4>O que o escaneamento mostra antes</h4><p>Onde há osso, quanto há, e em que sequência os dentes precisam ser resolvidos.</p></div>
+        </div>
+
+        <div class="painel" role="tabpanel" id="painel-lente" aria-labelledby="aba-lente" tabindex="0" hidden>
+          <div class="linha-caso"><h4>Para quem</h4><p>Tem os dentes, mas não gosta deles. Formato irregular, desgaste, manchas que clareamento não tira, espaços entre um dente e outro.</p></div>
+          <div class="linha-caso"><h4>O que resolve</h4><p>A face visível do dente — proporção, alinhamento aparente e cor.</p></div>
+          <div class="linha-caso linha-caso--limite"><h4>O que não resolve</h4><p>Ausência de dente, problema de gengiva não tratado ou mordida desequilibrada. Lente aplicada sobre um problema de base é dinheiro que volta a doer depois.</p></div>
+          <div class="linha-caso"><h4>O que o escaneamento mostra antes</h4><p>O formato e a proporção que o seu rosto comporta — antes de qualquer desgaste no dente.</p></div>
+        </div>
+
+        <p style="margin-top: var(--e-bloco)">
+          <a class="acao" href="#agendar" data-track="cta_meio">
+            <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+            Agendar minha avaliação com escaneamento 3D
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ S6 · O MEDO DE QUE FIQUE ARTIFICIAL ═══ -->
+    <section class="secao" aria-labelledby="t-s6">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 06</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s6">Dente novo que ninguém percebe que é dente novo</h2>
+        <p>Você conhece o resultado que não quer: branco demais, todos do mesmo tamanho, aquele sorriso que se anuncia antes da pessoa falar.</p>
+        <p>Isso não é acidente de execução. É consequência de decidir formato, proporção e cor no meio do procedimento, quando já não há tempo de discutir.</p>
+        <p>No modelo digital, essas três coisas são discutidas antes — com a sua cara na frente, comparando com o que você tinha e com o que faz sentido para a sua idade e o seu rosto. Se ficar artificial na tela, muda na tela.</p>
+
+        <figure class="proporcao">
+          <svg viewBox="0 0 182 136" role="img" aria-label="Diagrama de proporção dos seis dentes anteriores superiores, com cotas marcadas sobre a largura dos dois incisivos centrais.">
+            <path class="prop-guia" d="M 16 44 L 172 44"/>
+            <path class="prop-dente" d="M 24 62 L 39 62 L 39 112 Q 31.5 122 24 112 Z"/>
+            <path class="prop-dente" d="M 41 56 L 62 56 L 62 112 Q 51.5 122 41 112 Z"/>
+            <path class="prop-dente" d="M 64 44 L 90 44 L 90 112 Q 77 122 64 112 Z"/>
+            <path class="prop-cota" d="M 64 32 L 90 32"/>
+            <path class="prop-cota-serifa" d="M 64 28 L 64 36 M 90 28 L 90 36"/>
+            <path class="prop-dente" d="M 92 44 L 118 44 L 118 112 Q 105 122 92 112 Z"/>
+            <path class="prop-cota" d="M 92 32 L 118 32"/>
+            <path class="prop-cota-serifa" d="M 92 28 L 92 36 M 118 28 L 118 36"/>
+            <path class="prop-dente" d="M 120 56 L 141 56 L 141 112 Q 130.5 122 120 112 Z"/>
+            <path class="prop-dente" d="M 143 62 L 158 62 L 158 112 Q 150.5 122 143 112 Z"/>
+            <path class="prop-linha" d="M 16 120 L 172 120"/>
+            <text class="fig-rotulo" x="16" y="20">Largura e altura discutidas na tela</text>
+          </svg>
+          <figcaption class="legenda-fig">Diagrama de proporção — desenho técnico de composição, não é imagem de paciente. Ensaio visual prévio: <span class="campo">{{ETAPA_ENSAIO_VISUAL}}</span>, pendente de confirmação.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ═══ S7 · QUEM VAI ATENDER ═══ -->
+    <section class="secao" aria-labelledby="t-s7">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 07</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s7"><span class="campo">{{NOME_ESPECIALISTA}}</span></h2>
+        <p><span class="campo">{{ESPECIALIDADE_TITULACAO}}</span> · <span class="campo">CRO {{CRO_NUMERO}}</span></p>
+
+        <div class="responsavel">
+          <div class="numeros">
+            <div data-source="brief.md §4 · Autoridade (números)">
+              <b>+ de 15 anos</b>
+              <span>de experiência clínica</span>
+            </div>
+            <div data-source="brief.md §4 · Autoridade (números)">
+              <b>+ de 5.000</b>
+              <span>sorrisos transformados</span>
+            </div>
+          </div>
+          <p class="legenda-fig"><span class="campo">{{FRASE_DO_ESPECIALISTA}}</span> — uma frase curta sobre como ele conduz a primeira consulta, escrita ou aprovada por ele. Foto do responsável: pendente. A seção existe sem ela; o que não existe é substituto de foto.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ S11 · FAQ ═══ -->
+    <section class="secao" aria-labelledby="t-s11">
+      <div class="secao__marca">
+        <p class="obs"><span>Obs 08</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+      </div>
+      <div class="secao__corpo">
+        <h2 id="t-s11">As perguntas que travam a decisão</h2>
+
+        <div class="faq">
+          <details open data-track="faq_dor">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Vou sentir dor?</span>
+            </summary>
+            <div class="resposta">
+              <p>O que quase todo mundo teme é a memória da agulha e do barulho do motor, mais que o procedimento em si. Vale separar as duas coisas.</p>
+              <p><strong>Durante:</strong> a região é anestesiada e o procedimento acontece com você sem sensação de dor na área. <span class="campo">{{PROTOCOLO_ANESTESIA}}</span></p>
+              <p><strong>Depois:</strong> o incômodo do pós é sensibilidade de região operada, com conduta e medicação previstas no seu plano. <span class="campo">{{CONDUTA_POS}}</span></p>
+              <p>Na avaliação não há procedimento nenhum: é conversa e escaneamento.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_tempo">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Quanto tempo até eu voltar à minha rotina?</span>
+            </summary>
+            <div class="resposta">
+              <p>A avaliação não tem recuperação: você sai e segue o dia.</p>
+              <p>Para o tratamento, o tempo depende do caso — e é exatamente o que o plano por escrito responde na consulta, com número, para o <strong>seu</strong> caso. <span class="campo">{{TEMPO_RETORNO_ROTINA}}</span> <span class="campo">{{RESTRICOES_INICIAIS}}</span></p>
+              <p>Nenhum prazo genérico é dado aqui de propósito: prazo de recuperação que serve para todo mundo não serve para ninguém.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_provisorio">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Vou ficar sem dente em algum momento do processo?</span>
+            </summary>
+            <div class="resposta">
+              <p>Essa é a pergunta que a maioria não faz em voz alta. <span class="campo">{{POLITICA_PROVISORIO}}</span> — a resposta entra no plano por escrito, na primeira consulta.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_desgaste">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>A lente de porcelana estraga o dente por baixo?</span>
+            </summary>
+            <div class="resposta">
+              <p>Depende do quanto de estrutura precisa sair para a lente assentar, e isso varia caso a caso. <span class="campo">{{POLITICA_DESGASTE}}</span> O escaneamento mostra essa medida antes de qualquer desgaste — é uma das razões de o plano vir primeiro.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_sessoes">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Quantas consultas até terminar?</span>
+            </summary>
+            <div class="resposta">
+              <p>Varia com o caso. O plano entregue na avaliação traz a sequência e a contagem de sessões previstas para o seu, e não uma média de clínica.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_decisao">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Preciso decidir na hora?</span>
+            </summary>
+            <div class="resposta">
+              <p>Não. A avaliação termina com o plano na sua mão. Você decide fora da cadeira, no seu tempo.</p>
+            </div>
+          </details>
+
+          <details data-track="faq_preco">
+            <summary>
+              <svg class="sinal" width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><line x1="0" y1="6.5" x2="13" y2="6.5"/><line class="vertical" x1="6.5" y1="0" x2="6.5" y2="13"/></svg>
+              <span>Quanto custa?</span>
+            </summary>
+            <div class="resposta">
+              <p>O valor depende do que o seu caso exige, e por isso não aparece nesta página. <span class="campo">{{CONDICAO_ESPECIAL}}</span> vale para agendamentos feitos até <span class="campo">{{DATA_LIMITE}}</span> e é apresentada junto com o plano.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ S12 · CTA FINAL ═══ -->
+</div>
+
+<section class="fecho-bloco" id="agendar" aria-labelledby="t-s12">
+  <div class="fecho-bloco__interno">
+    <p class="obs"><span>Obs 09</span><svg class="obs__fio" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1=".5" x2="100" y2=".5"/></svg></p>
+    <h2 id="t-s12">Agende a avaliação com escaneamento 3D</h2>
+    <p>Uma conversa, um escaneamento e um plano por escrito na sua mão. Sem compromisso de fechar tratamento.</p>
+    <p class="condicao">As condições especiais de pagamento desta semana valem para agendamentos feitos até <span class="campo">{{DATA_LIMITE}}</span>.</p>
+    <p style="margin-top: var(--e-interno)">
+      <a class="acao" href="#agendar" data-track="cta_final">
+        <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+        Chamar no WhatsApp e agendar
+      </a>
+    </p>
+    <p class="acao-linha"><span class="campo">{{HORARIO_ATENDIMENTO}}</span> · <span class="campo">{{CIDADE}}</span></p>
+  </div>
+</section>
+
+<div class="pagina">
+  <footer class="rodape">
+    <div class="rodape__identificacao">
+      <p><span class="campo">{{NOME_CLINICA}}</span> · <span class="campo">{{ENDERECO}}</span> · <span class="campo">{{CIDADE}}</span></p>
+      <p>Responsável técnico: <span class="campo">{{NOME_ESPECIALISTA}}</span> — <span class="campo">CRO {{CRO_NUMERO}}</span></p>
+      <p><span class="campo">{{WHATSAPP_NUMERO}}</span> · <span class="campo">{{HORARIO_ATENDIMENTO}}</span></p>
+    </div>
+
+    <!-- Legenda de fechamento do laudo. Comportamento de piloto e de handoff:
+         em publicação real ela lista apenas as observações entregues. -->
+    <div class="legenda-laudo">
+      <h3>Legenda de fechamento</h3>
+      <ul>
+        <li><code>Obs 01</code><span>Estado atual e oferta</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 02</code><span>Reconhecimento da dor</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 03</code><span>Inversão de método</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 04</code><span>Protocolo da avaliação</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 05</code><span>Encaixe de caso e limite declarado</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 06</code><span>Proporção decidida antes da execução</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 07</code><span>Responsável técnico</span><span class="estado-ausente">Material ausente</span></li>
+        <li><code>Obs 08</code><span>Objeções de dor e tempo</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 09</code><span>Agendamento</span><span class="estado-registrado">Registrada</span></li>
+        <li><code>Obs 10</code><span>Consultório — depende de foto real</span><span class="estado-ausente">Material ausente</span></li>
+        <li><code>Obs 11</code><span>Casos tratados — depende de imagem e autorização</span><span class="estado-ausente">Material ausente</span></li>
+        <li><code>Obs 12</code><span>Depoimentos — depende de arquivo e autorização</span><span class="estado-ausente">Material ausente</span></li>
+      </ul>
+      <p style="margin-top: var(--e-interno)">Página de demonstração técnica. Conteúdo de identificação não preenchido; observações marcadas como material ausente não são renderizadas como seção.</p>
+    </div>
+  </footer>
+  <div class="reserva-flutuante"></div>
+</div>
+
+<div class="acao-flutuante" id="flutuante">
+  <a class="acao" href="#agendar" data-track="cta_flutuante">
+    <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z"/></svg>
+    Agendar avaliação com escaneamento 3D
+  </a>
+</div>
+
+<script>
+/* Protótipo do Ciclo II. O Ciclo III reimplementa isto como ilha Astro
+   dentro do orçamento de 60 KB do nível avançado. */
+
+/* --- tema: sistema → claro → escuro --- */
+(function () {
+  var raiz = document.documentElement;
+  var btn = document.getElementById('tema');
+  var ordem = ['sistema', 'claro', 'escuro'];
+  btn.addEventListener('click', function () {
+    var atual = raiz.getAttribute('data-tema') || 'sistema';
+    var prox = ordem[(ordem.indexOf(atual) + 1) % ordem.length];
+    raiz.setAttribute('data-tema', prox);
+    btn.textContent = 'Tema: ' + prox;
+  });
+})();
+
+/* --- abas: tablist com teclado --- */
+(function () {
+  var abas = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function ativar(aba) {
+    abas.forEach(function (a) {
+      var sel = a === aba;
+      a.setAttribute('aria-selected', String(sel));
+      a.tabIndex = sel ? 0 : -1;
+      document.getElementById(a.getAttribute('aria-controls')).hidden = !sel;
+    });
+  }
+  abas.forEach(function (aba, i) {
+    aba.addEventListener('click', function () { ativar(aba); });
+    aba.addEventListener('keydown', function (e) {
+      var alvo = null;
+      if (e.key === 'ArrowRight') alvo = abas[(i + 1) % abas.length];
+      if (e.key === 'ArrowLeft') alvo = abas[(i - 1 + abas.length) % abas.length];
+      if (e.key === 'Home') alvo = abas[0];
+      if (e.key === 'End') alvo = abas[abas.length - 1];
+      if (alvo) { e.preventDefault(); ativar(alvo); alvo.focus(); }
+    });
+  });
+})();
+
+/* --- CTA flutuante: aparece depois do fim de S2 --- */
+(function () {
+  var alvo = document.getElementById('t-s3');
+  var barra = document.getElementById('flutuante');
+  if (!alvo || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (ents) {
+    barra.setAttribute('data-visivel', ents[0].boundingClientRect.top < 0 ? 'sim' : 'nao');
+  }, { threshold: 0 }).observe(alvo);
+})();
+</script>
+</body>
+</html>

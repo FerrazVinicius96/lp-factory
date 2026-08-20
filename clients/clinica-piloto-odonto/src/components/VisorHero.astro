@@ -1,0 +1,258 @@
+---
+/**
+ * S1 — Hero. O visor do scanner: campo escuro em campo cheio, malha
+ * triangulada da arcada, régua de leitura à esquerda, H1 sobreposto — o
+ * elemento LCP da página (wireframe.md > "Regras estruturais" > LCP).
+ *
+ * CAMPO SINTÉTICO (hero-malha-v1.png · Higgsfield recraft_v4_1 · 2688×1536):
+ * entra como `background-image` em camada decorativa, NUNCA como <img>.
+ * Decisão registrada em PROJECT.md §5 e tokens.json > midia.campo-sintetico,
+ * por duas razões que não podem ser revertidas neste ciclo:
+ *   1. o LCP tem de continuar sendo o bloco de headline. A camada cobre o
+ *      viewport inteiro no desktop — condição em que o Chrome trata a
+ *      imagem como fundo e a exclui de candidata a LCP — e no mobile a
+ *      faixa nasce abaixo da coluna de texto, fora da janela inicial.
+ *   2. `background-image` é descoberto depois do CSSOM, então não disputa
+ *      banda com a fonte nem com o primeiro parágrafo.
+ * Quem decide ONDE a imagem aparece é a MÁSCARA, não a caixa: a máscara
+ * mantém alfa zero sobre toda a coluna de texto — a medição de contraste
+ * (tokens.json > cor.contraste) não deixa folga nenhuma para clarear o
+ * fundo sob texto.
+ *
+ * Pipeline de imagem (Ciclo III): o pipeline de imagem do Astro (`astro:assets`,
+ * sharp) gera AVIF + WebP em 768/1280/1920/2560 a partir do master em
+ * src/assets/sintetico/. `image-set()` deixa o navegador escolher o formato
+ * suportado; a média-query por largura escolhe a variante. Sem isso o
+ * protótipo teria ido ao ar servindo o PNG de 2,3 MB — risco já registrado
+ * em PROJECT.md §7 e fechado aqui.
+ */
+import CampoSintetico from './CampoSintetico.astro';
+---
+
+<header class="visor">
+  <CampoSintetico forca={0.46} forcaColuna={0.58} altura="var(--campo-alt)" />
+  <div class="visor__malha" aria-hidden="true">
+    <svg viewBox="0 0 360 250" preserveAspectRatio="xMidYMid meet">
+      <path class="malha-aberta" d="M 60.1 224.8 L 34 214.5 L 45.2 187.3 Z"/><path class="malha-aberta" d="M 60.1 224.8 L 45.2 187.3 L 70.9 198.3 Z"/>
+      <path class="malha-aberta" d="M 70.9 198.3 L 45.2 187.3 L 56.4 162.3 Z"/><path class="malha-aberta" d="M 70.9 198.3 L 56.4 162.3 L 81.8 174.2 Z"/>
+      <path class="malha-aberta" d="M 81.8 174.2 L 56.4 162.3 L 67.7 139.5 Z"/><path class="malha-aberta" d="M 81.8 174.2 L 67.7 139.5 L 92.5 152.5 Z"/>
+      <path class="malha" d="M 92.5 152.5 L 67.7 139.5 L 79.1 119.1 Z"/><path class="malha" d="M 92.5 152.5 L 79.1 119.1 L 103.2 133.3 Z"/>
+      <path class="malha" d="M 103.2 133.3 L 79.1 119.1 L 90.6 100.8 Z"/><path class="malha" d="M 103.2 133.3 L 90.6 100.8 L 113.8 116.4 Z"/>
+      <path class="malha" d="M 113.8 116.4 L 90.6 100.8 L 102.2 84.7 Z"/><path class="malha" d="M 113.8 116.4 L 102.2 84.7 L 124.2 102 Z"/>
+      <path class="malha" d="M 124.2 102 L 102.2 84.7 L 114.1 70.9 Z"/><path class="malha" d="M 124.2 102 L 114.1 70.9 L 134.5 90.1 Z"/>
+      <path class="malha" d="M 134.5 90.1 L 114.1 70.9 L 126.3 59.2 Z"/><path class="malha" d="M 134.5 90.1 L 126.3 59.2 L 144.4 80.6 Z"/>
+      <path class="malha" d="M 144.4 80.6 L 126.3 59.2 L 138.9 49.8 Z"/><path class="malha" d="M 144.4 80.6 L 138.9 49.8 L 154 73.5 Z"/>
+      <path class="malha" d="M 154 73.5 L 138.9 49.8 L 152.1 42.9 Z"/><path class="malha" d="M 154 73.5 L 152.1 42.9 L 163.1 68.6 Z"/>
+      <path class="malha" d="M 163.1 68.6 L 152.1 42.9 L 165.9 38.5 Z"/><path class="malha" d="M 163.1 68.6 L 165.9 38.5 L 171.7 65.9 Z"/>
+      <path class="malha" d="M 171.7 65.9 L 165.9 38.5 L 180 37 Z"/><path class="malha" d="M 171.7 65.9 L 180 37 L 180 65 Z"/>
+      <path class="malha" d="M 180 65 L 180 37 L 194.1 38.5 Z"/><path class="malha" d="M 180 65 L 194.1 38.5 L 188.3 65.9 Z"/>
+      <path class="malha" d="M 188.3 65.9 L 194.1 38.5 L 207.9 42.9 Z"/><path class="malha" d="M 188.3 65.9 L 207.9 42.9 L 196.9 68.6 Z"/>
+      <path class="malha" d="M 196.9 68.6 L 207.9 42.9 L 221.1 49.8 Z"/><path class="malha" d="M 196.9 68.6 L 221.1 49.8 L 206 73.5 Z"/>
+      <path class="malha" d="M 206 73.5 L 221.1 49.8 L 233.7 59.2 Z"/><path class="malha" d="M 206 73.5 L 233.7 59.2 L 215.6 80.6 Z"/>
+      <path class="malha" d="M 215.6 80.6 L 233.7 59.2 L 245.9 70.9 Z"/><path class="malha" d="M 215.6 80.6 L 245.9 70.9 L 225.5 90.1 Z"/>
+      <path class="malha" d="M 225.5 90.1 L 245.9 70.9 L 257.8 84.7 Z"/><path class="malha" d="M 225.5 90.1 L 257.8 84.7 L 235.8 102 Z"/>
+      <path class="malha" d="M 235.8 102 L 257.8 84.7 L 269.4 100.8 Z"/><path class="malha" d="M 235.8 102 L 269.4 100.8 L 246.2 116.4 Z"/>
+      <path class="malha" d="M 246.2 116.4 L 269.4 100.8 L 280.9 119.1 Z"/><path class="malha" d="M 246.2 116.4 L 280.9 119.1 L 256.8 133.3 Z"/>
+      <path class="malha" d="M 256.8 133.3 L 280.9 119.1 L 292.3 139.5 Z"/><path class="malha" d="M 256.8 133.3 L 292.3 139.5 L 267.5 152.5 Z"/>
+      <path class="malha-aberta" d="M 267.5 152.5 L 292.3 139.5 L 303.6 162.3 Z"/><path class="malha-aberta" d="M 267.5 152.5 L 303.6 162.3 L 278.2 174.2 Z"/>
+      <path class="malha-aberta" d="M 278.2 174.2 L 303.6 162.3 L 314.8 187.3 Z"/><path class="malha-aberta" d="M 278.2 174.2 L 314.8 187.3 L 289.1 198.3 Z"/>
+      <path class="malha-aberta" d="M 289.1 198.3 L 314.8 187.3 L 326 214.5 Z"/><path class="malha-aberta" d="M 289.1 198.3 L 326 214.5 L 299.9 224.8 Z"/>
+      <path class="malha-crista" d="M 54.5 184 L 46.2 203.7 L 60.3 209.7 L 68.7 190 Z"/>
+      <path class="malha-crista" d="M 73.6 143.1 L 64.6 161.1 L 79 168.3 L 88 150.3 Z"/>
+      <path class="malha-crista" d="M 92.9 109 L 83.1 125.1 L 97.4 133.8 L 107.2 117.8 Z"/>
+      <path class="malha-crista" d="M 112.5 81.7 L 101.7 95.5 L 115.5 106.3 L 126.3 92.5 Z"/>
+      <path class="malha-crista" d="M 132.7 61.2 L 120.7 72.1 L 133 85.6 L 145 74.7 Z"/>
+      <path class="malha-crista" d="M 153.7 47.8 L 140.6 55 L 149.7 71.6 L 162.8 64.4 Z"/>
+      <path class="malha-crista" d="M 175.5 42 L 162.1 44.4 L 165.6 63.7 L 179 61.3 Z"/>
+      <path class="malha-crista" d="M 197.9 44.4 L 184.5 42 L 181 61.3 L 194.4 63.7 Z"/>
+      <path class="malha-crista" d="M 219.4 55 L 206.3 47.8 L 197.2 64.4 L 210.3 71.6 Z"/>
+      <path class="malha-crista" d="M 239.3 72.1 L 227.3 61.2 L 215 74.7 L 227 85.6 Z"/>
+      <path class="malha-crista" d="M 258.3 95.5 L 247.5 81.7 L 233.7 92.5 L 244.5 106.3 Z"/>
+      <path class="malha-crista" d="M 276.9 125.1 L 267.1 109 L 252.8 117.8 L 262.6 133.8 Z"/>
+      <path class="malha-crista" d="M 295.4 161.1 L 286.4 143.1 L 272 150.3 L 281 168.3 Z"/>
+      <path class="malha-crista" d="M 313.8 203.7 L 305.5 184 L 291.3 190 L 299.7 209.7 Z"/>
+    </svg>
+  </div>
+
+  <div class="visor__interno">
+    <div class="regua" aria-hidden="true">
+      <div class="regua__item"><b>CAP 01</b><span>arcada superior</span></div>
+      <div class="regua__item"><b>CAP 02</b><span>oclusão</span></div>
+      <div class="regua__item"><b>CAMPO</b><span>composição sintética</span></div>
+      <div class="regua__item"><b>—</b><span>sem dado</span></div>
+    </div>
+    <div class="visor__coluna">
+      <p class="marca">
+        {'{{NOME_CLINICA}}'} <span class="leitura">logotipo · sem dado</span>
+      </p>
+      <h1 id="t-hero">Veja o seu sorriso planejado na tela antes de decidir qualquer coisa</h1>
+      <p class="hero__sub">
+        Avaliação com escaneamento 3D em <span class="sem-dado">{'{{CIDADE}}'}</span>. Você sai da
+        consulta com o seu caso desenhado em imagem — implante, lente de porcelana ou nenhum dos
+        dois — e decide depois, fora da cadeira.
+      </p>
+      <p style="margin-top: var(--spacing-interno)">
+        <a
+          class="acao lp-interativo"
+          href={`https://wa.me/{{WHATSAPP_NUMERO}}?text=${encodeURIComponent('Olá, vim pelo site e quero agendar a avaliação com escaneamento 3D. Meu nome é ')}`}
+          data-track="cta_hero"
+        >
+          <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"
+            ><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z" /></svg
+          >
+          Agendar minha avaliação com escaneamento 3D
+        </a>
+      </p>
+      <p class="acao-linha">
+        Atendimento por WhatsApp · <span class="sem-dado">{'{{HORARIO_ATENDIMENTO}}'}</span> · sem
+        compromisso de fechar tratamento
+      </p>
+      <p class="tira">
+        <span class="sem-dado">{'{{NOME_ESPECIALISTA}}'}</span> ·
+        <span class="sem-dado">CRO {'{{CRO_NUMERO}}'}</span> ·
+        <span data-source="brief.md §4 · Autoridade (números)"><b>+ de 15 anos</b> de experiência clínica</span>
+      </p>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* .visor (fundo, cor, papéis) vive em sistema.css — compartilhado com
+     CtaFinal.astro. Aqui só o que é específico do herói: a malha, o grid
+     de duas colunas e as duas variáveis que a zona de campo precisa. */
+
+  /* ═══ ZONA DE CAMPO — mesmo contrato de CampoSintetico.astro, para a malha ═══
+     tokens.json > zona-campo: nenhuma camada decorativa tem alfa acima de
+     zero onde há texto, em 320–1920px. A garantia é posicional: campo (PNG,
+     estilizado em CampoSintetico.astro) e malha (SVG, aqui) ocupam
+     exclusivamente a zona de campo — faixa sob o texto abaixo de 75rem,
+     coluna à direita de --campo-limite a partir de 75rem — e a zona de
+     campo nunca contém texto. As duas caixas são declaradas em componentes
+     diferentes (o CSS com escopo do Astro não atravessa de componente pai
+     para filho), mas obedecem à MESMA geometria — só por isso são
+     equivalentes, não porque compartilham regra.
+     Antes, a malha era deslocada com `left: 42%` sem reduzir a largura:
+     alargava a caixa para além do container, cobria a coluna de texto
+     abaixo de 60rem e jogava 531px da arcada para fora da tela acima dela.
+     Foi o defeito que devolveu o gate. */
+  .visor__malha {
+    position: absolute;
+    pointer-events: none;
+    inset: auto 0 0 0;
+    height: var(--campo-alt);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
+    /* a arcada vem sempre mais forte que o campo sintético: o campo é
+       profundidade, a arcada é o objeto que o visor está lendo. */
+    opacity: 0.72;
+  }
+  .visor__malha svg { width: 100%; height: 100%; display: block; }
+  .malha { fill: none; stroke: var(--color-malha); stroke-width: 0.5; }
+  .malha-aberta { fill: none; stroke: var(--color-malha); stroke-width: 0.5; stroke-dasharray: 2 2; opacity: 0.5; }
+  .malha-crista { fill: none; stroke: var(--color-medida-clara); stroke-width: 0.8; opacity: 0.85; }
+
+  @media (min-width: 75rem) {
+    /* a caixa da malha começa no limite, para a arcada centralizar dentro
+       do campo visível em vez de ficar centralizada no viewport e cortada
+       pela máscara. A rampa de 6em é a garantia; a caixa é composição. */
+    .visor__malha {
+      inset: 0 0 0 var(--campo-limite);
+      height: auto;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6em);
+      mask-image: linear-gradient(to right, transparent 0, #000 6em);
+    }
+  }
+
+  .visor__interno {
+    position: relative;
+    max-width: 84rem;
+    margin: 0 auto;
+    /* respiro de baixo abre espaço para a faixa de campo sintético no mobile —
+       nenhuma linha da coluna cai sobre a imagem. */
+    padding: var(--spacing-respiro-hero, clamp(4rem, 12vh, 8rem)) var(--spacing-gutter)
+      calc(var(--spacing-entre-secoes) + var(--campo-alt));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-entre-blocos);
+  }
+  @media (min-width: 60rem) {
+    /* o grid vira duas colunas (régua + texto) aqui, mas a zona de campo
+       continua sendo faixa até 75rem — a reserva de altura só cai lá embaixo. */
+    .visor__interno {
+      grid-template-columns: var(--spacing-regua) minmax(0, 1fr);
+      column-gap: var(--spacing-gutter);
+      align-items: start;
+    }
+  }
+  @media (min-width: 75rem) {
+    .visor__interno { padding-bottom: var(--spacing-entre-secoes); }
+  }
+  /* Limite direito da coluna de texto do herói, remontado nas medidas do
+     próprio grid: centralização + padding + régua + column-gap + a medida
+     de leitura (--spacing-medida) + a folga do contrato de campo. */
+  .visor {
+    --campo-limite: calc(max(0px, (100% - 84rem) / 2) + var(--spacing-regua) + var(--spacing-gutter) * 2 + var(--spacing-medida) + var(--campo-folga));
+    /* altura da zona de campo enquanto ela é faixa (< 75rem). Passada como
+       `var(--campo-alt)` para <CampoSintetico altura="..." />, então as duas
+       camadas (PNG e SVG) reservam exatamente a mesma altura. */
+    --campo-alt: clamp(13rem, 40vw, 17rem);
+  }
+
+  .marca {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 1rem;
+    margin: 0 0 var(--spacing-entre-blocos);
+  }
+  .hero__sub {
+    font-size: clamp(1.125rem, 0.5vw + 1rem, 1.35rem);
+    line-height: 1.45;
+    color: var(--color-conteudo-suave);
+    max-width: 34ch;
+    margin-top: var(--spacing-interno);
+  }
+  .tira {
+    margin-top: var(--spacing-entre-blocos);
+    padding-top: var(--spacing-entre-linhas);
+    border-top: var(--spacing-fio) solid var(--color-fio);
+    font-size: 0.8125rem;
+    color: var(--color-conteudo-suave);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.8rem;
+    align-items: center;
+  }
+  .tira b { color: var(--color-conteudo); }
+
+  /* Motivo de motion: a malha se resolve conforme o leitor desce. Um momento
+     só, scroll-linked, sempre dentro de @supports + prefers-reduced-motion.
+     Estado final é estático e legível: sem suporte (Firefox), nada se perde. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* a crista entra com o resto da captura — antes ela era a única parte
+         da malha que nascia acesa, o que contradizia o próprio motivo: a
+         medição não precede o dado (PROJECT.md, correção do Ciclo II). */
+      /* Longhands puros, de propósito — nunca `animation:` (shorthand) numa
+         regra que também tem `animation-timeline`: o minificador do build
+         (Lightning CSS) funde as duas num `animation:` combinado que o
+         Chrome rejeita por inteiro, apagando a animação em silêncio (era
+         por isso que a malha nunca aparecia no Chrome — defeito raiz do
+         Ciclo III, ver PROJECT.md e motion.css). */
+      .malha, .malha-aberta, .malha-crista {
+        opacity: 0;
+        animation-name: capturar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 25%;
+      }
+      .malha-aberta { --alvo: 0.5; }
+      .malha-crista { --alvo: 0.85; }
+    }
+  }
+  @keyframes capturar { to { opacity: var(--alvo, 1); } }
+</style>

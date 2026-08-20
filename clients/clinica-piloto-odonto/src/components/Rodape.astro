@@ -1,0 +1,45 @@
+---
+/**
+ * S13 — Rodapé. Identificação e responsável técnico ficam aqui, não no hero
+ * (wireframe.md > S13). Balanço de leituras completas / sem dado, herdado
+ * do motivo: a régua fecha contando o que já foi capturado.
+ */
+interface Props {
+  leiturasCompletas: number;
+  semDado: number;
+  secoesPendentes: number;
+}
+
+const { leiturasCompletas, semDado, secoesPendentes } = Astro.props;
+---
+
+<div class="pagina">
+  <footer class="rodape">
+    <p>
+      {'{{NOME_CLINICA}}'} · <span class="sem-dado">{'{{ENDERECO}}'}</span> ·
+      <span class="sem-dado">{'{{CIDADE}}'}</span>
+    </p>
+    <p>
+      Responsável técnico: <span class="sem-dado">{'{{NOME_ESPECIALISTA}}'}</span> —
+      <span class="sem-dado">CRO {'{{CRO_NUMERO}}'}</span>
+    </p>
+    <p><span class="sem-dado">{'{{WHATSAPP_NUMERO}}'}</span> · <span class="sem-dado">{'{{HORARIO_ATENDIMENTO}}'}</span></p>
+
+    <div class="balanco">
+      <span class="leitura">Leituras completas · {String(leiturasCompletas).padStart(2, '0')}</span>
+      <span class="leitura">Sem dado · {String(semDado).padStart(2, '0')}</span>
+      <span class="leitura">Ativos pendentes · {secoesPendentes} seções travadas</span>
+    </div>
+
+    <p style="margin-top: var(--spacing-interno)">
+      Consultório, casos tratados e depoimentos ainda não têm material do cliente e por isso não
+      aparecem nesta página — nem como reserva de área, nem como exemplo.
+    </p>
+    <p>
+      O campo de fundo do visor é uma composição sintética abstrata, gerada para esta página. Não
+      retrata paciente, profissional, consultório nem registro de atendimento, e não substitui
+      nenhum dos ativos pendentes acima.
+    </p>
+    <p>Página de demonstração técnica. Conteúdo de identificação não preenchido.</p>
+  </footer>
+</div>

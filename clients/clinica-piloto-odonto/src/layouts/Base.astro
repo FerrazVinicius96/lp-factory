@@ -1,0 +1,90 @@
+---
+/**
+ * Layout base da landing page — piloto tecnico da clinica de odontologia.
+ *
+ * RF11 (marcacao de piloto): `noindex, nofollow` e incondicional aqui, nao um
+ * prop opcional. Este site nunca deve ser indexado enquanto os dados reais
+ * da clinica nao forem fornecidos (PROJECT.md secao 3 e 7).
+ *
+ * Fonte: uma unica requisicao de folha do Google Fonts com os dois cortes que
+ * o CSS realmente usa — Chivo (titulos e texto) e Chivo Mono (leituras,
+ * codigos e cotas). `display=swap` evita FOIT depois que a fonte chega, mas
+ * sozinho nao evita bloqueio de renderizacao: `<link rel="stylesheet">`
+ * continua sendo render-blocking ate resolver, e o H1 do herói (elemento de
+ * LCP confirmado, wireframe.md > "Regras estruturais" > LCP) so pintava
+ * depois da folha — LCP real medido em 2,7s contra o teto de 2,0s.
+ *
+ * Correcao (achado do perf-a11y-auditor, Ciclo III): tecnica padrao de fonte
+ * nao-bloqueante — a folha carrega com `media="print"` (fora do caminho
+ * critico de media "all") e vira "all" no `onload`, sem esperar a rede para
+ * pintar o primeiro texto na fonte de sistema da pilha de fallback
+ * (`system-ui`, ja declarada em theme.css). O `<noscript>` cobre o caso sem
+ * JS. O `preload` continua apontando para a mesma folha, entao a requisicao
+ * comeca cedo mesmo com o `<link>` fora do caminho de bloqueio.
+ */
+interface Props {
+  titulo: string;
+  descricao: string;
+  canonical?: string;
+  schema?: object | object[];
+}
+
+const { titulo, descricao, canonical = Astro.url.href, schema } = Astro.props;
+
+import '../styles/theme.css';
+import '../styles/semantica.css';
+import '../styles/sistema.css';
+import '../styles/motion.css';
+
+const esquemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+
+const FONTES =
+  'https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700&family=Chivo+Mono:wght@400;600&display=swap';
+---
+
+<!doctype html>
+<html lang="pt-BR" data-nivel="avancado">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <meta name="color-scheme" content="light dark" />
+
+    {/* RF11 — piloto tecnico: nunca indexar enquanto os dados reais da clinica nao chegarem. */}
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href={FONTES} />
+    {/* media="print" tira a folha do caminho de bloqueio de renderização;
+        onload troca para "all" assim que ela chega, sem atrasar o LCP. */}
+    <link rel="stylesheet" href={FONTES} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={FONTES} /></noscript>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="canonical" href={canonical} />
+    {esquemas.map((e) => <script type="application/ld+json" set:html={JSON.stringify(e)} />)}
+
+    {/* ─── INDICATIVO DE INTEGRAÇÃO — Pixel/GTM ───
+         RF10: nenhum ID real entra no código do piloto. Quando o cliente
+         fornecer os IDs, o snippet de GTM/Meta Pixel entra aqui, no <head>,
+         antes de qualquer outro script de terceiro. */}
+
+    <script type="module" src="/rum.js" data-endpoint="/_vitals"></script>
+  </head>
+
+  <body>
+    <slot />
+
+    {/* ─── INDICATIVO DE INTEGRAÇÃO — Pixel/GTM (noscript) ───
+         Quando houver Meta Pixel real, o <noscript><img .../></noscript>
+         de fallback entra aqui, logo após a abertura do <body>. */}
+  </body>
+</html>

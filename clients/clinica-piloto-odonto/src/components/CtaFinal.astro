@@ -1,0 +1,58 @@
+---
+/**
+ * S12 — CTA final. O mesmo visor do herói, mais baixo de tom: a página abre
+ * no campo e fecha nele (tokens.json > motivo.aplicacao). Reaproveita o
+ * campo sintético em força menor (.34, contra .46/.58 do herói — faixa e
+ * coluna) — mesma decisão de arquitetura de VisorHero.astro
+ * (background-image, nunca <img>). Sem malha SVG aqui: só o campo.
+ */
+import CampoSintetico from './CampoSintetico.astro';
+
+const mensagem = encodeURIComponent(
+  'Olá, vim pelo site e quero agendar a avaliação com escaneamento 3D. Meu nome é '
+);
+---
+
+<section class="visor fecho-visor" id="agendar" aria-labelledby="t-cta-final">
+  <CampoSintetico forca={0.34} altura="var(--campo-alt)" />
+  <div class="fecho-visor__interno">
+    <div class="visor__coluna">
+      <span class="leitura" aria-hidden="true">Leitura 09</span>
+      <h2 id="t-cta-final" style="margin-top: var(--spacing-leitura)">
+        Agende a avaliação com escaneamento 3D
+      </h2>
+      <p>Uma conversa, um escaneamento e um plano por escrito na sua mão. Sem compromisso de fechar tratamento.</p>
+      <p>
+        As condições especiais de pagamento desta semana valem para agendamentos feitos até
+        <span class="sem-dado">{'{{DATA_LIMITE}}'}</span>.
+      </p>
+      <p style="margin-top: var(--spacing-interno)">
+        <a class="acao lp-interativo" href={`https://wa.me/{{WHATSAPP_NUMERO}}?text=${mensagem}`} data-track="cta_final">
+          <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"
+            ><path class="acao__marca" d="M2.2 14.8 3.4 11a6.3 6.3 0 1 1 2.4 2.4Z" /></svg
+          >
+          Chamar no WhatsApp e agendar
+        </a>
+      </p>
+      <p class="acao-linha">
+        <span class="sem-dado">{'{{HORARIO_ATENDIMENTO}}'}</span> · <span class="sem-dado">{'{{CIDADE}}'}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* .visor e .visor__coluna vivem em sistema.css — compartilhado com
+     VisorHero.astro, para não duplicar as sete sobreposições de token. */
+  .fecho-visor {
+    /* mesma variável usada pela CampoSintetico (altura="var(--campo-alt)"):
+       um valor só, em vez do clamp(7rem, 22vw, 10rem) repetido em duas linhas. */
+    --campo-alt: clamp(7rem, 22vw, 10rem);
+    padding: var(--spacing-entre-secoes) var(--spacing-gutter) calc(var(--spacing-entre-secoes) + var(--campo-alt));
+    margin-top: var(--spacing-entre-secoes);
+    /* mesma lógica de VisorHero.astro, sem a coluna de régua (o fecho não tem). */
+    --campo-limite: calc(max(0px, (100% - 84rem) / 2) + var(--spacing-gutter) + var(--spacing-medida) + var(--campo-folga));
+  }
+  @media (min-width: 75rem) { .fecho-visor { padding-bottom: var(--spacing-entre-secoes); } }
+  .fecho-visor__interno { max-width: 84rem; margin: 0 auto; position: relative; }
+</style>

@@ -1,0 +1,100 @@
+---
+/**
+ * Campo sintético do visor (hero-malha-v1.png), isolado num componente de
+ * elemento único. Motivo técnico: `define:vars` grava as variáveis CSS como
+ * atributo `style` em CADA elemento com escopo do bloco `<style>` — num
+ * componente com uma árvore inteira (S1 ou S12), isso duplicava a mesma
+ * string de `image-set()` dezenas de vezes no HTML. Com um único elemento
+ * raiz aqui, a variável é escrita uma vez.
+ *
+ * Decisão de arquitetura herdada de PROJECT.md §5 / tokens.json > midia:
+ * `background-image` em camada decorativa, nunca `<img>` — o LCP continua
+ * sendo o bloco de headline. Ver VisorHero.astro para a razão completa.
+ *
+ * Correção pós-gate (tokens.json > zona-campo): a geometria muda de FAIXA
+ * (abaixo do texto) para COLUNA (à direita do texto) em 75rem, não em
+ * 60rem — 60rem é só onde o grid vira duas colunas (régua + texto); entre
+ * 60 e 75rem o campo continua sendo faixa no rodapé do visor, porque abaixo
+ * de 75rem a coluna à direita seria um filete. As duas forças (mobile/faixa
+ * e desktop/coluna) vêm de `forca` e `forcaColuna`, como no protótipo — o
+ * campo recua na faixa porque divide altura com a arcada, e volta à força
+ * cheia na coluna, onde há espaço para os dois (tokens.json > midia).
+ */
+import { getImage } from 'astro:assets';
+import heroMalha from '../assets/sintetico/hero-malha-v1.png';
+
+interface Props {
+  forca: number;
+  forcaColuna?: number;
+  altura: string;
+}
+
+const { forca, forcaColuna = forca, altura } = Astro.props;
+
+const LARGURAS = [768, 1280, 1920, 2560] as const;
+const FORMATOS = ['avif', 'webp'] as const;
+
+const imagemPorLargura: Record<number, string> = {};
+for (const largura of LARGURAS) {
+  const partes = await Promise.all(
+    FORMATOS.map(async (formato) => {
+      const img = await getImage({ src: heroMalha, width: largura, format: formato });
+      return `url("${img.src}") type("image/${formato}")`;
+    })
+  );
+  imagemPorLargura[largura] = `image-set(${partes.join(', ')})`;
+}
+
+const vars = {
+  campo768: imagemPorLargura[768],
+  campo1280: imagemPorLargura[1280],
+  campo1920: imagemPorLargura[1920],
+  campo2560: imagemPorLargura[2560],
+  campoForca: forca,
+  campoForcaColuna: forcaColuna,
+  campoAltura: altura,
+};
+---
+
+<div class="visor__campo" aria-hidden="true"></div>
+
+<style define:vars={vars}>
+  .visor__campo {
+    position: absolute;
+    pointer-events: none;
+    background-image: var(--campo768);
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: var(--campoForca);
+    /* Faixa (< 75rem): rodapé do visor, abaixo de toda a coluna de texto. */
+    inset: auto 0 0 0;
+    height: var(--campoAltura);
+    background-position: 58% 50%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 46%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 46%);
+  }
+  @media (min-width: 48rem) and (max-width: 74.999rem) {
+    .visor__campo { background-image: var(--campo1280); }
+  }
+  @media (min-width: 75rem) {
+    /* Coluna (>= 75rem): campo cheio, revelado só depois do limite direito
+       da coluna de texto — calculado nas medidas do próprio grid pelo
+       elemento pai (--campo-limite), em vez de chutar uma porcentagem fixa. */
+    .visor__campo {
+      background-image: var(--campo1920);
+      inset: 0;
+      height: auto;
+      background-position: 100% 50%;
+      opacity: var(--campoForcaColuna);
+      -webkit-mask-image: linear-gradient(
+        to right, transparent 0, transparent var(--campo-limite), #000 calc(var(--campo-limite) + 16em)
+      );
+      mask-image: linear-gradient(
+        to right, transparent 0, transparent var(--campo-limite), #000 calc(var(--campo-limite) + 16em)
+      );
+    }
+  }
+  @media (min-width: 100rem) {
+    .visor__campo { background-image: var(--campo2560); }
+  }
+</style>

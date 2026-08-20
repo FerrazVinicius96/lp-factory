@@ -1,0 +1,2 @@
+- [Verificação visual no gate](feedback_gate_verificacao_visual.md) — medir o BUILD com Chrome headless via CDP; receita, sondas que já pegaram defeito e armadilhas.
+- [Defeitos recorrentes do gate](project_gate_defeitos_recorrentes.md) — contagem de seções 4/3, fechada na 5a rodada: varrer a familia de numeros, nao o numero errado; ancorar no dist.
